@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import {V8Protocol, Response, Event} from 'Protocol';
+import {DebugProtocol, ProtocolServer, Response, Event} from 'vscode-debugprotocol';
 import * as Net from 'net';
 import * as Path from 'path';
 import * as Url from 'url';
@@ -139,7 +139,7 @@ export enum ErrorDestination {
 	Telemetry = 2
 };
 
-export class DebugSession extends V8Protocol {
+export class DebugSession extends ProtocolServer {
 
 	private _debuggerLinesStartAt1: boolean;
 	private _debuggerColumnsStartAt1: boolean;

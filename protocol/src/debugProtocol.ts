@@ -7,7 +7,7 @@
 
 /** Declaration module describing the VS Code debug protocol
  */
-declare module DebugProtocol {
+export module DebugProtocol {
 
 	//---- V8 inspired protocol
 

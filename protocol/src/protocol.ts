@@ -4,6 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 
 import * as ee from 'events';
+import { DebugProtocol } from './debugProtocol';
+
 
 export class Message implements DebugProtocol.V8Message {
 	seq: number;
@@ -45,7 +47,7 @@ export class Event extends Message implements DebugProtocol.Event {
 	}
 }
 
-export class V8Protocol extends ee.EventEmitter {
+export class ProtocolServer extends ee.EventEmitter {
 
 	private static TIMEOUT = 3000;
 
@@ -89,7 +91,7 @@ export class V8Protocol extends ee.EventEmitter {
 		}
 	}
 
-	protected send(command: string, args: any, timeout: number = V8Protocol.TIMEOUT): Promise<DebugProtocol.Response> {
+	protected send(command: string, args: any, timeout: number = ProtocolServer.TIMEOUT): Promise<DebugProtocol.Response> {
 		return new Promise((completeDispatch, errorDispatch) => {
 			this._sendRequest(command, args, timeout, (result: DebugProtocol.Response) => {
 				if (result.success) {
