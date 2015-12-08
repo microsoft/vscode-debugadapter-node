@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import {V8Protocol, Response, Event} from './v8Protocol';
+import {V8Protocol, Response, Event} from 'Protocol';
 import * as Net from 'net';
 import * as Path from 'path';
 import * as Url from 'url';
