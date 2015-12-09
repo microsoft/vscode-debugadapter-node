@@ -9,10 +9,8 @@
  */
 export module DebugProtocol {
 
-	//---- V8 inspired protocol
-
-	/** Base class of V8 requests, responses, and events. */
-	export interface V8Message {
+	/** Base class of requests, responses, and events. */
+	export interface ProtocolMessage {
 		/** Sequence number */
 		seq: number;
 		/** One of "request", "response", or "event" */
@@ -20,7 +18,7 @@ export module DebugProtocol {
 	}
 
 	/** Client-initiated request */
-	export interface Request extends V8Message {
+	export interface Request extends ProtocolMessage {
 		/** The command to execute */
 		command: string;
 		/** Object containing arguments for the command */
@@ -28,7 +26,7 @@ export module DebugProtocol {
 	}
 
 	/** Server-initiated event */
-	export interface Event extends V8Message {
+	export interface Event extends ProtocolMessage {
 		/** Type of event */
 		event: string;
 		/** Event-specific information */
@@ -36,7 +34,7 @@ export module DebugProtocol {
 	}
 
 	/** Server-initiated response to client request */
-	export interface Response extends V8Message {
+	export interface Response extends ProtocolMessage {
 		/** Sequence number of the corresponding request */
 		request_seq: number;
 		/** Outcome of the request */

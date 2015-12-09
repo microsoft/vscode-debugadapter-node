@@ -11,8 +11,8 @@
 	"bugs": {
 		"url": "https://github.com/Microsoft/vscode-debugadapter-node/issues"
 	},
-	"main": "./lib/main.js",
-	"typings": "./lib/main",
+	"main": "./lib/debugProtocol.js",
+	"typings": "./lib/debugProtocol",
 	"devDependencies": {
 		"mocha": "^2.3.2",
 		"typescript": "^1.6.2"

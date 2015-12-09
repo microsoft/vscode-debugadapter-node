@@ -3,7 +3,9 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import {DebugProtocol, ProtocolServer, Response, Event} from 'vscode-debugprotocol';
+import {DebugProtocol} from 'vscode-debugprotocol';
+import {ProtocolServer} from './protocol';
+import {Response, Event} from './messages';
 import * as Net from 'net';
 import * as Path from 'path';
 import * as Url from 'url';
@@ -189,7 +191,7 @@ export class DebugSession extends ProtocolServer {
 
 		if (port > 0) {
 			// start as a server
-			console.error(`waiting for v8 protocol on port ${port}`);
+			console.error(`waiting for debug protocol on port ${port}`);
 			Net.createServer((socket) => {
 				console.error('>> accepted connection from client');
 				socket.on('end', () => {
@@ -200,7 +202,7 @@ export class DebugSession extends ProtocolServer {
 		} else {
 
 			// start a session
-			console.error("waiting for v8 protocol on stdin/stdout");
+			console.error("waiting for debug protocol on stdin/stdout");
 			let session = new debugSession(false);
 			process.on('SIGTERM', () => {
 				session.shutdown();

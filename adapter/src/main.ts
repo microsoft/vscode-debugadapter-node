@@ -4,10 +4,13 @@
  * ------------------------------------------------------------------------------------------ */
 'use strict';
 
-import { DebugSession, InitializedEvent, TerminatedEvent, StoppedEvent, OutputEvent, Thread, StackFrame, Scope, Source } from './debugSession';
+import { DebugSession, InitializedEvent, TerminatedEvent, StoppedEvent, OutputEvent, Thread, StackFrame, Scope, Variable, Breakpoint, Source } from './debugSession';
 import { Handles } from './handles';
 
 export {
-	DebugSession, InitializedEvent, TerminatedEvent, StoppedEvent, OutputEvent, Thread, StackFrame, Scope, Source,
+	DebugSession,
+	InitializedEvent, TerminatedEvent, StoppedEvent, OutputEvent,
+	Thread, StackFrame, Scope, Variable,
+	Breakpoint, Source,
 	Handles
 }

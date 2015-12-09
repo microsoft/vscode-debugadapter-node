@@ -4,48 +4,9 @@
  *--------------------------------------------------------------------------------------------*/
 
 import * as ee from 'events';
-import { DebugProtocol } from './debugProtocol';
+import { DebugProtocol } from 'vscode-debugprotocol';
+import { Response, Event } from './messages';
 
-
-export class Message implements DebugProtocol.V8Message {
-	seq: number;
-	type: string;
-
-	public constructor(type: string) {
-		this.seq = 0;
-		this.type = type;
-	}
-}
-
-export class Response extends Message implements DebugProtocol.Response {
-	request_seq: number;
-	success: boolean;
-	command: string;
-
-	public constructor(request: DebugProtocol.Request, message?: string) {
-		super('response');
-		this.request_seq = request.seq;
-		this.command = request.command;
-		if (message) {
-			this.success = false;
-			(<any>this).message = message;
-		} else {
-			this.success = true;
-		}
-	}
-}
-
-export class Event extends Message implements DebugProtocol.Event {
-	event: string;
-
-	public constructor(event: string, body?: any) {
-		super('event');
-		this.event = event;
-		if (body) {
-			(<any>this).body = body;
-		}
-	}
-}
 
 export class ProtocolServer extends ee.EventEmitter {
 
@@ -153,7 +114,7 @@ export class ProtocolServer extends ee.EventEmitter {
 		this.emit(event.event, event);
 	}
 
-	private _send(typ: string, message: DebugProtocol.V8Message): void {
+	private _send(typ: string, message: DebugProtocol.ProtocolMessage): void {
 		message.type = typ;
 		message.seq = this._sequence++;
 		const json = JSON.stringify(message);
@@ -219,7 +180,7 @@ export class ProtocolServer extends ee.EventEmitter {
 		}
 	}
 
-	private _dispatch(message: DebugProtocol.V8Message): void {
+	private _dispatch(message: DebugProtocol.ProtocolMessage): void {
 		switch (message.type) {
 		case 'event':
 			this._emitEvent(<DebugProtocol.Event> message);
