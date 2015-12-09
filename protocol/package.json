@@ -14,13 +14,11 @@
 	"main": "./lib/debugProtocol.js",
 	"typings": "./lib/debugProtocol",
 	"devDependencies": {
-		"mocha": "^2.3.2",
 		"typescript": "^1.6.2"
 	},
 	"scripts": {
 		"prepublish": "tsc -p ./src",
 		"compile": "tsc -p ./src",
-		"watch": "tsc -w -p ./src",
-		"test": "mocha"
+		"watch": "tsc -w -p ./src"
 	}
 }
