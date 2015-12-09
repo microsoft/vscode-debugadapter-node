@@ -1,4 +1,4 @@
-# vscode-debugadapter-node
+# VS Code Debug Protocol and Debug Adapter
 
 Debug adapter protocol and default implementation for VS Code.
 
