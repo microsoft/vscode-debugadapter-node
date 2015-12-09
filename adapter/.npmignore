@@ -4,3 +4,4 @@ lib/*.map
 src/
 test/
 .gitignore
+.npmignore
