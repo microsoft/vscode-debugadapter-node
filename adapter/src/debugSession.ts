@@ -136,6 +136,22 @@ export class OutputEvent extends Event implements DebugProtocol.OutputEvent {
 	}
 }
 
+export class ThreadEvent extends Event implements DebugProtocol.ThreadEvent {
+	body: {
+		reason: string,
+		threadId: number
+	};
+
+	public constructor(reason: string, threadId: number) {
+		super('thread');
+		this.body = {
+			reason: reason,
+			threadId: threadId
+		};
+	}
+}
+
+
 export enum ErrorDestination {
 	User = 1,
 	Telemetry = 2
