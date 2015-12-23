@@ -16,10 +16,13 @@ export class Source implements DebugProtocol.Source {
 	path: string;
 	sourceReference: number;
 
-	public constructor(name: string, path: string, id: number = 0) {
+	public constructor(name: string, path: string, id: number = 0, origin?: string) {
 		this.name = name;
 		this.path = path;
 		this.sourceReference = id;
+		if (origin) {
+			(<any>this).origin = origin;
+		}
 	}
 }
 
