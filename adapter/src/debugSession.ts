@@ -307,6 +307,9 @@ export class DebugSession extends ProtocolServer {
 			} else if (request.command === 'setExceptionBreakpoints') {
 				this.setExceptionBreakPointsRequest(<DebugProtocol.SetExceptionBreakpointsResponse> response, request.arguments);
 
+			} else if (request.command === 'configurationDone') {
+				this.configurationDoneRequest(<DebugProtocol.ConfigurationDoneResponse> response, request.arguments);
+
 			} else if (request.command === 'continue') {
 				this.continueRequest(<DebugProtocol.ContinueResponse> response, request.arguments);
 
@@ -370,6 +373,10 @@ export class DebugSession extends ProtocolServer {
 	}
 
 	protected setExceptionBreakPointsRequest(response: DebugProtocol.SetExceptionBreakpointsResponse, args: DebugProtocol.SetExceptionBreakpointsArguments): void {
+		this.sendResponse(response);
+	}
+
+	protected configurationDoneRequest(response: DebugProtocol.ConfigurationDoneResponse, args: DebugProtocol.ConfigurationDoneArguments): void {
 		this.sendResponse(response);
 	}
 
