@@ -352,6 +352,10 @@ export class DebugSession extends ProtocolServer {
 	}
 
 	protected initializeRequest(response: DebugProtocol.InitializeResponse, args: DebugProtocol.InitializeRequestArguments): void {
+
+		// This debug adapter implements the configurationDoneRequest.
+		response.supportsConfigurationDoneRequest = true;
+
 		this.sendResponse(response);
 	}
 

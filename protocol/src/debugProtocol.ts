@@ -72,7 +72,7 @@ export module DebugProtocol {
 			reason: string;
 			/** The thread which was stopped. */
 			threadId?: number;
-			/** Additonal information. E.g. if reason is 'exception', text contains the exception name. */
+			/** Additional information. E.g. if reason is 'exception', text contains the exception name. */
 			text?: string;
 		};
 	}
@@ -110,10 +110,12 @@ export module DebugProtocol {
 	*/
 	export interface OutputEvent extends Event {
 		body: {
-			/** The category of output (such as: 'console', 'stdout', 'stderr'). If not specified, 'console' is assumed. */
+			/** The category of output (such as: 'console', 'stdout', 'stderr', 'telemetry'). If not specified, 'console' is assumed. */
 			category?: string;
-			/** The output */
+			/** The output to report. */
 			output: string;
+			/** Optional data to report. For the 'telemetry' category the data will be sent to telemetry, for the other categories the data is shown in JSON format. */
+			data?: any;
 		};
 	}
 
@@ -144,8 +146,14 @@ export module DebugProtocol {
 		/** Determines in what format paths are specified. Possible values are 'path' or 'uri'. The default is 'path', which is the native format. */
 		pathFormat?: string;
 	}
-	/** Response to Initialize request. */
+	/** Response to Initialize request.
+	 *  It contains information about the features implemented by a debug adapter.
+	*/
 	export interface InitializeResponse extends Response {
+		/** The debug adapter supports the configurationDoneRequest. */
+		supportsConfigurationDoneRequest?: boolean;
+		/** The debug adapter supports a (side effect free) evaluate request for data hovers. */
+		supportEvaluateForHovers?: boolean;
 	}
 
 	/** ConfigurationDone request; value of command field is "configurationDone".
@@ -427,7 +435,7 @@ export module DebugProtocol {
 		expression: string;
 		/** Evaluate the expression in the scope of this stack frame. If not specified, the expression is evaluated in the global scope. */
 		frameId?: number;
-		/** The context in which the evaluate request is run. Possible values are 'watch' if evaluate is run in a watch or 'repl' if run from the REPL console. */
+		/** The context in which the evaluate request is run. Possible values are 'watch' if evaluate is run in a watch, 'repl' if run from the REPL console, or 'hover' if run from a data hover. */
 		context?: string;
 	}
 	/** Response to "evaluate" request. */
@@ -451,9 +459,9 @@ export module DebugProtocol {
 		format: string;
 		/** An object used as a dictionary for looking up the variables in the format string. */
 		variables?: { [key: string]: string };
-		/** if true send to telemetry (Experimental) */
+		/** if true send to telemetry */
 		sendTelemetry?: boolean;
-		/** if true show user (Experimental) */
+		/** if true show user */
 		showUser?: boolean;
 	}
 
