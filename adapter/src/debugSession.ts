@@ -289,7 +289,9 @@ export class DebugSession extends ProtocolServer {
 				if (args.pathFormat !== 'path') {
 					this.sendErrorResponse(response, 2018, "debug adapter only supports native paths", null, ErrorDestination.Telemetry);
 				} else {
-					this.initializeRequest(<DebugProtocol.InitializeResponse> response, args);
+					const initializeResponse = <DebugProtocol.InitializeResponse> response;
+					initializeResponse.body = {};
+					this.initializeRequest(initializeResponse, args);
 				}
 
 			} else if (request.command === 'launch') {
@@ -354,7 +356,7 @@ export class DebugSession extends ProtocolServer {
 	protected initializeRequest(response: DebugProtocol.InitializeResponse, args: DebugProtocol.InitializeRequestArguments): void {
 
 		// This debug adapter implements the configurationDoneRequest.
-		response.supportsConfigurationDoneRequest = true;
+		response.body.supportsConfigurationDoneRequest = true;
 
 		this.sendResponse(response);
 	}
