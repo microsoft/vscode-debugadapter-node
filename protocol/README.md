@@ -8,6 +8,9 @@ This npm module contains declarations for the json-based Visual Studio Code debu
 
 ## History
 
+* 1.4.x:
+  * Made the `body` of the `InitializeResponse` optional (for backward compatibility).
+
 * 1.3.x: Version introduces support for feature negotiation.
   * The `InitializeResponse` has now attributes for these features:
     * A boolean `supportsConfigurationDoneRequest` indicates whether the debug adapter implements the `ConfigurationDoneRequest`.

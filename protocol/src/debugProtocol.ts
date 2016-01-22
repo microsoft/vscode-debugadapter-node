@@ -149,7 +149,7 @@ export module DebugProtocol {
 	/** Response to Initialize request. */
 	export interface InitializeResponse extends Response {
 		/** The capabilities of this debug adapter */
-		body: Capabilites;
+		body?: Capabilites;
 	}
 
 	/** ConfigurationDone request; value of command field is "configurationDone".
