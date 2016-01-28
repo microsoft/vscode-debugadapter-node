@@ -8,6 +8,10 @@ This npm module contains declarations for the json-based Visual Studio Code debu
 
 ## History
 
+* 1.5.x:
+  * A boolean `supportsFunctionBreakpoints` in `Capabilities` indicates whether the debug adapter implements the function breakpoints.
+  * Renamed `supportEvaluateForHovers` in `Capabilities` to `supportsEvaluateForHovers`.
+
 * 1.4.x:
   * Made the `body` of the `InitializeResponse` optional (for backward compatibility).
 

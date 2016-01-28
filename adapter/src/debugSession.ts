@@ -349,7 +349,7 @@ export class DebugSession extends ProtocolServer {
 				this.sendErrorResponse(response, 1014, "unrecognized request", null, ErrorDestination.Telemetry);
 			}
 		} catch (e) {
-			this.sendErrorResponse(response, 1104, "exception while processing request (exception: {_exception})", { _exception: e.message }, ErrorDestination.Telemetry);
+			this.sendErrorResponse(response, 1104, "{_stack}", { _exception: e.message, _stack: e.stack }, ErrorDestination.Telemetry);
 		}
 	}
 
