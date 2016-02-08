@@ -481,9 +481,9 @@ export class DebugSession extends ProtocolServer {
 
 	protected convertDebuggerColumnToClient(column: number): number {
 		if (this._debuggerColumnsStartAt1) {
-			return this._clientColumnsStartAt1 ? column : column + 1;
+			return this._clientColumnsStartAt1 ? column : column - 1;
 		}
-		return this._clientColumnsStartAt1 ? column - 1 : column;
+		return this._clientColumnsStartAt1 ? column + 1 : column;
 	}
 
 	protected convertClientPathToDebugger(clientPath: string): string {
