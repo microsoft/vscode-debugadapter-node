@@ -85,13 +85,17 @@ export class Variable implements DebugProtocol.Variable {
 
 export class Breakpoint implements DebugProtocol.Breakpoint {
 	verified: boolean;
-	line: number;
 
-	public constructor(verified: boolean, line: number, column?: number) {
+	public constructor(verified: boolean, line?: number, column?: number, source?: Source) {
 		this.verified = verified;
-		this.line = line;
+		if (typeof line === 'number') {
+			(<any>this).line = line;
+		}
 		if (typeof column === 'number') {
 			(<any>this).column = column;
+		}
+		if (source) {
+			(<any>this).source = source;
 		}
 	}
 }
@@ -153,6 +157,21 @@ export class ThreadEvent extends Event implements DebugProtocol.ThreadEvent {
 		this.body = {
 			reason: reason,
 			threadId: threadId
+		};
+	}
+}
+
+export class BreakpointEvent extends Event implements DebugProtocol.BreakpointEvent {
+	body: {
+		reason: string,
+		breakpoint: Breakpoint
+	};
+
+	public constructor(reason: string, breakpoint: Breakpoint) {
+		super('breakpoint');
+		this.body = {
+			reason: reason,
+			breakpoint: breakpoint
 		};
 	}
 }
@@ -306,6 +325,9 @@ export class DebugSession extends ProtocolServer {
 			} else if (request.command === 'setBreakpoints') {
 				this.setBreakPointsRequest(<DebugProtocol.SetBreakpointsResponse> response, request.arguments);
 
+			} else if (request.command === 'setFunctionBreakpoints') {
+				this.setFunctionBreakPointsRequest(<DebugProtocol.SetFunctionBreakpointsResponse> response, request.arguments);
+
 			} else if (request.command === 'setExceptionBreakpoints') {
 				this.setExceptionBreakPointsRequest(<DebugProtocol.SetExceptionBreakpointsResponse> response, request.arguments);
 
@@ -375,6 +397,10 @@ export class DebugSession extends ProtocolServer {
 	}
 
 	protected setBreakPointsRequest(response: DebugProtocol.SetBreakpointsResponse, args: DebugProtocol.SetBreakpointsArguments): void {
+		this.sendResponse(response);
+	}
+
+	protected setFunctionBreakPointsRequest(response: DebugProtocol.SetFunctionBreakpointsResponse, args: DebugProtocol.SetFunctionBreakpointsArguments): void {
 		this.sendResponse(response);
 	}
 
