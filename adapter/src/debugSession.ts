@@ -251,13 +251,15 @@ export class DebugSession extends ProtocolServer {
 				socket.on('end', () => {
 					console.error('>> client connection closed\n');
 				});
-				new debugSession(false, true).start(socket, socket);
+				const session = new debugSession(false, true);
+				session.setRunAsServer(true);
+				session.start(socket, socket);
 			}).listen(port);
 		} else {
 
 			// start a session
 			console.error("waiting for debug protocol on stdin/stdout");
-			let session = new debugSession(false);
+			const session = new debugSession(false);
 			process.on('SIGTERM', () => {
 				session.shutdown();
 			});
