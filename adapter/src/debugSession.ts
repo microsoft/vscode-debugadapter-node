@@ -194,18 +194,19 @@ export class DebugSession extends ProtocolServer {
 
 	private _isServer: boolean;
 
-	public constructor(debuggerLinesAndColumnsStartAt1: boolean, isServer: boolean = false) {
+	public constructor(obsolete_debuggerLinesAndColumnsStartAt1?: boolean, obsolete_isServer?: boolean) {
 		super();
 
-		this._debuggerLinesStartAt1 = debuggerLinesAndColumnsStartAt1;
-		this._debuggerColumnsStartAt1 = debuggerLinesAndColumnsStartAt1;
+		const x = typeof obsolete_debuggerLinesAndColumnsStartAt1 === 'boolean' ? obsolete_debuggerLinesAndColumnsStartAt1 : false;
+		this._debuggerLinesStartAt1 = x;
+		this._debuggerColumnsStartAt1 = x;
 		this._debuggerPathsAreURIs = false;
 
 		this._clientLinesStartAt1 = true;
 		this._clientColumnsStartAt1 = true;
 		this._clientPathsAreURIs = false;
 
-		this._isServer = isServer;
+		this._isServer = typeof obsolete_isServer === 'boolean' ? obsolete_isServer : false;
 
 		this.on('close', () => {
 			this.shutdown();
@@ -213,6 +214,18 @@ export class DebugSession extends ProtocolServer {
 		this.on('error', (error) => {
 			this.shutdown();
 		});
+	}
+
+	public setDebuggerLinesStartAt1(enable: boolean) {
+		this._debuggerLinesStartAt1 = enable;
+	}
+
+	public setDebuggerColumnsStartAt1(enable: boolean) {
+		this._debuggerColumnsStartAt1 = enable;
+	}
+
+	public setRunAsServer(enable: boolean) {
+		this._isServer = enable;
 	}
 
 	/**
