@@ -184,6 +184,8 @@ export enum ErrorDestination {
 
 export class DebugSession extends ProtocolServer {
 
+	private _locale: string;
+
 	private _debuggerLinesStartAt1: boolean;
 	private _debuggerColumnsStartAt1: boolean;
 	private _debuggerPathsAreURIs: boolean;
@@ -216,6 +218,10 @@ export class DebugSession extends ProtocolServer {
 		});
 	}
 
+	public setDebuggerPathFormat(format: string) {
+		this._debuggerPathsAreURIs = format !== 'path';
+	}
+
 	public setDebuggerLinesStartAt1(enable: boolean) {
 		this._debuggerLinesStartAt1 = enable;
 	}
@@ -226,6 +232,10 @@ export class DebugSession extends ProtocolServer {
 
 	public setRunAsServer(enable: boolean) {
 		this._isServer = enable;
+	}
+
+	public getLocale() : string {
+		return this._locale;
 	}
 
 	/**
@@ -313,6 +323,9 @@ export class DebugSession extends ProtocolServer {
 			if (request.command === 'initialize') {
 				var args = <DebugProtocol.InitializeRequestArguments> request.arguments;
 
+				if (args.locale) {
+					this._locale = args.locale;
+				}
 				if (typeof args.linesStartAt1 === 'boolean') {
 					this._clientLinesStartAt1 = args.linesStartAt1;
 				}

@@ -8,6 +8,9 @@ This npm module contains declarations for the json-based Visual Studio Code debu
 
 ## History
 
+* 1.6.x:
+  * Adds an optional string attribute `locale` to `InitializeRequestArguments`.
+
 * 1.5.x:
   * A boolean `supportsFunctionBreakpoints` in `Capabilities` indicates whether the debug adapter implements the function breakpoints.
   * Renamed `supportEvaluateForHovers` in `Capabilities` to `supportsEvaluateForHovers`.
