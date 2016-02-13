@@ -66,7 +66,7 @@ export class Thread implements DebugProtocol.Thread {
 		if (name) {
 			this.name = name;
 		} else {
-			this.name = "Thread #" + id;
+			this.name = 'Thread #' + id;
 		}
 	}
 }
@@ -184,8 +184,6 @@ export enum ErrorDestination {
 
 export class DebugSession extends ProtocolServer {
 
-	private _locale: string;
-
 	private _debuggerLinesStartAt1: boolean;
 	private _debuggerColumnsStartAt1: boolean;
 	private _debuggerPathsAreURIs: boolean;
@@ -199,9 +197,9 @@ export class DebugSession extends ProtocolServer {
 	public constructor(obsolete_debuggerLinesAndColumnsStartAt1?: boolean, obsolete_isServer?: boolean) {
 		super();
 
-		const x = typeof obsolete_debuggerLinesAndColumnsStartAt1 === 'boolean' ? obsolete_debuggerLinesAndColumnsStartAt1 : false;
-		this._debuggerLinesStartAt1 = x;
-		this._debuggerColumnsStartAt1 = x;
+		const linesAndColumnsStartAt1 = typeof obsolete_debuggerLinesAndColumnsStartAt1 === 'boolean' ? obsolete_debuggerLinesAndColumnsStartAt1 : false;
+		this._debuggerLinesStartAt1 = linesAndColumnsStartAt1;
+		this._debuggerColumnsStartAt1 = linesAndColumnsStartAt1;
 		this._debuggerPathsAreURIs = false;
 
 		this._clientLinesStartAt1 = true;
@@ -234,10 +232,6 @@ export class DebugSession extends ProtocolServer {
 		this._isServer = enable;
 	}
 
-	public getLocale() : string {
-		return this._locale;
-	}
-
 	/**
 	 * A virtual constructor...
 	 */
@@ -268,7 +262,7 @@ export class DebugSession extends ProtocolServer {
 		} else {
 
 			// start a session
-			console.error("waiting for debug protocol on stdin/stdout");
+			console.error('waiting for debug protocol on stdin/stdout');
 			const session = new debugSession(false);
 			process.on('SIGTERM', () => {
 				session.shutdown();
@@ -289,8 +283,6 @@ export class DebugSession extends ProtocolServer {
 	}
 
 	protected sendErrorResponse(response: DebugProtocol.Response, code: number, format: string, args?: any, dest: ErrorDestination = ErrorDestination.User): void {
-
-		format = `request '${response.command}': ${format}`;
 
 		response.success = false;
 		response.message = DebugSession.formatPII(format, true, args);
@@ -323,9 +315,6 @@ export class DebugSession extends ProtocolServer {
 			if (request.command === 'initialize') {
 				var args = <DebugProtocol.InitializeRequestArguments> request.arguments;
 
-				if (args.locale) {
-					this._locale = args.locale;
-				}
 				if (typeof args.linesStartAt1 === 'boolean') {
 					this._clientLinesStartAt1 = args.linesStartAt1;
 				}
@@ -334,7 +323,7 @@ export class DebugSession extends ProtocolServer {
 				}
 
 				if (args.pathFormat !== 'path') {
-					this.sendErrorResponse(response, 2018, "debug adapter only supports native paths", null, ErrorDestination.Telemetry);
+					this.sendErrorResponse(response, 2018, 'debug adapter only supports native paths', null, ErrorDestination.Telemetry);
 				} else {
 					const initializeResponse = <DebugProtocol.InitializeResponse> response;
 					initializeResponse.body = {};
@@ -396,10 +385,10 @@ export class DebugSession extends ProtocolServer {
 				this.evaluateRequest(<DebugProtocol.EvaluateResponse> response, request.arguments);
 
 			} else {
-				this.sendErrorResponse(response, 1014, "unrecognized request", null, ErrorDestination.Telemetry);
+				this.sendErrorResponse(response, 1014, 'unrecognized request', null, ErrorDestination.Telemetry);
 			}
 		} catch (e) {
-			this.sendErrorResponse(response, 1104, "{_stack}", { _exception: e.message, _stack: e.stack }, ErrorDestination.Telemetry);
+			this.sendErrorResponse(response, 1104, '{_stack}', { _exception: e.message, _stack: e.stack }, ErrorDestination.Telemetry);
 		}
 	}
 
