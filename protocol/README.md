@@ -9,9 +9,9 @@ This npm module contains declarations for the json-based Visual Studio Code debu
 ## History
 
 * 1.6.x:
-  * Adds an optional string attribute `locale` to `InitializeRequestArguments`.
   * A boolean `supportsConditionalBreakpoints` in `Capabilities` indicates whether the debug adapter supports conditional breakpoints.
-  * Adds an optional `exceptionBreakpointFilters` capability that lists the filters available for the `setExceptionBreakpoints" request.
+  * Adds an optional `exceptionBreakpointFilters` capability that lists the filters available for the `setExceptionBreakpoints` request.
+  * Adds an optional `restart` attribute to the `TerminatedEvent` which can be used to request a restart of the debug session.
 
 * 1.5.x:
   * A boolean `supportsFunctionBreakpoints` in `Capabilities` indicates whether the debug adapter implements the function breakpoints.

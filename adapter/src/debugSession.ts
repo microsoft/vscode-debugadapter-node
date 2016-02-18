@@ -88,14 +88,15 @@ export class Breakpoint implements DebugProtocol.Breakpoint {
 
 	public constructor(verified: boolean, line?: number, column?: number, source?: Source) {
 		this.verified = verified;
+		const e: DebugProtocol.Breakpoint = this;
 		if (typeof line === 'number') {
-			(<any>this).line = line;
+			e.line = line;
 		}
 		if (typeof column === 'number') {
-			(<any>this).column = column;
+			e.column = column;
 		}
 		if (source) {
-			(<any>this).source = source;
+			e.source = source;
 		}
 	}
 }
@@ -114,7 +115,8 @@ export class StoppedEvent extends Event implements DebugProtocol.StoppedEvent {
 		};
 
 		if (exception_text) {
-			(<any>this).body.text = exception_text;
+			const e: DebugProtocol.StoppedEvent = this;
+			e.body.text = exception_text;
 		}
 	}
 }
@@ -126,8 +128,14 @@ export class InitializedEvent extends Event implements DebugProtocol.Initialized
 }
 
 export class TerminatedEvent extends Event implements DebugProtocol.TerminatedEvent {
-	public constructor() {
+	public constructor(restart?: boolean) {
 		super('terminated');
+		if (typeof restart === 'boolean') {
+			const e: DebugProtocol.TerminatedEvent = this;
+			e.body = {
+				restart: restart
+			};
+		}
 	}
 }
 
