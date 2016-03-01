@@ -173,10 +173,6 @@ export class ProtocolServer extends ee.EventEmitter {
 					this._newRes(buf.slice(this._bodyStartByteIndex + this._contentLength).toString('utf8'));
 				}
 				break;
-
-			default:
-				throw new Error('Unknown state');
-				break;
 		}
 	}
 
