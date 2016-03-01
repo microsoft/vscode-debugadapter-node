@@ -64,7 +64,7 @@ export module DebugProtocol {
 
 	/** Event message for "stopped" event type.
 		The event indicates that the execution of the debugee has stopped due to a break condition.
-		This can be caused by by a break point previously set, a stepping action has completed or by executing a debugger statement.
+		This can be caused by a break point previously set, a stepping action has completed or by executing a debugger statement.
 	*/
 	export interface StoppedEvent extends Event {
 		body: {
