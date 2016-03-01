@@ -13,8 +13,8 @@ export module DebugProtocol {
 	export interface ProtocolMessage {
 		/** Sequence number */
 		seq: number;
-		/** Type of protocol message */
-		type: 'request' | 'response' | 'event';
+		/** One of "request", "response", or "event" */
+		type: string;
 	}
 
 	/** Client-initiated request */
@@ -70,7 +70,7 @@ export module DebugProtocol {
 	export interface StoppedEvent extends Event {
 		body: {
 			/** The reason for the event (such as: 'step', 'breakpoint', 'exception', 'pause') */
-			reason: 'step' | 'breakpoint' | 'exception' | 'pause';
+			reason: string;
 			/** The thread which was stopped. */
 			threadId?: number;
 			/** Additional information. E.g. if reason is 'exception', text contains the exception name. */
@@ -104,7 +104,7 @@ export module DebugProtocol {
 	export interface ThreadEvent extends Event {
 		body: {
 			/** The reason for the event (such as: 'started', 'exited'). */
-			reason: 'started' | 'exited';
+			reason: string;
 			/** The identifier of the thread. */
 			threadId: number;
 		};
@@ -116,7 +116,7 @@ export module DebugProtocol {
 	export interface OutputEvent extends Event {
 		body: {
 			/** The category of output (such as: 'console', 'stdout', 'stderr', 'telemetry'). If not specified, 'console' is assumed. */
-			category?: 'console' | 'stdout' | 'stderr' | 'telemetry';
+			category?: string;
 			/** The output to report. */
 			output: string;
 			/** Optional data to report. For the 'telemetry' category the data will be sent to telemetry, for the other categories the data is shown in JSON format. */
@@ -130,7 +130,7 @@ export module DebugProtocol {
 	export interface BreakpointEvent extends Event {
 		body: {
 			/** The reason for the event (such as: 'changed', 'new'). */
-			reason: 'changed' | 'new';
+			reason: string;
 			/** The breakpoint. */
 			breakpoint: Breakpoint;
 		}
@@ -161,7 +161,7 @@ export module DebugProtocol {
 		/** If true all column numbers are 1-based (default). */
 		columnsStartAt1?: boolean;
 		/** Determines in what format paths are specified. Possible values are 'path' or 'uri'. The default is 'path', which is the native format. */
-		pathFormat?: 'path' | 'uri';
+		pathFormat?: string;
 	}
 	/** Response to Initialize request. */
 	export interface InitializeResponse extends Response {
@@ -474,7 +474,7 @@ export module DebugProtocol {
 		/** Evaluate the expression in the scope of this stack frame. If not specified, the expression is evaluated in the global scope. */
 		frameId?: number;
 		/** The context in which the evaluate request is run. Possible values are 'watch' if evaluate is run in a watch, 'repl' if run from the REPL console, or 'hover' if run from a data hover. */
-		context?: 'watch' | 'repl' | 'hover';
+		context?: string;
 	}
 	/** Response to "evaluate" request. */
 	export interface EvaluateResponse extends Response {
