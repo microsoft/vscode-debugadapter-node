@@ -521,6 +521,10 @@ export module DebugProtocol {
 		sendTelemetry?: boolean;
 		/** if true show user */
 		showUser?: boolean;
+		/** An optional url where additional information about this message can be found. */
+		url?: string;
+		/** An optional label that is presented to the user as the UI for opening the url. */
+		urlLabel?: string;
 	}
 
 	/** A Thread */
