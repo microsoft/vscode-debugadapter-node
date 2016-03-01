@@ -241,10 +241,12 @@ export module DebugProtocol {
 	/** Response to "setBreakpoints" request.
 		Returned is information about each breakpoint created by this request.
 		This includes the actual code location and whether the breakpoint could be verified.
+		The breakpoints returned are in the same order as the elements of the 'breakpoints'
+		(or the deprecated 'lines') in the SetBreakpointsArguments.
 	*/
 	export interface SetBreakpointsResponse extends Response {
 		body: {
-			/** Information about the breakpoints. The array elements correspond to the elements of the 'breakpoints' (or the deprecated 'lines) array. */
+			/** Information about the breakpoints. The array elements are in the same order as the elements of the 'breakpoints' (or the deprecated 'lines') in the SetBreakpointsArguments. */
 			breakpoints: Breakpoint[];
 		};
 	}
