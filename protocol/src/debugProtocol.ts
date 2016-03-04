@@ -502,8 +502,12 @@ export module DebugProtocol {
 		/** Available filters for the setExceptionBreakpoints request. */
 		exceptionBreakpointFilters?: [
 			{
+				/** The internal ID of the filter. This value is passed to the setExceptionBreakpoints request. */
 				filter: string,
-				label: string
+				/** The name of the filter. This will be shown in the UI. */
+				label: string,
+				/** Initial value of the filter. If not specified a value 'false' is assumed. */
+				default?: boolean
 			}
 		]
 	}
