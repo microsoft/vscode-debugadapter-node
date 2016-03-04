@@ -290,25 +290,31 @@ export class DebugSession extends ProtocolServer {
 		}
 	}
 
-	protected sendErrorResponse(response: DebugProtocol.Response, code: number, format: string, args?: any, dest: ErrorDestination = ErrorDestination.User): void {
+	protected sendErrorResponse(response: DebugProtocol.Response, codeOrMessage: number | DebugProtocol.Message, format?: string, variables?: any, dest: ErrorDestination = ErrorDestination.User): void {
+
+		let msg : DebugProtocol.Message;
+		if (typeof codeOrMessage === 'number') {
+			msg = <DebugProtocol.Message> {
+				id: <number> codeOrMessage,
+				format: format
+			};
+			if (variables) {
+				msg.variables = variables;
+			}
+			if (dest & ErrorDestination.User) {
+				msg.showUser = true;
+			}
+			if (dest & ErrorDestination.Telemetry) {
+				msg.sendTelemetry = true;
+			}
+		} else {
+			msg = codeOrMessage;
+		}
 
 		response.success = false;
-		response.message = DebugSession.formatPII(format, true, args);
+		response.message = DebugSession.formatPII(msg.format, true, msg.variables);
 		if (!response.body) {
-			response.body = {};
-		}
-		const msg = <DebugProtocol.Message> {
-			id: code,
-			format: format
-		};
-		if (args) {
-			msg.variables = args;
-		}
-		if (dest & ErrorDestination.User) {
-			msg.showUser = true;
-		}
-		if (dest & ErrorDestination.Telemetry) {
-			msg.sendTelemetry = true;
+			response.body = { };
 		}
 		response.body.error = msg;
 
