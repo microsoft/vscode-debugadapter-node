@@ -21,8 +21,8 @@
 		"vscode-debugprotocol": "1.7.0-pre.1"
 	},
 	"scripts": {
-		"prepublish": "tsc -p ./src",
-		"compile": "tsc -p ./src",
-		"watch": "tsc -w -p ./src"
+		"prepublish": "node ./node_modules/typescript/bin/tsc -p ./src",
+		"compile": "node ./node_modules/typescript/bin/tsc -p ./src",
+		"watch": "node ./node_modules/typescript/bin/tsc -w -p ./src"
 	}
 }
