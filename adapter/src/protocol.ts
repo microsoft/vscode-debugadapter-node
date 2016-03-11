@@ -11,11 +11,10 @@ import { Response, Event } from './messages';
 export class ProtocolServer extends ee.EventEmitter {
 
 	private static TIMEOUT = 3000;
+	private static TWO_CRLF = '\r\n\r\n';
 
-	private _state: string;
+	private _rawData: Buffer;
 	private _contentLength: number;
-	private _bodyStartByteIndex: number;
-	private _res: any;
 	private _sequence: number;
 	private _writableStream: NodeJS.WritableStream;
 	private _pendingRequests = new Map<number, DebugProtocol.Response>();
@@ -24,14 +23,13 @@ export class ProtocolServer extends ee.EventEmitter {
 		super();
 	}
 
-	protected start(inStream: NodeJS.ReadableStream, outStream: NodeJS.WritableStream): void {
+	public start(inStream: NodeJS.ReadableStream, outStream: NodeJS.WritableStream): void {
 		this._sequence = 1;
 		this._writableStream = outStream;
-		this._newRes(null);
+		this._rawData = new Buffer(0);
 
-		inStream.setEncoding('utf8');
+		inStream.on('data', (data: Buffer) => this._handleData(data));
 
-		inStream.on('data', (data) => this._handleData(data));
 		inStream.on('close', () => {
 			this._emitEvent(new Event('close'));
 		});
@@ -52,7 +50,7 @@ export class ProtocolServer extends ee.EventEmitter {
 		}
 	}
 
-	protected send(command: string, args: any, timeout: number = ProtocolServer.TIMEOUT): Promise<DebugProtocol.Response> {
+	public send(command: string, args: any, timeout: number = ProtocolServer.TIMEOUT): Promise<DebugProtocol.Response> {
 		return new Promise((completeDispatch, errorDispatch) => {
 			this._sendRequest(command, args, timeout, (result: DebugProtocol.Response) => {
 				if (result.success) {
@@ -114,65 +112,52 @@ export class ProtocolServer extends ee.EventEmitter {
 		this.emit(event.event, event);
 	}
 
-	private _send(typ: string, message: DebugProtocol.ProtocolMessage): void {
+	private _send(typ: 'request' | 'response' | 'event', message: DebugProtocol.ProtocolMessage): void {
+
 		message.type = typ;
 		message.seq = this._sequence++;
-		const json = JSON.stringify(message);
-		const data = 'Content-Length: ' + Buffer.byteLength(json, 'utf8') + '\r\n\r\n' + json;
+
 		if (this._writableStream) {
-			this._writableStream.write(data);
+			const json = JSON.stringify(message);
+			this._writableStream.write(`Content-Length: ${Buffer.byteLength(json, 'utf8')}\r\n\r\n${json}`, 'utf8');
 		}
 	}
 
-	private _newRes(raw: string): void {
-		this._res = {
-			raw: raw || '',
-			headers: {}
-		};
-		this._state = 'headers';
-		this._handleData('');
-	}
+	private _handleData(data: Buffer): void {
 
-	private _handleData(d): void {
-		const res = this._res;
-		res.raw += d;
+		this._rawData = Buffer.concat([this._rawData, data]);
 
-		switch (this._state) {
-			case 'headers':
-				const endHeaderIndex = res.raw.indexOf('\r\n\r\n');
-				if (endHeaderIndex < 0)
-					break;
-
-				const rawHeader = res.raw.slice(0, endHeaderIndex);
-				const endHeaderByteIndex = Buffer.byteLength(rawHeader, 'utf8');
-				const lines = rawHeader.split('\r\n');
-				for (let i = 0; i < lines.length; i++) {
-					const kv = lines[i].split(/: +/);
-					res.headers[kv[0]] = kv[1];
+		while (true) {
+			if (this._contentLength >= 0) {
+				if (this._rawData.length >= this._contentLength) {
+					const message = this._rawData.toString('utf8', 0, this._contentLength);
+					this._rawData = this._rawData.slice(this._contentLength);
+					this._contentLength = -1;
+					if (message.length > 0) {
+						try {
+							this._dispatch(JSON.parse(message));
+						}
+						catch (e) {
+						}
+					}
+					continue;	// there may be more complete messages to process
 				}
-
-				this._contentLength = +res.headers['Content-Length'];
-				this._bodyStartByteIndex = endHeaderByteIndex + 4;
-
-				this._state = 'body';
-
-				const len = Buffer.byteLength(res.raw, 'utf8');
-				if (len - this._bodyStartByteIndex < this._contentLength) {
-					break;
+			} else {
+				const idx = this._rawData.indexOf(ProtocolServer.TWO_CRLF);
+				if (idx !== -1) {
+					const header = this._rawData.toString('utf8', 0, idx);
+					const lines = header.split('\r\n');
+					for (let i = 0; i < lines.length; i++) {
+						const pair = lines[i].split(/: +/);
+						if (pair[0] == 'Content-Length') {
+							this._contentLength = +pair[1];
+						}
+					}
+					this._rawData = this._rawData.slice(idx + ProtocolServer.TWO_CRLF.length);
+					continue;
 				}
-			// pass thru
-
-			case 'body':
-				const resRawByteLength = Buffer.byteLength(res.raw, 'utf8');
-				if (resRawByteLength - this._bodyStartByteIndex >= this._contentLength) {
-					const buf = new Buffer(resRawByteLength);
-					buf.write(res.raw, 0, resRawByteLength, 'utf8');
-					res.body = buf.slice(this._bodyStartByteIndex, this._bodyStartByteIndex + this._contentLength).toString('utf8');
-					res.body = res.body.length ? JSON.parse(res.body) : {};
-					this._dispatch(res.body);
-					this._newRes(buf.slice(this._bodyStartByteIndex + this._contentLength).toString('utf8'));
-				}
-				break;
+			}
+			break;
 		}
 	}
 
