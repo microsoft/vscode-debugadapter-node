@@ -11,6 +11,7 @@ This npm module contains declarations for the json-based Visual Studio Code debu
 * 1.7.x:
   * Adds optional `url` and `urlLabel` attributes to the error messages. The frontend will show this as a UI to open additional information in a browser.
   * Added option `default` attribute to the `exceptionBreakpointFilters` capability.
+  * Adds optional attribute `allThreadsStopped` to the `StoppedEvent` to indicate that all threads are stopped (and not only the one mentioned in the event).
 
 * 1.6.x:
   * A boolean `supportsConditionalBreakpoints` in `Capabilities` indicates whether the debug adapter supports conditional breakpoints.

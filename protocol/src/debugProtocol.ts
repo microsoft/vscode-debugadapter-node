@@ -64,7 +64,7 @@ export module DebugProtocol {
 	}
 
 	/** Event message for "stopped" event type.
-		The event indicates that the execution of the debugee has stopped due to a break condition.
+		The event indicates that the execution of the debuggee has stopped due to a break condition.
 		This can be caused by a break point previously set, a stepping action has completed or by executing a debugger statement.
 	*/
 	export interface StoppedEvent extends Event {
@@ -75,11 +75,16 @@ export module DebugProtocol {
 			threadId?: number;
 			/** Additional information. E.g. if reason is 'exception', text contains the exception name. */
 			text?: string;
+			/** If allThreadsStopped is true, a debug adapter can announce that all threads have stopped.
+			 *  The client should use this information to enable that all threads can be expanded to access their stacktraces.
+			 *  If the attribute is missing or false, only the thread with the given threadId can be expanded.
+			 **/
+			allThreadsStopped?: boolean;
 		};
 	}
 
 	/** Event message for "exited" event type.
-		The event indicates that the debugee has exited.
+		The event indicates that the debuggee has exited.
 	*/
 	export interface ExitedEvent extends Event {
 		body: {
