@@ -1,0 +1,12 @@
+{
+	"compilerOptions": {
+		"target": "es5",
+		"module": "commonjs",
+		"moduleResolution": "node",
+		"declaration": true,
+		"stripInternal": true,
+		"inlineSourceMap": true,
+		"inlineSources": true,
+		"outDir": "../lib"
+	}
+}

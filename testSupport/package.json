@@ -1,7 +1,7 @@
 {
-	"name": "vscode-debugadapter",
-	"description": "Debug adapter implementation for node",
-	"version": "1.7.0-pre.4",
+	"name": "vscode-debugadapter-testsupport",
+	"description": "Npm module with mocha test support for Visual Studio Code debug adapters",
+	"version": "1.7.0-pre.6",
 	"author": "Microsoft Corporation",
 	"license": "MIT",
 	"repository": {
