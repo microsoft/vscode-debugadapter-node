@@ -21,6 +21,8 @@ export class DebugClient extends ProtocolClient {
 
 	private _supportsConfigurationDoneRequest: boolean;
 
+	public defaultTimeout = 5000;
+
 	/**
 	 * Creates a DebugClient object that provides a promise-based API to write
 	 * debug adapter tests.
@@ -200,10 +202,12 @@ export class DebugClient extends ProtocolClient {
 	// ---- convenience methods -----------------------------------------------------------------------------------------------
 
 	/*
-	 * Returns a promise that will resolve if an event with a specific type was received within the given timeout.
+	 * Returns a promise that will resolve if an event with a specific type was received within some specified time.
 	 * The promise will be rejected if a timeout occurs.
 	 */
-	public waitForEvent(eventType: string, timeout: number = 3000): Promise<DebugProtocol.Event> {
+	public waitForEvent(eventType: string, timeout?: number): Promise<DebugProtocol.Event> {
+
+		timeout = timeout || this.defaultTimeout;
 
 		return new Promise((resolve, reject) => {
 			this.on(eventType, event => {
@@ -218,7 +222,7 @@ export class DebugClient extends ProtocolClient {
 	}
 
 	/*
-	 * Returns a promise that will resolve if an 'initialized' event was received within 3000ms
+	 * Returns a promise that will resolve if an 'initialized' event was received within some specified time
 	 * and a subsequent 'configurationDone' request was successfully executed.
 	 * The promise will be rejected if a timeout occurs or if the 'configurationDone' request fails.
 	 */
@@ -232,13 +236,13 @@ export class DebugClient extends ProtocolClient {
 	/**
 	 * Returns a promise that will resolve if a 'initialize' and a 'launch' request were successful.
 	 */
-	public launch(args: DebugProtocol.LaunchRequestArguments): Promise<DebugProtocol.LaunchResponse> {
+	public launch(launchArgs: any): Promise<DebugProtocol.LaunchResponse> {
 
 		return this.initializeRequest().then(response => {
 			if (response.body && response.body.supportsConfigurationDoneRequest) {
 				this._supportsConfigurationDoneRequest = true;
 			}
-			return this.launchRequest(args);
+			return this.launchRequest(launchArgs);
 		});
 	}
 
@@ -252,7 +256,7 @@ export class DebugClient extends ProtocolClient {
 	}
 
 	/*
-	 * Returns a promise that will resolve if a 'stopped' event was received within 3000ms
+	 * Returns a promise that will resolve if a 'stopped' event was received within some specified time
 	 * and the event's reason and line number was asserted.
 	 * The promise will be rejected if a timeout occurs, the assertions fail, or if the 'stackTrace' request fails.
 	 */
@@ -283,7 +287,9 @@ export class DebugClient extends ProtocolClient {
 	 * and the concatenated data match the expected data.
 	 * The promise will be rejected as soon as the received data cannot match the expected data or if a timeout occurs.
 	 */
-	public assertOutput(category: string, expected: string, timeout: number = 3000): Promise<DebugProtocol.Event> {
+	public assertOutput(category: string, expected: string, timeout?: number): Promise<DebugProtocol.Event> {
+
+		timeout = timeout || this.defaultTimeout;
 
 		return new Promise((resolve, reject) => {
 			let output = '';
@@ -310,7 +316,7 @@ export class DebugClient extends ProtocolClient {
 	// ---- scenarios ---------------------------------------------------------------------------------------------------------
 
 	/**
-	 * Returns a promise that will resolve if a configurable breakpoint has been hit within 3000ms
+	 * Returns a promise that will resolve if a configurable breakpoint has been hit within some time
 	 * and the event's reason and line number was asserted.
 	 * The promise will be rejected if a timeout occurs, the assertions fail, or if the requests fails.
 	 */
