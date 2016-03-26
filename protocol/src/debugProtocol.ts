@@ -195,7 +195,8 @@ export module DebugProtocol {
 	}
 	/** Arguments for "launch" request. */
 	export interface LaunchRequestArguments {
-		/* The launch request has no standardized attributes. */
+		/* If noDebug is true the launch request should launch the program without enabling debugging. */
+		noDebug?: boolean;
 	}
 	/** Response to "launch" request. This is just an acknowledgement, so no body field is required. */
 	export interface LaunchResponse extends Response {

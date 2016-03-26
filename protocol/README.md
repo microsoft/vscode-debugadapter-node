@@ -9,6 +9,7 @@ This npm module contains declarations for the json-based Visual Studio Code debu
 
 * 1.8.x:
   * Introduces `ExceptionBreakpointsFilter` and fixed corresponding capability.
+  * Adds optional `noDebug` attribute to `LaunchRequestArguments`.
 
 * 1.7.x:
   * Adds optional `url` and `urlLabel` attributes to the error messages. The frontend will show this as a UI to open additional information in a browser.
