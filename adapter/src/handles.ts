@@ -21,11 +21,11 @@ export class Handles<T> {
 
 	public create(value: T): number {
 		var handle = this._nextHandle++;
-		this._handleMap[handle] = value;
+		this._handleMap.set(handle, value);
 		return handle;
 	}
 
 	public get(handle: number, dflt?: T): T {
-		return this._handleMap[handle] || dflt;
+		return this._handleMap.get(handle) || dflt;
 	}
 }
