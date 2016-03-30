@@ -270,7 +270,7 @@ export class DebugSession extends ProtocolServer {
 		} else {
 
 			// start a session
-			console.error('waiting for debug protocol on stdin/stdout');
+			//console.error('waiting for debug protocol on stdin/stdout');
 			const session = new debugSession(false);
 			process.on('SIGTERM', () => {
 				session.shutdown();
