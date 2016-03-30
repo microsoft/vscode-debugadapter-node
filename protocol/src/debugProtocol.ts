@@ -384,6 +384,8 @@ export module DebugProtocol {
 	export interface StackTraceArguments {
 		/** Retrieve the stacktrace for this thread. */
 		threadId: number;
+		/** the index of the first frames to return; if omitted frames start at 0. */
+		startFrame?: number;
 		/** The maximum number of frames to return. If levels is not specified or 0, all frames are returned. */
 		levels?: number;
 	}
@@ -393,6 +395,8 @@ export module DebugProtocol {
 			/** The frames of the stackframe. If the array has length zero, there are no stackframes available.
 				This means that there is no location information available. */
 			stackFrames: StackFrame[];
+			/** The total number of frames available. */
+			totalFrames?: number;
 		};
 	}
 
