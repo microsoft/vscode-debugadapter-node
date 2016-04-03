@@ -10,14 +10,12 @@ import { Response, Event } from './messages';
 
 export class ProtocolServer extends ee.EventEmitter {
 
-	private static TIMEOUT = 3000;
 	private static TWO_CRLF = '\r\n\r\n';
 
 	private _rawData: Buffer;
 	private _contentLength: number;
 	private _sequence: number;
 	private _writableStream: NodeJS.WritableStream;
-	private _pendingRequests = new Map<number, DebugProtocol.Response>();
 
 	constructor() {
 		super();
@@ -50,25 +48,13 @@ export class ProtocolServer extends ee.EventEmitter {
 		}
 	}
 
-	public send(command: string, args: any, timeout: number = ProtocolServer.TIMEOUT): Promise<DebugProtocol.Response> {
-		return new Promise((completeDispatch, errorDispatch) => {
-			this._sendRequest(command, args, timeout, (result: DebugProtocol.Response) => {
-				if (result.success) {
-					completeDispatch(result);
-				} else {
-					errorDispatch(result);
-				}
-			});
-		});
-	}
-
 	public sendEvent(event: DebugProtocol.Event): void {
 		this._send('event', event);
 	}
 
 	public sendResponse(response: DebugProtocol.Response): void {
 		if (response.seq > 0) {
-			console.error('attempt to send more than one response for command {0}', response.command);
+			console.error(`attempt to send more than one response for command ${response.command}`);
 		} else {
 			this._send('response', response);
 		}
@@ -80,33 +66,6 @@ export class ProtocolServer extends ee.EventEmitter {
 	}
 
 	// ---- private ------------------------------------------------------------
-
-	private _sendRequest(command: string, args: any, timeout: number, cb: (response: DebugProtocol.Response) => void): void {
-
-		const request: any = {
-			command: command
-		};
-		if (args && Object.keys(args).length > 0) {
-			request.arguments = args;
-		}
-
-		this._send('request', request);
-
-		if (cb) {
-			this._pendingRequests[request.seq] = cb;
-
-			const timer = setTimeout(() => {
-				clearTimeout(timer);
-				const clb = this._pendingRequests[request.seq];
-				if (clb) {
-					delete this._pendingRequests[request.seq];
-					clb(new Response(request, 'timeout after ' + timeout + 'ms'));
-
-					this._emitEvent(new Event('diagnostic', { reason: 'unresponsive ' + command }));
-				}
-			}, timeout);
-		}
-	}
 
 	private _emitEvent(event: DebugProtocol.Event) {
 		this.emit(event.event, event);
@@ -135,9 +94,13 @@ export class ProtocolServer extends ee.EventEmitter {
 					this._contentLength = -1;
 					if (message.length > 0) {
 						try {
-							this._dispatch(JSON.parse(message));
+							let msg: DebugProtocol.ProtocolMessage = JSON.parse(message);
+							if (msg.type === 'request') {
+								this.dispatchRequest(<DebugProtocol.Request> msg);
+							}
 						}
 						catch (e) {
+							this._emitEvent(new Event('error'));
 						}
 					}
 					continue;	// there may be more complete messages to process
@@ -157,27 +120,6 @@ export class ProtocolServer extends ee.EventEmitter {
 					continue;
 				}
 			}
-			break;
-		}
-	}
-
-	private _dispatch(message: DebugProtocol.ProtocolMessage): void {
-		switch (message.type) {
-		case 'event':
-			this._emitEvent(<DebugProtocol.Event> message);
-			break;
-		case 'response':
-			const response = <DebugProtocol.Response> message;
-			const clb = this._pendingRequests[response.request_seq];
-			if (clb) {
-				delete this._pendingRequests[response.request_seq];
-				clb(response);
-			}
-			break;
-		case 'request':
-			this.dispatchRequest(<DebugProtocol.Request> message);
-			break;
-		default:
 			break;
 		}
 	}
