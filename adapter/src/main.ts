@@ -18,5 +18,6 @@ export {
 	InitializedEvent, TerminatedEvent, StoppedEvent, OutputEvent, ThreadEvent, BreakpointEvent,
 	Thread, StackFrame, Scope, Variable,
 	Breakpoint, Source, ErrorDestination,
+	Event, Response,
 	Handles
 }
