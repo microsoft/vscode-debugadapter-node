@@ -399,7 +399,7 @@ export class DebugSession extends ProtocolServer {
 				this.evaluateRequest(<DebugProtocol.EvaluateResponse> response, request.arguments);
 
 			} else {
-				this.sendErrorResponse(response, 1014, 'unrecognized request', null, ErrorDestination.Telemetry);
+				this.customRequest(request.command, <DebugProtocol.Response> response, request.arguments);
 			}
 		} catch (e) {
 			this.sendErrorResponse(response, 1104, '{_stack}', { _exception: e.message, _stack: e.stack }, ErrorDestination.Telemetry);
@@ -408,7 +408,7 @@ export class DebugSession extends ProtocolServer {
 
 	protected initializeRequest(response: DebugProtocol.InitializeResponse, args: DebugProtocol.InitializeRequestArguments): void {
 
-		// This debug adapter implements the configurationDoneRequest.
+		// This default debug adapter implements the configurationDoneRequest.
 		response.body.supportsConfigurationDoneRequest = true;
 
 		this.sendResponse(response);
@@ -485,6 +485,13 @@ export class DebugSession extends ProtocolServer {
 
 	protected evaluateRequest(response: DebugProtocol.EvaluateResponse, args: DebugProtocol.EvaluateArguments): void {
 		this.sendResponse(response);
+	}
+
+	/**
+	 * Override this hook to implement custom requests.
+	 */
+	protected customRequest(command: string, response: DebugProtocol.Response, args: any): void {
+		this.sendErrorResponse(response, 1014, 'unrecognized request', null, ErrorDestination.Telemetry);
 	}
 
 	//---- protected -------------------------------------------------------------------------------------------------
