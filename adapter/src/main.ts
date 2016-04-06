@@ -10,6 +10,7 @@ import {
 	Thread, StackFrame, Scope, Variable,
 	Breakpoint, Source, ErrorDestination
 } from './debugSession';
+import { Event, Response } from './messages';
 import { Handles } from './handles';
 
 export {
@@ -17,5 +18,6 @@ export {
 	InitializedEvent, TerminatedEvent, StoppedEvent, OutputEvent, ThreadEvent, BreakpointEvent,
 	Thread, StackFrame, Scope, Variable,
 	Breakpoint, Source, ErrorDestination,
+	Event, Response,
 	Handles
 }
