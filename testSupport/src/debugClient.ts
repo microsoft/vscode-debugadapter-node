@@ -29,13 +29,12 @@ export class DebugClient extends ProtocolClient {
 	 * A simple mocha example for setting and hitting a breakpoint in line 15 of a program 'test.js' looks like this:
 	 *
 	 * var dc;
-	 * setup(done => {
+	 * setup( () => {
 	 *     dc = new DebugClient('node', './out/node/nodeDebug.js', 'node');
-	 *     dc.start(done);
+	 *     return dc.start();
 	 * });
-	 * teardown(done => {
-	 *     dc.stop(done);
-	 * });
+	 * teardown( () => dc.stop() );
+	 *
 	 * test('should stop on a breakpoint', () => {
 	 *     return dc.hitBreakpoint({ program: 'test.js' }, 'test.js', 15);
 	 * });
@@ -95,7 +94,7 @@ export class DebugClient extends ProtocolClient {
 	 */
 	public stop(): Promise<void> {
 
-		return this.disconnectRequest().then(()=>{
+		return this.disconnectRequest().then(() => {
 			this.stopAdapter();
 		}).catch(() => {
 			this.stopAdapter();
