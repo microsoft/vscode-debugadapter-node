@@ -9,7 +9,7 @@ The module provides a toolkit with Promise-based building blocks for individual 
 
 Here are three example Mocha tests:
 
-```typescript
+```js
 var dc: DebugClient;
 
 setup( () => {
