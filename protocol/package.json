@@ -1,7 +1,7 @@
 {
 	"name": "vscode-debugprotocol",
 	"description": "Npm module with declarations for the Visual Studio Code debug protocol",
-	"version": "1.8.0-pre.3",
+	"version": "1.8.0",
 	"author": "Microsoft Corporation",
 	"license": "MIT",
 	"repository": {
