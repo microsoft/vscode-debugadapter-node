@@ -3,14 +3,16 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+import fs = require('fs');
 import cp = require('child_process');
 import assert = require('assert');
 import net = require('net');
 import {DebugProtocol} from 'vscode-debugprotocol';
 import {ProtocolClient} from './protocolClient';
 
-
 export class DebugClient extends ProtocolClient {
+
+	private static CASE_INSENSITIVE_FILESYSTEM : boolean;
 
 	private _runtime: string;
 	private _executable: string;
@@ -46,6 +48,16 @@ export class DebugClient extends ProtocolClient {
 		this._enableStderr = false;
 		this._debugType = debugType;
 		this._supportsConfigurationDoneRequest = false;
+
+		if (DebugClient.CASE_INSENSITIVE_FILESYSTEM === undefined) {
+			try {
+				fs.accessSync(process.execPath.toLowerCase(), fs.F_OK);
+				fs.accessSync(process.execPath.toUpperCase(), fs.F_OK);
+				DebugClient.CASE_INSENSITIVE_FILESYSTEM = true;
+			} catch (err) {
+				DebugClient.CASE_INSENSITIVE_FILESYSTEM = false;
+			}
+		}
 	}
 
 	// ---- life cycle --------------------------------------------------------------------------------------------------------
@@ -269,7 +281,7 @@ export class DebugClient extends ProtocolClient {
 		}).then(response => {
 			const frame = response.body.stackFrames[0];
 			if (typeof expected.path === 'string') {
-				assert.equal(frame.source.path, expected.path, 'stopped location: path mismatch');
+				this.assertPath(frame.source.path, expected.path, 'stopped location: path mismatch');
 			}
 			if (typeof expected.line === 'number') {
 				assert.equal(frame.line, expected.line, 'stopped location: line mismatch');
@@ -312,6 +324,18 @@ export class DebugClient extends ProtocolClient {
 		});
 	}
 
+	public assertPath(path: string, expected: string, message?: string) {
+		if (DebugClient.CASE_INSENSITIVE_FILESYSTEM) {
+			if (typeof path === 'string') {
+				path = path.toLowerCase();
+			}
+			if (typeof expected === 'string') {
+				expected = expected.toLowerCase();
+			}
+		}
+		assert.equal(path, expected, message);
+	}
+
 	// ---- scenarios ---------------------------------------------------------------------------------------------------------
 
 	/**
@@ -337,7 +361,7 @@ export class DebugClient extends ProtocolClient {
 				assert.equal(bp.verified, verified, 'breakpoint verification mismatch: verified');
 
 				if (bp.source && bp.source.path) {
-					assert.equal(bp.source.path, location.path, 'breakpoint verification mismatch: path');
+					this.assertPath(bp.source.path, location.path, 'breakpoint verification mismatch: path');
 				}
 				if (typeof bp.line === 'number') {
 					assert.equal(bp.line, location.line, 'breakpoint verification mismatch: line');
