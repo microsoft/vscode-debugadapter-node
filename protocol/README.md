@@ -7,6 +7,9 @@ This npm module contains declarations for the json-based Visual Studio Code debu
 
 ## History
 
+* 1.9.x:
+  * Introduces a `allThreadsContinued` attribute on the `ContinueResponse` to indicate that all threads are continued and not only the one specified.
+
 * 1.8.x:
   * Introduces `ExceptionBreakpointsFilter` and fixed corresponding capability.
   * Adds optional `noDebug` attribute to `LaunchRequestArguments`.
