@@ -316,7 +316,7 @@ export module DebugProtocol {
 
 	/** Next request; value of command field is "next".
 		The request starts the debuggee to run again for one step.
-		penDebug will respond with a StoppedEvent (event type 'step') after running the step.
+		The debug adapter will respond with a StoppedEvent (event type 'step') after running the step.
 	*/
 	export interface NextRequest extends Request {
 		arguments: NextArguments;
@@ -346,9 +346,9 @@ export module DebugProtocol {
 	export interface StepInResponse extends Response {
 	}
 
-	/** StepOutIn request; value of command field is "stepOut".
+	/** StepOut request; value of command field is "stepOut".
 		The request starts the debuggee to run again for one step.
-		penDebug will respond with a StoppedEvent (event type 'step') after running the step.
+		The debug adapter will respond with a StoppedEvent (event type 'step') after running the step.
 	*/
 	export interface StepOutRequest extends Request {
 		arguments: StepOutArguments;
