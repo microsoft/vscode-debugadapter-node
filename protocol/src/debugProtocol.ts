@@ -362,6 +362,22 @@ export module DebugProtocol {
 	export interface StepOutResponse extends Response {
 	}
 
+	/** StepBack request; value of command field is "stepBack".
+		The request starts the debuggee to run one step backwards.
+		The debug adapter will respond with a StoppedEvent (event type 'step') after running the step.
+	*/
+	export interface StepBackRequest extends Request {
+		arguments: StepBackArguments;
+	}
+	/** Arguments for "stepBack" request. */
+	export interface StepBackArguments {
+		/** Continue execution for this thread. */
+		threadId: number;
+	}
+	/** Response to "stepBack" request. This is just an acknowledgement, so no body field is required. */
+	export interface StepBackResponse extends Response {
+	}
+
 	/** Pause request; value of command field is "pause".
 		The request suspenses the debuggee.
 		penDebug will respond with a StoppedEvent (event type 'pause') after a successful 'pause' command.
@@ -514,6 +530,8 @@ export module DebugProtocol {
 		supportsEvaluateForHovers?: boolean;
 		/** Available filters for the setExceptionBreakpoints request. */
 		exceptionBreakpointFilters?: ExceptionBreakpointsFilter[];
+		/** The debug adapter supports stepping back. */
+		supportsStepBack?: boolean;
 	}
 
 	/** An ExceptionBreakpointsFilter is shown in the UI as an option for configuring how exceptions are dealt with. */
