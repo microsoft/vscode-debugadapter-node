@@ -121,6 +121,19 @@ export class StoppedEvent extends Event implements DebugProtocol.StoppedEvent {
 	}
 }
 
+export class ContinuedEvent extends Event implements DebugProtocol.ContinuedEvent {
+	body: {
+		threadId: number;
+	};
+
+	public constructor(threadId: number) {
+		super('continued');
+		this.body = {
+			threadId: threadId
+		};
+	}
+}
+
 export class InitializedEvent extends Event implements DebugProtocol.InitializedEvent {
 	public constructor() {
 		super('initialized');

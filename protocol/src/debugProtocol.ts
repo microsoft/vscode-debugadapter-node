@@ -83,6 +83,17 @@ export module DebugProtocol {
 		};
 	}
 
+	/** Event message for "continued" event type.
+		The event indicates that the execution of the debuggee has resumed without a corresponding
+		request from the debugger.
+	*/
+	export interface ContinuedEvent extends Event {
+		body: {
+			/** The thread which resumed. */
+			threadId: number;
+		};
+	}
+
 	/** Event message for "exited" event type.
 		The event indicates that the debuggee has exited.
 	*/
