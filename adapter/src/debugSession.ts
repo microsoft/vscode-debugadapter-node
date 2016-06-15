@@ -101,6 +101,16 @@ export class Breakpoint implements DebugProtocol.Breakpoint {
 	}
 }
 
+export class Module implements DebugProtocol.Module {
+	id: number | string;
+	name: string;
+
+	public constructor(id: number | string, name: string) {
+		this.id = id;
+		this.name = name;
+	}
+}
+
 export class StoppedEvent extends Event implements DebugProtocol.StoppedEvent {
 	body: {
 		reason: string;
@@ -184,6 +194,20 @@ export class BreakpointEvent extends Event implements DebugProtocol.BreakpointEv
 	}
 }
 
+export class ModuleEvent extends Event implements DebugProtocol.ModuleEvent {
+	body: {
+		reason: 'new' | 'changed' | 'removed',
+		module: Module
+	};
+
+	public constructor(reason: 'new' | 'changed' | 'removed', module: Module) {
+		super('module');
+		this.body = {
+			reason: reason,
+			module: module
+		};
+	}
+}
 
 export enum ErrorDestination {
 	User = 1,
@@ -377,6 +401,9 @@ export class DebugSession extends ProtocolServer {
 			} else if (request.command === 'stepOut') {
 				this.stepOutRequest(<DebugProtocol.StepOutResponse> response, request.arguments);
 
+			} else if (request.command === 'stepBack') {
+				this.stepBackRequest(<DebugProtocol.StepBackResponse> response, request.arguments);
+
 			} else if (request.command === 'pause') {
 				this.pauseRequest(<DebugProtocol.PauseResponse> response, request.arguments);
 
@@ -408,8 +435,20 @@ export class DebugSession extends ProtocolServer {
 
 	protected initializeRequest(response: DebugProtocol.InitializeResponse, args: DebugProtocol.InitializeRequestArguments): void {
 
-		// This default debug adapter implements the configurationDoneRequest.
+		// This default debug adapter does not support conditional breakpoints.
+		response.body.supportsConditionalBreakpoints = false;
+
+		// This default debug adapter does not support function breakpoints.
+		response.body.supportsFunctionBreakpoints = false;
+
+		// This default debug adapter implements the 'configurationDone' request.
 		response.body.supportsConfigurationDoneRequest = true;
+
+		// This default debug adapter does not support hovers based on the 'evaluate' request.
+		response.body.supportsEvaluateForHovers = false;
+
+		// This default debug adapter does not support the 'stepBack' request.
+		response.body.supportsStepBack = false;
 
 		this.sendResponse(response);
 	}
@@ -456,6 +495,10 @@ export class DebugSession extends ProtocolServer {
 	}
 
 	protected stepOutRequest(response: DebugProtocol.StepOutResponse, args: DebugProtocol.StepOutArguments) : void {
+		this.sendResponse(response);
+	}
+
+	protected stepBackRequest(response: DebugProtocol.StepBackResponse, args: DebugProtocol.StepBackArguments) : void {
 		this.sendResponse(response);
 	}
 

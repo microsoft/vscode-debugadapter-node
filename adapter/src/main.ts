@@ -6,18 +6,20 @@
 
 import {
 	DebugSession,
-	InitializedEvent, TerminatedEvent, StoppedEvent, OutputEvent, ThreadEvent, BreakpointEvent,
+	InitializedEvent, TerminatedEvent, StoppedEvent, OutputEvent, ThreadEvent, BreakpointEvent, ModuleEvent,
 	Thread, StackFrame, Scope, Variable,
-	Breakpoint, Source, ErrorDestination
+	Breakpoint, Source, Module,
+	ErrorDestination
 } from './debugSession';
 import { Event, Response } from './messages';
 import { Handles } from './handles';
 
 export {
 	DebugSession,
-	InitializedEvent, TerminatedEvent, StoppedEvent, OutputEvent, ThreadEvent, BreakpointEvent,
+	InitializedEvent, TerminatedEvent, StoppedEvent, OutputEvent, ThreadEvent, BreakpointEvent, ModuleEvent,
 	Thread, StackFrame, Scope, Variable,
-	Breakpoint, Source, ErrorDestination,
+	Breakpoint, Source, Module,
+	ErrorDestination,
 	Event, Response,
 	Handles
 }
