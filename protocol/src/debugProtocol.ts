@@ -481,7 +481,7 @@ export module DebugProtocol {
 		/** The reference of the variable container. */
 		variablesReference: number;
 		/** The name of the variable. */
-		name: number;
+		name: string;
 		/** The value of the variable. */
 		value: string;
 	}

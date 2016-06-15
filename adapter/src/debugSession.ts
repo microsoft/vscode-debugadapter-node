@@ -416,6 +416,9 @@ export class DebugSession extends ProtocolServer {
 			} else if (request.command === 'variables') {
 				this.variablesRequest(<DebugProtocol.VariablesResponse> response, request.arguments);
 
+			} else if (request.command === 'setVariable') {
+				this.setVariableRequest(<DebugProtocol.SetVariableResponse> response, request.arguments);
+
 			} else if (request.command === 'source') {
 				this.sourceRequest(<DebugProtocol.SourceResponse> response, request.arguments);
 
@@ -449,6 +452,9 @@ export class DebugSession extends ProtocolServer {
 
 		// This default debug adapter does not support the 'stepBack' request.
 		response.body.supportsStepBack = false;
+
+		// This default debug adapter does not support the 'setVariable' request.
+		response.body.supportsSetVariable = false;
 
 		this.sendResponse(response);
 	}
@@ -523,6 +529,10 @@ export class DebugSession extends ProtocolServer {
 	}
 
 	protected variablesRequest(response: DebugProtocol.VariablesResponse, args: DebugProtocol.VariablesArguments): void {
+		this.sendResponse(response);
+	}
+
+	protected setVariableRequest(response: DebugProtocol.SetVariableResponse, args: DebugProtocol.SetVariableArguments): void {
 		this.sendResponse(response);
 	}
 
