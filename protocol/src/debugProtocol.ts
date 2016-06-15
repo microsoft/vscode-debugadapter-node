@@ -470,6 +470,29 @@ export module DebugProtocol {
 		};
 	}
 
+	/** setVariable request; value of command field is "setVariable".
+		Set the variable with the given name in the variable container to a new value.
+	*/
+	export interface SetVariableRequest extends Request {
+		arguments: SetVariableArguments;
+	}
+	/** Arguments for "setVariable" request. */
+	export interface SetVariableArguments {
+		/** The reference of the variable container. */
+		variablesReference: number;
+		/** The name of the variable. */
+		name: number;
+		/** The value of the variable. */
+		value: string;
+	}
+	/** Response to "setVariable" request. */
+	export interface SetVariableResponse extends Response {
+		body: {
+			/** the new value of the variable. */
+			value: string;
+		};
+	}
+
 	/** Source request; value of command field is "source".
 		The request retrieves the source code for a given source reference.
 	*/
@@ -567,6 +590,8 @@ export module DebugProtocol {
 		exceptionBreakpointFilters?: ExceptionBreakpointsFilter[];
 		/** The debug adapter supports stepping back. */
 		supportsStepBack?: boolean;
+		/** The debug adapter supports setting a variable to a value. */
+		supportsSetVariable?: boolean;
 	}
 
 	/** An ExceptionBreakpointsFilter is shown in the UI as an option for configuring how exceptions are dealt with. */
