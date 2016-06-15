@@ -622,7 +622,7 @@ export module DebugProtocol {
 		/** True if the module is optimized. */
 		isOptimized?: boolean
 		/** True if the module is considered 'user code' by a debugger that supports 'Just My Code'. */
-		isUseCode?: boolean
+		isUserCode?: boolean
 		/** Version of Module. */
 		version? : string
 		/** User understandable description of if symbols were found for the module (ex: 'Symbols Loaded', 'Symbols not found', etc */
