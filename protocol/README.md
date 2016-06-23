@@ -12,7 +12,7 @@ This npm module contains declarations for the json-based Visual Studio Code debu
   * Introduces the type `Module`, a `ModuleRequest`, and a `ModuleEvent`
   * Introduces the `setVariableRequest`
   * Adds new optional attributes `type` and `kind` for a `Variable`.
-  * Adds optional attributes `endLine` and `endColumn` to `StackFrame`, `SourceBreakpoint` and `Breakpoint` types.
+  * Adds optional attributes `endLine` and `endColumn` to `StackFrame` and `Breakpoint` types.
 
 * 1.9.x:
   * Introduces a `allThreadsContinued` attribute on the `ContinueResponse` to indicate that all threads are continued and not only the one specified.
