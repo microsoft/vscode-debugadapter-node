@@ -509,6 +509,8 @@ export module DebugProtocol {
 		body: {
 			/** Content of the source reference */
 			content: string;
+			/** Optional content type (mime type) of the source. */
+			mimeType?: string;
 		};
 	}
 

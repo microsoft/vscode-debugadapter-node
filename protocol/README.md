@@ -7,6 +7,9 @@ This npm module contains declarations for the json-based Visual Studio Code debu
 
 ## History
 
+* 1.11.x:
+  * Adds a new optional attribute `mimeType` to the `SourceResponse`
+
 * 1.10.x:
   * Introduces a `stepBack` request and a corresponding `supportsStepBack` capability.
   * Introduces the type `Module`, a `ModuleRequest`, and a `ModuleEvent`
