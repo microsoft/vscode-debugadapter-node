@@ -305,7 +305,7 @@ export class DebugSession extends ProtocolServer {
 
 	public shutdown(): void {
 		if (this._isServer) {
-			console.error('process.exit ignored in server mode');
+			console.error('shutdown ignored in server mode');
 		} else {
 			// wait a bit before shutting down
 			setTimeout(() => {
