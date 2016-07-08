@@ -8,9 +8,10 @@ This npm module contains declarations for the json-based Visual Studio Code debu
 ## History
 
 * 1.11.x:
-  * Adds a new optional attribute `mimeType` to the `SourceResponse`
+  * Adds a new optional attribute `mimeType` to the `SourceResponse`.
   * Adds a new optional attribute `sourceModified` to the `SetBreakpointsArguments` that indicates that the underlying source has been modified which results in new breakpoint locations.
   * Adds a new optional attribute `supportsVariableType` to `InitializeRequestArguments`. True indicates that the client shows the variable's type attribute in the UI.
+  * Adds optional 'type' attribute to the `EvaluateResponse`.
 
 * 1.10.x:
   * Introduces a `stepBack` request and a corresponding `supportsStepBack` capability.

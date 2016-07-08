@@ -574,8 +574,10 @@ export module DebugProtocol {
 	/** Response to "evaluate" request. */
 	export interface EvaluateResponse extends Response {
 		body: {
-			/** The result of the evaluate. */
+			/** The result of the evaluate request. */
 			result: string;
+			/** The optional type of the evaluate result. */
+			type?: string;
 			/** If variablesReference is > 0, the evaluate result is structured and its children can be retrieved by passing variablesReference to the VariablesRequest */
 			variablesReference: number;
 		};
