@@ -404,6 +404,9 @@ export class DebugSession extends ProtocolServer {
 			} else if (request.command === 'stepBack') {
 				this.stepBackRequest(<DebugProtocol.StepBackResponse> response, request.arguments);
 
+			} else if (request.command === 'restartFrame') {
+				this.restartFrameRequest(<DebugProtocol.RestartFrameResponse> response, request.arguments);
+
 			} else if (request.command === 'pause') {
 				this.pauseRequest(<DebugProtocol.PauseResponse> response, request.arguments);
 
@@ -456,6 +459,9 @@ export class DebugSession extends ProtocolServer {
 		// This default debug adapter does not support the 'setVariable' request.
 		response.body.supportsSetVariable = false;
 
+		// This default debug adapter does not support the 'restartFrame' request.
+		response.body.supportsRestartFrame = false;
+
 		this.sendResponse(response);
 	}
 
@@ -505,6 +511,10 @@ export class DebugSession extends ProtocolServer {
 	}
 
 	protected stepBackRequest(response: DebugProtocol.StepBackResponse, args: DebugProtocol.StepBackArguments) : void {
+		this.sendResponse(response);
+	}
+
+	protected restartFrameRequest(response: DebugProtocol.RestartFrameResponse, args: DebugProtocol.RestartFrameArguments) : void {
 		this.sendResponse(response);
 	}
 
