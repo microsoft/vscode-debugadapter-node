@@ -395,6 +395,22 @@ export module DebugProtocol {
 	export interface StepBackResponse extends Response {
 	}
 
+	/** RestartFrame request; value of command field is "restartFrame".
+		The request restarts execution of the specified stackframe.
+		The debug adapter first sends the RestartFrameResponse and then a StoppedEvent (event type 'restart') after the restart has completed.
+	*/
+	export interface RestartFrameRequest extends Request {
+		arguments: RestartFrameArguments;
+	}
+	/** Arguments for "restartFrame" request. */
+	export interface RestartFrameArguments {
+		/** Restart this stackframe. */
+		frameId: number;
+	}
+	/** Response to "restartFrame" request. This is just an acknowledgement, so no body field is required. */
+	export interface RestartFrameResponse extends Response {
+	}
+
 	/** Pause request; value of command field is "pause".
 		The request suspenses the debuggee.
 		The debug adapter first sends the PauseResponse and then a StoppedEvent (event type 'pause') after the thread has been paused successfully.
@@ -601,6 +617,8 @@ export module DebugProtocol {
 		supportsStepBack?: boolean;
 		/** The debug adapter supports setting a variable to a value. */
 		supportsSetVariable?: boolean;
+		/** The debug adapter supports restarting a frame. */
+		supportsRestartFrame?: boolean;
 	}
 
 	/** An ExceptionBreakpointsFilter is shown in the UI as an option for configuring how exceptions are dealt with. */
@@ -716,7 +734,7 @@ export module DebugProtocol {
 
 	/** A Stackframe contains the source location. */
 	export interface StackFrame {
-		/** An identifier for the stack frame. This id can be used to retrieve the scopes of the frame with the 'scopesRequest'. */
+		/** An identifier for the stack frame. This id can be used to retrieve the scopes of the frame with the 'scopesRequest' or to restart the execution of a stackframe. */
 		id: number;
 		/** The name of the stack frame, typically a method name */
 		name: string;
