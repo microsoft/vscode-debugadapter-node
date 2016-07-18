@@ -48,7 +48,7 @@ export class StackFrame implements DebugProtocol.StackFrame {
 	column: number;
 	name: string;
 
-	public constructor(i: number, nm: string, src: Source, ln: number, col: number) {
+	public constructor(i: number, nm: string, src?: Source, ln: number = 0, col: number = 0) {
 		this.id = i;
 		this.source = src;
 		this.line = ln;
