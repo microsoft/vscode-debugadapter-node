@@ -13,6 +13,7 @@ This npm module contains declarations for the json-based Visual Studio Code debu
   * Adds a new optional attribute `supportsVariableType` to `InitializeRequestArguments`. True indicates that the client shows the variable's type attribute in the UI.
   * Adds optional 'type' attribute to the `EvaluateResponse`.
   * Introduces the `RestartFrameRequest` and a corresponding `supportsRestartFrame` capability.
+  * Introduces a `ContinuedEvent` so that a debug adapter can explicit trigger that a thread has continued execution.
 
 * 1.10.x:
   * Introduces a `stepBack` request and a corresponding `supportsStepBack` capability.
