@@ -14,6 +14,7 @@ This npm module contains declarations for the json-based Visual Studio Code debu
   * Adds optional 'type' attribute to the `EvaluateResponse`.
   * Introduces the `RestartFrameRequest` and a corresponding `supportsRestartFrame` capability.
   * Introduces a `ContinuedEvent` so that a debug adapter can explicit trigger that a thread has continued execution.
+  * Adds support for step in targets (request `StepInTargetsRequest`, type `StepInTarget`, capability `supportsStepInTargetsRequest`)
 
 * 1.10.x:
   * Introduces a `stepBack` request and a corresponding `supportsStepBack` capability.
