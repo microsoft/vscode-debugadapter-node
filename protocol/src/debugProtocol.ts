@@ -748,7 +748,7 @@ export module DebugProtocol {
 
 	/** A Stackframe contains the source location. */
 	export interface StackFrame {
-		/** An identifier for the stack frame. This id can be used to retrieve the scopes of the frame with the 'scopesRequest' or to restart the execution of a stackframe. */
+		/** An identifier for the stack frame. It must be unique across all threads. This id can be used to retrieve the scopes of the frame with the 'scopesRequest' or to restart the execution of a stackframe. */
 		id: number;
 		/** The name of the stack frame, typically a method name */
 		name: string;
