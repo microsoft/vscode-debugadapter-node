@@ -362,8 +362,12 @@ export module DebugProtocol {
 	}
 
 	/** StepIn request; value of command field is "stepIn".
-		The request starts the debuggee to run again for one step.
+		The request starts the debuggee to step into a function/method if possible.
+		If it cannot step into a target, "stepIn" behaves like "next".
 		The debug adapter first sends the StepInResponse and then a StoppedEvent (event type 'step') after the step has completed.
+		If there are multiple function/method calls (or other targets) on the source line,
+		the optional argument 'targetId' can be used to control into which target the "stepIn" should occur.
+		The list of possible targets for a given source line can be retrieved via the "stepInTargets" request.
 	*/
 	export interface StepInRequest extends Request {
 		arguments: StepInArguments;
@@ -372,6 +376,8 @@ export module DebugProtocol {
 	export interface StepInArguments {
 		/** Continue execution for this thread. */
 		threadId: number;
+		/** Optional id of the target to step into. */
+		targetId?: number | string;
 	}
 	/** Response to "stepIn" request. This is just an acknowledgement, so no body field is required. */
 	export interface StepInResponse extends Response {
@@ -613,6 +619,31 @@ export module DebugProtocol {
 		};
 	}
 
+	/** StepInTargets request; value of command field is "stepInTargets".
+		This request retrieves the possible stepIn targets for the specified source location.
+		These targets can be used in the "stepIn" request.
+		The StepInTargets may only be called if the "supportsStepInTargetsRequest" capability exists and is true.
+	 */
+	export interface StepInTargetsRequest extends Request {
+		arguments: StepInTargetsArguments;
+	}
+	/** Arguments for "stepInTargets" request. */
+	export interface StepInTargetsArguments {
+		/** The source of the source location. */
+		source: Source;
+		/** The line of the source location. */
+		line: number;
+		/** An optional column of the source location. */
+		column?: number;
+	}
+	/** Response to "stepInTargets" request. */
+	export interface StepInTargetsResponse extends Response {
+		body: {
+			/** The possible stepIn targets of the specified source location. */
+			targets: StepInTarget[];
+		};
+	}
+
 	//---- Types
 
 	/** Information about the capabilities of a debug adapter. */
@@ -633,6 +664,8 @@ export module DebugProtocol {
 		supportsSetVariable?: boolean;
 		/** The debug adapter supports restarting a frame. */
 		supportsRestartFrame?: boolean;
+		/** The debug adapter supports stepInTargetsRequest. */
+		supportsStepInTargetsRequest?: boolean;
 	}
 
 	/** An ExceptionBreakpointsFilter is shown in the UI as an option for configuring how exceptions are dealt with. */
@@ -831,5 +864,15 @@ export module DebugProtocol {
 		endLine?: number;
 		/**  An optional end column of the actual range covered by the breakpoint. If no end line is given, then the end column is assumed to be in the start line. */
 		endColumn?: number;
+	}
+
+	/** A StepInTarget can be used in the 'stepIn' request and determines into
+	 *  which single target the stepIn request should step.
+	 */
+	export interface StepInTarget {
+		/** Unique identifier for a stepIn target. */
+		id: number | string;
+		/** The name of the stepIn target (shown in the UI). */
+ 		label: string;
 	}
 }
