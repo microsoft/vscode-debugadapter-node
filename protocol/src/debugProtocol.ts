@@ -377,7 +377,7 @@ export module DebugProtocol {
 		/** Continue execution for this thread. */
 		threadId: number;
 		/** Optional id of the target to step into. */
-		targetId?: number | string;
+		targetId?: number;
 	}
 	/** Response to "stepIn" request. This is just an acknowledgement, so no body field is required. */
 	export interface StepInResponse extends Response {
@@ -620,7 +620,7 @@ export module DebugProtocol {
 	}
 
 	/** StepInTargets request; value of command field is "stepInTargets".
-		This request retrieves the possible stepIn targets for the specified source location.
+		This request retrieves the possible stepIn targets for the specified stack frame.
 		These targets can be used in the "stepIn" request.
 		The StepInTargets may only be called if the "supportsStepInTargetsRequest" capability exists and is true.
 	 */
@@ -629,12 +629,8 @@ export module DebugProtocol {
 	}
 	/** Arguments for "stepInTargets" request. */
 	export interface StepInTargetsArguments {
-		/** The source of the source location. */
-		source: Source;
-		/** The line of the source location. */
-		line: number;
-		/** An optional column of the source location. */
-		column?: number;
+		/** The stack frame for which to retrieve the possible stepIn targets. */
+		frameId: number;
 	}
 	/** Response to "stepInTargets" request. */
 	export interface StepInTargetsResponse extends Response {
@@ -871,7 +867,7 @@ export module DebugProtocol {
 	 */
 	export interface StepInTarget {
 		/** Unique identifier for a stepIn target. */
-		id: number | string;
+		id: number;
 		/** The name of the stepIn target (shown in the UI). */
  		label: string;
 	}
