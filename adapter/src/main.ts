@@ -6,7 +6,7 @@
 
 import {
 	DebugSession,
-	InitializedEvent, TerminatedEvent, StoppedEvent, OutputEvent, ThreadEvent, BreakpointEvent, ModuleEvent,
+	InitializedEvent, TerminatedEvent, StoppedEvent, ContinuedEvent, OutputEvent, ThreadEvent, BreakpointEvent, ModuleEvent,
 	Thread, StackFrame, Scope, Variable,
 	Breakpoint, Source, Module,
 	ErrorDestination
@@ -16,7 +16,7 @@ import { Handles } from './handles';
 
 export {
 	DebugSession,
-	InitializedEvent, TerminatedEvent, StoppedEvent, OutputEvent, ThreadEvent, BreakpointEvent, ModuleEvent,
+	InitializedEvent, TerminatedEvent, StoppedEvent, ContinuedEvent, OutputEvent, ThreadEvent, BreakpointEvent, ModuleEvent,
 	Thread, StackFrame, Scope, Variable,
 	Breakpoint, Source, Module,
 	ErrorDestination,
