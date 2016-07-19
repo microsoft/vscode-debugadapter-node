@@ -449,6 +449,9 @@ export class DebugSession extends ProtocolServer {
 			} else if (request.command === 'evaluate') {
 				this.evaluateRequest(<DebugProtocol.EvaluateResponse> response, request.arguments);
 
+			} else if (request.command === 'stepInTargets') {
+				this.stepInTargetsRequest(<DebugProtocol.StepInTargetsResponse> response, request.arguments);
+
 			} else {
 				this.customRequest(request.command, <DebugProtocol.Response> response, request.arguments);
 			}
@@ -479,6 +482,9 @@ export class DebugSession extends ProtocolServer {
 
 		// This default debug adapter does not support the 'restartFrame' request.
 		response.body.supportsRestartFrame = false;
+
+		// This default debug adapter does not support the 'stepInTargetsRequest' request.
+		response.body.supportsStepInTargetsRequest = false;
 
 		this.sendResponse(response);
 	}
@@ -565,6 +571,10 @@ export class DebugSession extends ProtocolServer {
 	}
 
 	protected evaluateRequest(response: DebugProtocol.EvaluateResponse, args: DebugProtocol.EvaluateArguments): void {
+		this.sendResponse(response);
+	}
+
+	protected stepInTargetsRequest(response: DebugProtocol.StepInTargetsResponse, args: DebugProtocol.StepInTargetsArguments): void {
 		this.sendResponse(response);
 	}
 
