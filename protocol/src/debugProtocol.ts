@@ -196,6 +196,8 @@ export module DebugProtocol {
 
 		/** Client supports the optional type attribute for variables. */
 		supportsVariableType?: boolean;
+		/** Client supports the paging of variables. */
+		supportsVariablePaging?: boolean;
 	}
 	/** Response to Initialize request. */
 	export interface InitializeResponse extends Response {
@@ -493,7 +495,7 @@ export module DebugProtocol {
 	}
 
 	/** Variables request; value of command field is "variables".
-		Retrieves all children for the given variable reference.
+		Retrieves all variables (or a range thereof) for the given variable reference.
 	*/
 	export interface VariablesRequest extends Request {
 		arguments: VariablesArguments;
@@ -502,11 +504,15 @@ export module DebugProtocol {
 	export interface VariablesArguments {
 		/** The Variable reference. */
 		variablesReference: number;
+		/** The index of the first variable to return; if omitted children start at 0. */
+		start?: number;
+		/** The number of variables to return. If count is missing or 0, all variables are returned. */
+		count?: number;
 	}
 	/** Response to "variables" request. */
 	export interface VariablesResponse extends Response {
 		body: {
-			/** All children for the given variable reference */
+			/** All (or a selected range) of variables for the given variable reference. */
 			variables: Variable[];
 		};
 	}
@@ -616,6 +622,10 @@ export module DebugProtocol {
 			type?: string;
 			/** If variablesReference is > 0, the evaluate result is structured and its children can be retrieved by passing variablesReference to the VariablesRequest */
 			variablesReference: number;
+			/** The total number of child variables.
+				If this number is large, the number should be returned via the optional 'totalCount' attribute.
+				The client can use this information to present the variables in a paged UI and fetch them in chunks. */
+			totalCount?: number;
 		};
 	}
 
@@ -799,6 +809,9 @@ export module DebugProtocol {
 		name: string;
 		/** The variables of this scope can be retrieved by passing the value of variablesReference to the VariablesRequest. */
 		variablesReference: number;
+		/** The total number of variables in this scope.
+			The client can use this optional information to present the variables in a paged UI and fetch them in chunks. */
+		totalCount?: number;
 		/** If true, the number of variables in this scope is large or expensive to retrieve. */
 		expensive: boolean;
 	}
@@ -807,6 +820,8 @@ export module DebugProtocol {
 		Optionally a variable can have a 'type' that is shown if space permits or when hovering over the variable's name.
 		An optional 'kind' is used to render additional properties of the variable, e.g. different icons can be used to indicate that a variable is public or private.
 		If the value is structured (has children), a handle is provided to retrieve the children with the VariablesRequest.
+		If the number of children is large, the number should be returned via the optional 'totalCount' attribute.
+		The client can use this optional information to present the children in a paged UI and fetch them in chunks.
 	*/
 	export interface Variable {
 		/** The variable's name. */
@@ -817,6 +832,8 @@ export module DebugProtocol {
 		value: string;
 		/** If variablesReference is > 0, the variable is structured and its children can be retrieved by passing variablesReference to the VariablesRequest. */
 		variablesReference: number;
+		/** The total number of child variables. */
+		totalCount?: number;
 		/** Properties of a variable that can be used to determine how to render the variable in the UI. Format of the string value: TBD. */
 		kind?: string;
 	}
