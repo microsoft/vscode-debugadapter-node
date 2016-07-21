@@ -111,6 +111,18 @@ export class Module implements DebugProtocol.Module {
 	}
 }
 
+export class CompletionItem implements DebugProtocol.CompletionItem {
+	label: string;
+	start: number;
+	length: number;
+
+	public constructor(label: string, start: number, length: number = 0) {
+		this.label = label;
+		this.start = start;
+		this.length = length;
+	}
+}
+
 export class StoppedEvent extends Event implements DebugProtocol.StoppedEvent {
 	body: {
 		reason: string;
@@ -452,6 +464,9 @@ export class DebugSession extends ProtocolServer {
 			} else if (request.command === 'stepInTargets') {
 				this.stepInTargetsRequest(<DebugProtocol.StepInTargetsResponse> response, request.arguments);
 
+			} else if (request.command === 'completions') {
+				this.completionsRequest(<DebugProtocol.CompletionsResponse> response, request.arguments);
+
 			} else {
 				this.customRequest(request.command, <DebugProtocol.Response> response, request.arguments);
 			}
@@ -485,6 +500,9 @@ export class DebugSession extends ProtocolServer {
 
 		// This default debug adapter does not support the 'stepInTargetsRequest' request.
 		response.body.supportsStepInTargetsRequest = false;
+
+		// This default debug adapter does not support the 'completionsRequest' request.
+		response.body.supportsCompletionsRequest = false;
 
 		this.sendResponse(response);
 	}
@@ -575,6 +593,10 @@ export class DebugSession extends ProtocolServer {
 	}
 
 	protected stepInTargetsRequest(response: DebugProtocol.StepInTargetsResponse, args: DebugProtocol.StepInTargetsArguments): void {
+		this.sendResponse(response);
+	}
+
+	protected completionsRequest(response: DebugProtocol.CompletionsResponse, args: DebugProtocol.CompletionsArguments): void {
 		this.sendResponse(response);
 	}
 

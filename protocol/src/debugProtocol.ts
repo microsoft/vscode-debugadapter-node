@@ -650,6 +650,41 @@ export module DebugProtocol {
 		};
 	}
 
+	/** EXPERIMENTAL, DO NOT USE!
+		CompletionsRequest request; value of command field is "completions".
+		Returns a list of possible completions for a given caret position and text.
+		The CompletionsRequest may only be called if the "supportsCompletionsRequest" capability exists and is true.
+	 */
+	export interface CompletionsRequest extends Request {
+		arguments: CompletionsArguments;
+	}
+	/** Arguments for "completions" request. */
+	export interface CompletionsArguments {
+		/** One or more source lines. Typically this is the text a user has typed into the debug console before he asked for completion. */
+		text: string;
+		/** The character position for which to determine the completion proposals. */
+		column: number;
+		/** An optional line for which to determine the completion proposals. If missing the first line of the text is assumed. */
+		line?: number;
+	}
+	/** Response to "completions" request. */
+	export interface CompletionsResponse extends Response {
+		body: {
+			/** The possible completions for . */
+			targets: CompletionItem[];
+		};
+	}
+
+	export interface CompletionItem {
+		/** The label of this completion item. By default this is also the text that is inserted when selecting this completion. */
+		label: string;
+		/** If text is not falsy then it is inserted instead of the label. */
+		text?: string;
+		/** When a completion is selected it replaces 'length' characters starting at 'start' in the text passed to the CompletionsRequest. */
+		start: number;
+		length: number;
+	}
+
 	//---- Types
 
 	/** Information about the capabilities of a debug adapter. */
@@ -670,8 +705,10 @@ export module DebugProtocol {
 		supportsSetVariable?: boolean;
 		/** The debug adapter supports restarting a frame. */
 		supportsRestartFrame?: boolean;
-		/** The debug adapter supports stepInTargetsRequest. */
+		/** The debug adapter supports the stepInTargetsRequest. */
 		supportsStepInTargetsRequest?: boolean;
+		/** The debug adapter supports the completionsRequest. */
+		supportsCompletionsRequest?: boolean;
 	}
 
 	/** An ExceptionBreakpointsFilter is shown in the UI as an option for configuring how exceptions are dealt with. */

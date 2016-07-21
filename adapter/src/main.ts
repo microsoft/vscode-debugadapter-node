@@ -8,7 +8,7 @@ import {
 	DebugSession,
 	InitializedEvent, TerminatedEvent, StoppedEvent, ContinuedEvent, OutputEvent, ThreadEvent, BreakpointEvent, ModuleEvent,
 	Thread, StackFrame, Scope, Variable,
-	Breakpoint, Source, Module,
+	Breakpoint, Source, Module, CompletionItem,
 	ErrorDestination
 } from './debugSession';
 import { Event, Response } from './messages';
@@ -18,7 +18,7 @@ export {
 	DebugSession,
 	InitializedEvent, TerminatedEvent, StoppedEvent, ContinuedEvent, OutputEvent, ThreadEvent, BreakpointEvent, ModuleEvent,
 	Thread, StackFrame, Scope, Variable,
-	Breakpoint, Source, Module,
+	Breakpoint, Source, Module, CompletionItem,
 	ErrorDestination,
 	Event, Response,
 	Handles

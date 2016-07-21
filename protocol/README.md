@@ -16,6 +16,7 @@ This npm module contains declarations for the json-based Visual Studio Code debu
   * Introduces a `ContinuedEvent` so that a debug adapter can explicit trigger that a thread has continued execution.
   * Adds support for step in targets (request `StepInTargetsRequest`, type `StepInTarget`, capability `supportsStepInTargetsRequest`)
   * Adds support for variable paging, that is children of a variable can be requested in pages (chunks).
+  * Adds experimental support for completion proposals.
 
 * 1.10.x:
   * Introduces a `stepBack` request and a corresponding `supportsStepBack` capability.
