@@ -772,22 +772,6 @@ export module DebugProtocol {
 		default?: boolean
 	}
 
-	/** A GotoTarget describes a code location that can be used as a target in the 'goto' request.
-		The possible goto targets can be determined via the 'gotoTargets' request.
-	 */
-	export interface GotoTarget {
-		/** Unique identifier for a goto target. This is used in the goto request. */
-		id: number;
-		/** The line of the goto target. */
-		line: number;
-		/** An optional column of the goto target. */
-		column?: number;
-		/** An optional end line of the range covered by the goto target. */
-		endLine?: number;
-		/** An optional end column of the range covered by the goto target. */
-		endColumn?: number;
-	}
-
 	/** A structured message object. Used to return errors from requests. */
 	export interface Message {
 		/** Unique identifier for the message. */
@@ -993,5 +977,23 @@ export module DebugProtocol {
 		id: number;
 		/** The name of the stepIn target (shown in the UI). */
  		label: string;
+	}
+
+	/** A GotoTarget describes a code location that can be used as a target in the 'goto' request.
+		The possible goto targets can be determined via the 'gotoTargets' request.
+	 */
+	export interface GotoTarget {
+		/** Unique identifier for a goto target. This is used in the goto request. */
+		id: number;
+		/** The name of the goto target (shown in the UI). */
+ 		label: string;
+		/** The line of the goto target. */
+		line: number;
+		/** An optional column of the goto target. */
+		column?: number;
+		/** An optional end line of the range covered by the goto target. */
+		endLine?: number;
+		/** An optional end column of the range covered by the goto target. */
+		endColumn?: number;
 	}
 }
