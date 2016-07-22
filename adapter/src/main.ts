@@ -6,9 +6,9 @@
 
 import {
 	DebugSession,
-	InitializedEvent, TerminatedEvent, StoppedEvent, OutputEvent, ThreadEvent, BreakpointEvent, ModuleEvent,
+	InitializedEvent, TerminatedEvent, StoppedEvent, ContinuedEvent, OutputEvent, ThreadEvent, BreakpointEvent, ModuleEvent,
 	Thread, StackFrame, Scope, Variable,
-	Breakpoint, Source, Module,
+	Breakpoint, Source, Module, CompletionItem,
 	ErrorDestination
 } from './debugSession';
 import { Event, Response } from './messages';
@@ -16,9 +16,9 @@ import { Handles } from './handles';
 
 export {
 	DebugSession,
-	InitializedEvent, TerminatedEvent, StoppedEvent, OutputEvent, ThreadEvent, BreakpointEvent, ModuleEvent,
+	InitializedEvent, TerminatedEvent, StoppedEvent, ContinuedEvent, OutputEvent, ThreadEvent, BreakpointEvent, ModuleEvent,
 	Thread, StackFrame, Scope, Variable,
-	Breakpoint, Source, Module,
+	Breakpoint, Source, Module, CompletionItem,
 	ErrorDestination,
 	Event, Response,
 	Handles
