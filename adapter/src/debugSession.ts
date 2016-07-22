@@ -76,10 +76,13 @@ export class Variable implements DebugProtocol.Variable {
 	value: string;
 	variablesReference: number;
 
-	public constructor(name: string, value: string, ref: number = 0) {
+	public constructor(name: string, value: string, ref: number = 0, totalVariables?: number) {
 		this.name = name;
 		this.value = value;
 		this.variablesReference = ref;
+		if (typeof totalVariables === 'number') {
+			(<DebugProtocol.Variable>this).totalVariables = totalVariables;
+		}
 	}
 }
 
@@ -155,8 +158,7 @@ export class ContinuedEvent extends Event implements DebugProtocol.ContinuedEven
 		};
 
 		if (typeof allThreadsContinued === 'boolean') {
-			const e: DebugProtocol.ContinuedEvent = this;
-			e.body.allThreadsContinued = allThreadsContinued;
+			(<DebugProtocol.ContinuedEvent>this).body.allThreadsContinued = allThreadsContinued;
 		}
 	}
 }
@@ -506,6 +508,9 @@ export class DebugSession extends ProtocolServer {
 
 		// This default debug adapter does not support the 'stepInTargetsRequest' request.
 		response.body.supportsStepInTargetsRequest = false;
+
+		// This default debug adapter does not support the 'gotoTargetsRequest' request.
+		response.body.supportsGotoTargetsRequest = false;
 
 		// This default debug adapter does not support the 'completionsRequest' request.
 		response.body.supportsCompletionsRequest = false;
