@@ -196,8 +196,7 @@ export module DebugProtocol {
 
 		/** Client supports the optional type attribute for variables. */
 		supportsVariableType?: boolean;
-		/** EXPERIMENTAL, DO NOT USE!
-			Client supports the paging of variables. */
+		/** Client supports the paging of variables. */
 		supportsVariablePaging?: boolean;
 	}
 	/** Response to Initialize request. */
@@ -525,11 +524,9 @@ export module DebugProtocol {
 	export interface VariablesArguments {
 		/** The Variable reference. */
 		variablesReference: number;
-		/** EXPERIMENTAL, DO NOT USE!
-			The index of the first variable to return; if omitted children start at 0. */
+		/** The index of the first variable to return; if omitted children start at 0. */
 		start?: number;
-		/** EXPERIMENTAL, DO NOT USE!
-			The number of variables to return. If count is missing or 0, all variables are returned. */
+		/** The number of variables to return. If count is missing or 0, all variables are returned. */
 		count?: number;
 	}
 	/** Response to "variables" request. */
@@ -645,11 +642,10 @@ export module DebugProtocol {
 			type?: string;
 			/** If variablesReference is > 0, the evaluate result is structured and its children can be retrieved by passing variablesReference to the VariablesRequest */
 			variablesReference: number;
-			/** EXPERIMENTAL, DO NOT USE!
-				The total number of child variables.
+			/** The total number of child variables.
 				If this number is large, the number should be returned via the optional 'totalCount' attribute.
 				The client can use this information to present the variables in a paged UI and fetch them in chunks. */
-			totalCount?: number;
+			totalVariables?: number;
 		};
 	}
 
@@ -729,9 +725,10 @@ export module DebugProtocol {
 		label: string;
 		/** If text is not falsy then it is inserted instead of the label. */
 		text?: string;
-		/** When a completion is selected it replaces 'length' characters starting at 'start' in the text passed to the CompletionsRequest. */
-		start: number;
-		length: number;
+		/** When a completion is selected it replaces 'length' characters starting at 'start' in the text passed to the CompletionsRequest.
+			If missing the frontend will try to determine these values heuristically. */
+		start?: number;
+		length?: number;
 	}
 
 	//---- Types
@@ -897,10 +894,9 @@ export module DebugProtocol {
 		name: string;
 		/** The variables of this scope can be retrieved by passing the value of variablesReference to the VariablesRequest. */
 		variablesReference: number;
-		/** EXPERIMENTAL, DO NOT USE!
-			The total number of variables in this scope.
+		/** The total number of variables in this scope.
 			The client can use this optional information to present the variables in a paged UI and fetch them in chunks. */
-		totalCount?: number;
+		totalVariables?: number;
 		/** If true, the number of variables in this scope is large or expensive to retrieve. */
 		expensive: boolean;
 	}
@@ -921,9 +917,8 @@ export module DebugProtocol {
 		value: string;
 		/** If variablesReference is > 0, the variable is structured and its children can be retrieved by passing variablesReference to the VariablesRequest. */
 		variablesReference: number;
-		/** EXPERIMENTAL, DO NOT USE!
-			The total number of child variables. */
-		totalCount?: number;
+		/** The total number of child variables. */
+		totalVariables?: number;
 		/** Properties of a variable that can be used to determine how to render the variable in the UI. Format of the string value: TBD. */
 		kind?: string;
 	}
