@@ -643,7 +643,7 @@ export module DebugProtocol {
 			/** If variablesReference is > 0, the evaluate result is structured and its children can be retrieved by passing variablesReference to the VariablesRequest */
 			variablesReference: number;
 			/** The total number of child variables.
-				If this number is large, the number should be returned via the optional 'totalCount' attribute.
+				If this number is large, the number should be returned via the optional 'totalVariables' attribute.
 				The client can use this information to present the variables in a paged UI and fetch them in chunks. */
 			totalVariables?: number;
 		};
@@ -905,7 +905,7 @@ export module DebugProtocol {
 		Optionally a variable can have a 'type' that is shown if space permits or when hovering over the variable's name.
 		An optional 'kind' is used to render additional properties of the variable, e.g. different icons can be used to indicate that a variable is public or private.
 		If the value is structured (has children), a handle is provided to retrieve the children with the VariablesRequest.
-		If the number of children is large, the number should be returned via the optional 'totalCount' attribute.
+		If the number of children is large, the number should be returned via the optional 'totalVariables' attribute.
 		The client can use this optional information to present the children in a paged UI and fetch them in chunks.
 	*/
 	export interface Variable {
