@@ -437,6 +437,9 @@ export class DebugSession extends ProtocolServer {
 			} else if (request.command === 'restartFrame') {
 				this.restartFrameRequest(<DebugProtocol.RestartFrameResponse> response, request.arguments);
 
+			} else if (request.command === 'goto') {
+				this.gotoRequest(<DebugProtocol.GotoResponse> response, request.arguments);
+
 			} else if (request.command === 'pause') {
 				this.pauseRequest(<DebugProtocol.PauseResponse> response, request.arguments);
 
@@ -463,6 +466,9 @@ export class DebugSession extends ProtocolServer {
 
 			} else if (request.command === 'stepInTargets') {
 				this.stepInTargetsRequest(<DebugProtocol.StepInTargetsResponse> response, request.arguments);
+
+			} else if (request.command === 'gotoTargets') {
+				this.gotoTargetsRequest(<DebugProtocol.GotoTargetsResponse> response, request.arguments);
 
 			} else if (request.command === 'completions') {
 				this.completionsRequest(<DebugProtocol.CompletionsResponse> response, request.arguments);
@@ -560,6 +566,10 @@ export class DebugSession extends ProtocolServer {
 		this.sendResponse(response);
 	}
 
+	protected gotoRequest(response: DebugProtocol.GotoResponse, args: DebugProtocol.GotoArguments) : void {
+		this.sendResponse(response);
+	}
+
 	protected pauseRequest(response: DebugProtocol.PauseResponse, args: DebugProtocol.PauseArguments) : void {
 		this.sendResponse(response);
 	}
@@ -593,6 +603,10 @@ export class DebugSession extends ProtocolServer {
 	}
 
 	protected stepInTargetsRequest(response: DebugProtocol.StepInTargetsResponse, args: DebugProtocol.StepInTargetsArguments): void {
+		this.sendResponse(response);
+	}
+
+	protected gotoTargetsRequest(response: DebugProtocol.GotoTargetsResponse, args: DebugProtocol.GotoTargetsArguments): void {
 		this.sendResponse(response);
 	}
 
