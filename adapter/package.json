@@ -1,7 +1,7 @@
 {
 	"name": "vscode-debugadapter",
 	"description": "Debug adapter implementation for node",
-	"version": "1.11.0-pre.10",
+	"version": "1.11.0-pre.11",
 	"author": "Microsoft Corporation",
 	"license": "MIT",
 	"repository": {
