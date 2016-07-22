@@ -434,6 +434,26 @@ export module DebugProtocol {
 	export interface RestartFrameResponse extends Response {
 	}
 
+	/** Goto request; value of command field is "goto".
+		The request sets the location where the debuggee will continue to run.
+		This makes it possible to skip the execution of code or to executed code again.
+		The code between the current location and the goto target is not executed but skipped.
+		The debug adapter first sends the GotoResponse and then a StoppedEvent (event type 'goto').
+	*/
+	export interface GotoRequest extends Request {
+		arguments: GotoArguments;
+	}
+	/** Arguments for "goto" request. */
+	export interface GotoArguments {
+		/** Set the goto target for this thread. */
+		threadId: number;
+		/** The location where the debuggee will continue to run. */
+		targetId: number;
+	}
+	/** Response to "goto" request. This is just an acknowledgement, so no body field is required. */
+	export interface GotoResponse extends Response {
+	}
+
 	/** Pause request; value of command field is "pause".
 		The request suspenses the debuggee.
 		The debug adapter first sends the PauseResponse and then a StoppedEvent (event type 'pause') after the thread has been paused successfully.
@@ -654,6 +674,31 @@ export module DebugProtocol {
 		};
 	}
 
+	/** GotoTargets request; value of command field is "gotoTargets".
+		This request retrieves the possible goto targets for the specified source location.
+		These targets can be used in the "goto" request.
+		The GotoTargets request may only be called if the "supportsGotoTargetsRequest" capability exists and is true.
+	 */
+	export interface GotoTargetsRequest extends Request {
+		arguments: GotoTargetsArguments;
+	}
+	/** Arguments for "gotoTargets" request. */
+	export interface GotoTargetsArguments {
+		/** The source location for which the goto targets are determined. */
+		source: Source;
+		/** The line location for which the goto targets are determined. */
+		line: number;
+		/** An optional column location for which the goto targets are determined. */
+		column?: number;
+	}
+	/** Response to "gotoTargets" request. */
+	export interface GotoTargetsResponse extends Response {
+		body: {
+			/** The possible goto targets of the specified location. */
+			targets: GotoTarget[];
+		};
+	}
+
 	/** EXPERIMENTAL, DO NOT USE!
 		CompletionsRequest request; value of command field is "completions".
 		Returns a list of possible completions for a given caret position and text.
@@ -709,6 +754,8 @@ export module DebugProtocol {
 		supportsSetVariable?: boolean;
 		/** The debug adapter supports restarting a frame. */
 		supportsRestartFrame?: boolean;
+		/** The debug adapter supports the gotoTargetsRequest. */
+		supportsGotoTargetsRequest?: boolean;
 		/** The debug adapter supports the stepInTargetsRequest. */
 		supportsStepInTargetsRequest?: boolean;
 		/** The debug adapter supports the completionsRequest. */
@@ -723,6 +770,22 @@ export module DebugProtocol {
 		label: string,
 		/** Initial value of the filter. If not specified a value 'false' is assumed. */
 		default?: boolean
+	}
+
+	/** A GotoTarget describes a code location that can be used as a target in the 'goto' request.
+		The possible goto targets can be determined via the 'gotoTargets' request.
+	 */
+	export interface GotoTarget {
+		/** Unique identifier for a goto target. This is used in the goto request. */
+		id: number;
+		/** The line of the goto target. */
+		line: number;
+		/** An optional column of the goto target. */
+		column?: number;
+		/** An optional end line of the range covered by the goto target. */
+		endLine?: number;
+		/** An optional end column of the range covered by the goto target. */
+		endColumn?: number;
 	}
 
 	/** A structured message object. Used to return errors from requests. */
