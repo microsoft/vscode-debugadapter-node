@@ -76,12 +76,15 @@ export class Variable implements DebugProtocol.Variable {
 	value: string;
 	variablesReference: number;
 
-	public constructor(name: string, value: string, ref: number = 0, totalVariables?: number) {
+	public constructor(name: string, value: string, ref: number = 0, indexedVariables?: number, namedVariables?: number) {
 		this.name = name;
 		this.value = value;
 		this.variablesReference = ref;
-		if (typeof totalVariables === 'number') {
-			(<DebugProtocol.Variable>this).totalVariables = totalVariables;
+		if (typeof namedVariables === 'number') {
+			(<DebugProtocol.Variable>this).namedVariables = namedVariables;
+		}
+		if (typeof indexedVariables === 'number') {
+			(<DebugProtocol.Variable>this).indexedVariables = indexedVariables;
 		}
 	}
 }
