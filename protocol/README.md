@@ -7,6 +7,10 @@ This npm module contains declarations for the json-based Visual Studio Code debu
 
 ## History
 
+* 1.12.x:
+  * Adds a new optional attribute `frameId` to the `completionRequest`.
+  * Introduces a `runInTerminalRequest` so that a debug adapter can run a debuggee in a terminal managed by the frontend.
+
 * 1.11.x:
   * Adds a new optional attribute `mimeType` to the `SourceResponse`.
   * Adds a new optional attribute `sourceModified` to the `SetBreakpointsArguments` that indicates that the underlying source has been modified which results in new breakpoint locations.

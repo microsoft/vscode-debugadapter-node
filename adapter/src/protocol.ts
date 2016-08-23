@@ -16,6 +16,7 @@ export class ProtocolServer extends ee.EventEmitter {
 	private _contentLength: number;
 	private _sequence: number;
 	private _writableStream: NodeJS.WritableStream;
+	private _pendingRequests = new Map<number, (response: DebugProtocol.Response) => void>();
 
 	constructor() {
 		super();
@@ -60,6 +61,36 @@ export class ProtocolServer extends ee.EventEmitter {
 		}
 	}
 
+	public sendRequest(command: string, args: any, timeout: number, cb: (response: DebugProtocol.Response) => void) : void {
+
+		const request: any = {
+			command: command
+		};
+		if (args && Object.keys(args).length > 0) {
+			request.arguments = args;
+		}
+
+		if (!this._writableStream) {
+			this._emitEvent(new Event('error'));
+			return;
+		}
+
+		this._send('request', request);
+
+		if (cb) {
+			this._pendingRequests.set(request.seq, cb);
+
+			const timer = setTimeout(() => {
+				clearTimeout(timer);
+				const clb = this._pendingRequests.get(request.seq);
+				if (clb) {
+					this._pendingRequests.delete(request.seq);
+					clb(new Response(request, 'timeout'));
+				}
+			}, timeout);
+		}
+	}
+
 	// ---- protected ----------------------------------------------------------
 
 	protected dispatchRequest(request: DebugProtocol.Request): void {
@@ -97,6 +128,13 @@ export class ProtocolServer extends ee.EventEmitter {
 							let msg: DebugProtocol.ProtocolMessage = JSON.parse(message);
 							if (msg.type === 'request') {
 								this.dispatchRequest(<DebugProtocol.Request> msg);
+							} else if (msg.type === 'response') {
+								const response = <DebugProtocol.Response> msg;
+								const clb = this._pendingRequests.get(response.request_seq);
+								if (clb) {
+									this._pendingRequests.delete(response.request_seq);
+									clb(response);
+								}
 							}
 						}
 						catch (e) {
