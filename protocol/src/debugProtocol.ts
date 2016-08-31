@@ -173,6 +173,7 @@ export module DebugProtocol {
 		With this request a debug adapter can run a command in a terminal.
 	*/
 	export interface RunInTerminalRequest extends Request {
+		command: "runInTerminal";
 		arguments: RunInTerminalRequestArguments;
 	}
 	/** Arguments for "runInTerminal" request. */
@@ -1026,7 +1027,7 @@ export module DebugProtocol {
 		endColumn?: number;
 	}
 
-	/** CompletionItem are the suggestions returned from the CompletionsRequest.
+	/** CompletionItems are the suggestions returned from the CompletionsRequest.
 	 */
 	export interface CompletionItem {
 		/** The label of this completion item. By default this is also the text that is inserted when selecting this completion. */
