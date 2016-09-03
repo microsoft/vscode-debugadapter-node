@@ -11,45 +11,50 @@ export module DebugProtocol {
 
 	/** Base class of requests, responses, and events. */
 	export interface ProtocolMessage {
-		/** Sequence number */
+		/** Sequence number. */
 		seq: number;
-		/** One of "request", "response", or "event" */
+		/** One of 'request', 'response', or 'event'. */
 		type: string;
 	}
 
 	/** Client-initiated request */
 	export interface Request extends ProtocolMessage {
-		/** The command to execute */
+		type: 'request';
+		/** The command to execute. */
 		command: string;
-		/** Object containing arguments for the command */
-		arguments?: any;
+		/** Object containing arguments for the command. */
+		arguments?: {
+		};
 	}
 
-	/** Server-initiated event */
+	/** Server-initiated event. */
 	export interface Event extends ProtocolMessage {
-		/** Type of event */
+		type: 'event';
+		/** Type of event. */
 		event: string;
-		/** Event-specific information */
-		body?: any;
+		/** Event-specific information. */
+		body?: {
+		};
 	}
 
-	/** Server-initiated response to client request */
+	/** Server-initiated response to client request. */
 	export interface Response extends ProtocolMessage {
-		/** Sequence number of the corresponding request */
+		type: 'response';
+		/** Sequence number of the corresponding request. */
 		request_seq: number;
-		/** Outcome of the request */
+		/** Outcome of the request. */
 		success: boolean;
-		/** The command requested */
+		/** The command requested. */
 		command: string;
 		/** Contains error message if success == false. */
 		message?: string;
 		/** Contains request result if success is true and optional error details if success is false. */
-		body?: any;
+		body?: {};
 	}
 
 	//---- Events
 
-	/** Event message for "initialized" event type.
+	/** Event message for 'initialized' event type.
 		This event indicates that the debug adapter is ready to accept configuration requests (e.g. SetBreakpointsRequest, SetExceptionBreakpointsRequest).
 		A debug adapter is expected to send this event when it is ready to accept configuration requests (but not before the InitializeRequest has finished).
 		The sequence of events/requests is as follows:
@@ -61,13 +66,15 @@ export module DebugProtocol {
 		- frontend sends one ConfigurationDoneRequest to indicate the end of the configuration
 	*/
 	export interface InitializedEvent extends Event {
+		event: 'initialized';
 	}
 
-	/** Event message for "stopped" event type.
+	/** Event message for 'stopped' event type.
 		The event indicates that the execution of the debuggee has stopped due to some condition.
 		This can be caused by a break point previously set, a stepping action has completed, by executing a debugger statement etc.
 	*/
 	export interface StoppedEvent extends Event {
+		event: 'stopped';
 		body: {
 			/** The reason for the event (such as: 'step', 'breakpoint', 'exception', 'pause'). This string is shown in the UI. */
 			reason: string;
@@ -78,49 +85,53 @@ export module DebugProtocol {
 			/** If allThreadsStopped is true, a debug adapter can announce that all threads have stopped.
 			 *  The client should use this information to enable that all threads can be expanded to access their stacktraces.
 			 *  If the attribute is missing or false, only the thread with the given threadId can be expanded.
-			 **/
+			 */
 			allThreadsStopped?: boolean;
 		};
 	}
 
-	/** Event message for "continued" event type.
+	/** Event message for 'continued' event type.
 		The event indicates that the execution of the debuggee has continued.
 		Please note: a debug adapter is not expected to send this event in response to a request that implies that execution continues, e.g. 'launch' or 'continue'.
 		It is only necessary to send a ContinuedEvent if there was no previous request that implied this.
 	*/
 	export interface ContinuedEvent extends Event {
+		event: 'continued';
 		body: {
 			/** The thread which was continued. */
 			threadId: number;
-			/** If allThreadsContinued is true, a debug adapter can announce that all threads have continued. **/
+			/** If allThreadsContinued is true, a debug adapter can announce that all threads have continued. */
 			allThreadsContinued?: boolean;
 		};
 	}
 
-	/** Event message for "exited" event type.
+	/** Event message for 'exited' event type.
 		The event indicates that the debuggee has exited.
 	*/
 	export interface ExitedEvent extends Event {
+		event: 'exited';
 		body: {
 			/** The exit code returned from the debuggee. */
 			exitCode: number;
 		};
 	}
 
-	/** Event message for "terminated" event types.
+	/** Event message for 'terminated' event types.
 		The event indicates that debugging of the debuggee has terminated.
 	*/
 	export interface TerminatedEvent extends Event {
+		event: 'terminated';
 		body?: {
 			/** A debug adapter may set 'restart' to true to request that the front end restarts the session. */
 			restart?: boolean;
-		}
+		};
 	}
 
-	/** Event message for "thread" event type.
+	/** Event message for 'thread' event type.
 		The event indicates that a thread has started or exited.
 	*/
 	export interface ThreadEvent extends Event {
+		event: 'thread';
 		body: {
 			/** The reason for the event (such as: 'started', 'exited'). */
 			reason: string;
@@ -129,54 +140,57 @@ export module DebugProtocol {
 		};
 	}
 
-	/** Event message for "output" event type.
+	/** Event message for 'output' event type.
 		The event indicates that the target has produced output.
 	*/
 	export interface OutputEvent extends Event {
+		event: 'output';
 		body: {
 			/** The category of output (such as: 'console', 'stdout', 'stderr', 'telemetry'). If not specified, 'console' is assumed. */
 			category?: string;
 			/** The output to report. */
 			output: string;
 			/** Optional data to report. For the 'telemetry' category the data will be sent to telemetry, for the other categories the data is shown in JSON format. */
-			data?: any;
+			data?: {};
 		};
 	}
 
-	/** Event message for "breakpoint" event type.
+	/** Event message for 'breakpoint' event type.
 		The event indicates that some information about a breakpoint has changed.
 	*/
 	export interface BreakpointEvent extends Event {
+		event: 'breakpoint';
 		body: {
 			/** The reason for the event (such as: 'changed', 'new'). */
 			reason: string;
 			/** The breakpoint. */
 			breakpoint: Breakpoint;
-		}
+		};
 	}
 
-	/** Event message for "module" event type.
+	/** Event message for 'module' event type.
 		The event indicates that some information about a module has changed.
 	 */
 	export interface ModuleEvent extends Event {
+		event: 'module';
 		body: {
 			/** The reason for the event. */
 			reason: 'new' | 'changed' | 'removed';
 			/** The new, changed, or removed module. In case of 'removed' only the module id is used. */
 			module: Module;
-		}
+		};
 	}
 
 	//---- Frontend Requests
 
-	/** runInTerminal request; value of command field is "runInTerminal".
+	/** runInTerminal request; value of command field is 'runInTerminal'.
 		With this request a debug adapter can run a command in a terminal.
 	*/
 	export interface RunInTerminalRequest extends Request {
-		command: "runInTerminal";
+		command: 'runInTerminal';
 		arguments: RunInTerminalRequestArguments;
 	}
-	/** Arguments for "runInTerminal" request. */
+	/** Arguments for 'runInTerminal' request. */
 	export interface RunInTerminalRequestArguments {
 		/** What kind of terminal to launch. */
 		kind?: 'integrated' | 'external';
@@ -192,7 +206,7 @@ export module DebugProtocol {
 	/** Response to Initialize request. */
 	export interface RunInTerminalResponse extends Response {
 		body: {
-			/** The process ID */
+			/** The process ID. */
 			processId?: number;
 		};
 	}

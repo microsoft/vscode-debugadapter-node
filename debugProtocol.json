@@ -1,0 +1,611 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"title": "VS Code Debug Protocol",
+	"description": "A json schema for the VS Code Debug Protocol",
+	"type": "object",
+
+	"properties": {
+		"test": {
+		  "$ref": "#/definitions/ModuleEvent"
+		}
+	},
+
+	"definitions": {
+
+		"ProtocolMessage": {
+			"type": "object",
+			"description": "Base class of requests, responses, and events.",
+			"properties": {
+				"seq": {
+					"type": "integer",
+					"description": "Sequence number."
+				},
+				"type": {
+					"type": "string",
+					"description": "One of 'request', 'response', or 'event'.",
+					"enum": [ "request", "response", "event" ]
+				}
+			},
+			"required": [ "seq", "type" ]
+		},
+
+		"Request": {
+			"allOf": [ { "$ref": "#/definitions/ProtocolMessage" }, {
+				"type": "object",
+				"description": "Request.",
+				"properties": {
+					"type": {
+						"type": "string",
+						"enum": [ "request" ]
+					},
+					"command": {
+						"type": "string",
+						"description": "The command to execute."
+					},
+					"arguments": {
+						"type": "object",
+						"description": "Object containing arguments for the command."
+					}
+				},
+				"required": [ "type", "command" ]
+			}]
+		},
+
+		"Event": {
+			"allOf": [ { "$ref": "#/definitions/ProtocolMessage" }, {
+				"type": "object",
+				"description": "Event.",
+				"properties": {
+					"type": {
+						"type": "string",
+						"enum": [ "event" ]
+					},
+					"event": {
+						"type": "string",
+						"description": "Type of event."
+					},
+					"body": {
+						"type": "object",
+						"description": "Event-specific information."
+					}
+				},
+				"required": [ "type", "event" ]
+			}]
+		},
+
+		"Response": {
+			"allOf": [ { "$ref": "#/definitions/ProtocolMessage" }, {
+				"type": "object",
+				"description": "Response to a request.",
+				"properties": {
+					"type": {
+						"type": "string",
+						"enum": [ "response" ]
+					},
+					"request_seq": {
+						"type": "integer",
+						"description": "Sequence number of the corresponding request."
+					},
+					"success": {
+						"type": "boolean",
+						"description": "Outcome of the request."
+					},
+					"command": {
+						"type": "string",
+						"description": "The command requested."
+					},
+					"message": {
+						"type": "string",
+						"description": "Contains error message if success == false."
+					},
+					"body": {
+						"type": "object",
+						"description": "Contains request result if success is true and optional error details if success is false."
+					}
+				},
+				"required": [ "type", "request_seq", "success", "command" ]
+			}]
+		},
+
+		"InitializedEvent": {
+			"allOf": [ { "$ref": "#/definitions/Event" }, {
+				"type": "object",
+				"description": "Event message for 'initialized' event type.\nThis event indicates that the debug adapter is ready to accept configuration requests (e.g. SetBreakpointsRequest, SetExceptionBreakpointsRequest).\nA debug adapter is expected to send this event when it is ready to accept configuration requests (but not before the InitializeRequest has finished).\nThe sequence of events/requests is as follows:\n- adapters sends InitializedEvent (after the InitializeRequest has returned)\n- frontend sends zero or more SetBreakpointsRequest\n- frontend sends one SetFunctionBreakpointsRequest\n- frontend sends a SetExceptionBreakpointsRequest if one or more exceptionBreakpointFilters have been defined (or if supportsConfigurationDoneRequest is not defined or false)\n- frontend sends other future configuration requests\n- frontend sends one ConfigurationDoneRequest to indicate the end of the configuration",
+				"properties": {
+					"event": {
+						"type": "string",
+						"enum": [ "initialized" ]
+					}
+				},
+				"required": [ "event" ]
+			}]
+		},
+
+		"StoppedEvent": {
+			"allOf": [ { "$ref": "#/definitions/Event" }, {
+				"type": "object",
+				"description": "Event message for 'stopped' event type.\nThe event indicates that the execution of the debuggee has stopped due to some condition.\nThis can be caused by a break point previously set, a stepping action has completed, by executing a debugger statement etc.",
+				"properties": {
+					"event": {
+						"type": "string",
+						"enum": [ "stopped" ]
+					},
+					"body": {
+						"type": "object",
+						"properties": {
+							"reason": {
+								"type": "string",
+								"description": "The reason for the event (such as: 'step', 'breakpoint', 'exception', 'pause'). This string is shown in the UI.",
+								"enum": [ "step", "breakpoint", "exception", "pause" ]
+							},
+							"threadId": {
+								"type": "integer",
+								"description": "The thread which was stopped."
+							},
+							"text": {
+								"type": "string",
+								"description": "Additional information. E.g. if reason is 'exception', text contains the exception name. This string is shown in the UI."
+							},
+							"allThreadsStopped": {
+								"type": "boolean",
+								"description": "If allThreadsStopped is true, a debug adapter can announce that all threads have stopped.\n*  The client should use this information to enable that all threads can be expanded to access their stacktraces.\n*  If the attribute is missing or false, only the thread with the given threadId can be expanded."
+							}
+						},
+						"required": [ "reason" ]
+					}
+				},
+				"required": [ "event", "body" ]
+			}]
+		},
+
+		"ContinuedEvent": {
+			"allOf": [ { "$ref": "#/definitions/Event" }, {
+				"type": "object",
+				"description": "Event message for 'continued' event type.\nThe event indicates that the execution of the debuggee has continued.\nPlease note: a debug adapter is not expected to send this event in response to a request that implies that execution continues, e.g. 'launch' or 'continue'.\nIt is only necessary to send a ContinuedEvent if there was no previous request that implied this.",
+				"properties": {
+					"event": {
+						"type": "string",
+						"enum": [ "continued" ]
+					},
+					"body": {
+						"type": "object",
+						"properties": {
+							"threadId": {
+								"type": "integer",
+								"description": "The thread which was continued."
+							},
+							"allThreadsContinued": {
+								"type": "boolean",
+								"description": "If allThreadsContinued is true, a debug adapter can announce that all threads have continued."
+							}
+						},
+						"required": [ "threadId" ]
+					}
+				},
+				"required": [ "event", "body" ]
+			}]
+		},
+
+		"ExitedEvent": {
+			"allOf": [ { "$ref": "#/definitions/Event" }, {
+				"type": "object",
+				"description": "Event message for 'exited' event type.\nThe event indicates that the debuggee has exited.",
+				"properties": {
+					"event": {
+						"type": "string",
+						"enum": [ "exited" ]
+					},
+					"body": {
+						"type": "object",
+						"properties": {
+							"exitCode": {
+								"type": "integer",
+								"description": "The exit code returned from the debuggee."
+							}
+						},
+						"required": [ "exitCode" ]
+					}
+				},
+				"required": [ "event", "body" ]
+			}]
+		},
+
+		"TerminatedEvent": {
+			"allOf": [ { "$ref": "#/definitions/Event" }, {
+				"type": "object",
+				"description": "Event message for 'terminated' event types.\nThe event indicates that debugging of the debuggee has terminated.",
+				"properties": {
+					"event": {
+						"type": "string",
+						"enum": [ "terminated" ]
+					},
+					"body": {
+						"type": "object",
+						"properties": {
+							"restart": {
+								"type": "boolean",
+								"description": "A debug adapter may set 'restart' to true to request that the front end restarts the session."
+							}
+						}
+					}
+				},
+				"required": [ "event" ]
+			}]
+		},
+
+		"ThreadEvent": {
+			"allOf": [ { "$ref": "#/definitions/Event" }, {
+				"type": "object",
+				"description": "Event message for 'thread' event type.\nThe event indicates that a thread has started or exited.",
+				"properties": {
+					"event": {
+						"type": "string",
+						"enum": [ "thread" ]
+					},
+					"body": {
+						"type": "object",
+						"properties": {
+							"reason": {
+								"type": "string",
+								"description": "The reason for the event (such as: 'started', 'exited').",
+								"enum": [ "started", "exited" ]
+							},
+							"threadId": {
+								"type": "integer",
+								"description": "The identifier of the thread."
+							}
+						},
+						"required": ["reason", "threadId"]
+					}
+				},
+				"required": [ "event", "body" ]
+			}]
+		},
+
+		"OutputEvent": {
+			"allOf": [ { "$ref": "#/definitions/Event" }, {
+				"type": "object",
+				"description": "Event message for 'output' event type.\nThe event indicates that the target has produced output.",
+				"properties": {
+					"event": {
+						"type": "string",
+						"enum": [ "output" ]
+					},
+					"body": {
+						"type": "object",
+						"properties": {
+							"category": {
+								"type": "string",
+								"description": "The category of output (such as: 'console', 'stdout', 'stderr', 'telemetry'). If not specified, 'console' is assumed.",
+								"enum": [ "console", "stdout", "stderr", "telemetry" ]
+							},
+							"output": {
+								"type": "string",
+								"description": "The output to report."
+							},
+							"data": {
+								"type": "object",
+								"description": "Optional data to report. For the 'telemetry' category the data will be sent to telemetry, for the other categories the data is shown in JSON format."
+							}
+						},
+						"required": ["output"]
+					}
+				},
+				"required": [ "event", "body" ]
+			}]
+		},
+
+		"BreakpointEvent": {
+			"allOf": [ { "$ref": "#/definitions/Event" }, {
+				"type": "object",
+				"description": "Event message for 'breakpoint' event type.\nThe event indicates that some information about a breakpoint has changed.",
+				"properties": {
+					"event": {
+						"type": "string",
+						"enum": [ "breakpoint" ]
+					},
+					"body": {
+						"type": "object",
+						"properties": {
+							"reason": {
+								"type": "string",
+								"description": "The reason for the event (such as: 'changed', 'new').",
+								"enum": [ "changed", "new" ]
+							},
+							"breakpoint": {
+								"$ref": "#/definitions/Breakpoint",
+								"description": "The breakpoint."
+							}
+						},
+						"required": [ "reason", "breakpoint" ]
+					}
+				},
+				"required": [ "event", "body" ]
+			}]
+		},
+
+		"ModuleEvent": {
+			"allOf": [ { "$ref": "#/definitions/Event" }, {
+				"type": "object",
+				"description": "Event message for 'module' event type.\nThe event indicates that some information about a module has changed.",
+				"properties": {
+					"event": {
+						"type": "string",
+						"enum": [ "module" ]
+					},
+					"body": {
+						"type": "object",
+						"properties": {
+							"reason": {
+								"type": "string",
+								"description": "The reason for the event.",
+								"enum": [ "new", "changed", "removed" ]
+							},
+							"module": {
+								"$ref": "#/definitions/Module",
+								"description": "The new, changed, or removed module. In case of 'removed' only the module id is used."
+							}
+						},
+						"required": [ "reason", "module" ]
+					}
+				},
+				"required": [ "event", "body" ]
+			}]
+		},
+
+		"RunInTerminalRequest": {
+			"allOf": [ { "$ref": "#/definitions/Request" }, {
+				"type": "object",
+				"description": "runInTerminal request; value of command field is 'runInTerminal'.\nWith this request a debug adapter can run a command in a terminal.",
+				"properties": {
+					"command": {
+						"type": "string",
+						"enum": [ "runInTerminal" ]
+					},
+					"arguments": {
+						"$ref": "#/definitions/RunInTerminalRequestArguments"
+					}
+				},
+				"required": [ "command", "arguments" ]
+			}]
+		},
+		"RunInTerminalRequestArguments": {
+			"type": "object",
+			"description": "Arguments for 'runInTerminal' request.",
+			"properties": {
+				"kind": {
+					"type": "string",
+					"enum": [ "integrated", "external" ],
+					"description": "What kind of terminal to launch."
+				},
+				"title": {
+					"type": "string",
+					"description": "Optional title of the terminal."
+				},
+				"cwd": {
+					"type": "string",
+					"description": "Working directory of the command."
+				},
+				"args": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"description": "List of arguments. The first argument is the command to run."
+				},
+				"env": {
+					"type": "object",
+					"description": "Environment key-value pairs that are added to the default environment."
+				}
+			},
+			"required": [ "args", "cwd" ]
+		},
+		"RunInTerminalResponse": {
+			"allOf": [ { "$ref": "#/definitions/Response" }, {
+				"type": "object",
+				"description": "Response to Initialize request.",
+				"properties": {
+					"body": {
+						"type": "object",
+						"properties": {
+							"processId": {
+								"type": "number",
+								"description": "The process ID."
+							}
+						}
+					}
+				},
+				"required": [ "body" ]
+			}]
+		},
+
+		"Capabilities": {
+			"type": "object",
+			"description": "Information about the capabilities of a debug adapter.",
+			"properties": {
+				"supportsConfigurationDoneRequest": {
+					"type": "boolean",
+					"description": "The debug adapter supports the configurationDoneRequest."
+				},
+				"supportsFunctionBreakpoints": {
+					"type": "boolean",
+					"description": "The debug adapter supports functionBreakpoints."
+				},
+				"supportsConditionalBreakpoints": {
+					"type": "boolean",
+					"description": "The debug adapter supports conditionalBreakpoints."
+				},
+				"supportsEvaluateForHovers": {
+					"type": "boolean",
+					"description": "The debug adapter supports a (side effect free) evaluate request for data hovers."
+				},
+				"exceptionBreakpointFilters": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ExceptionBreakpointsFilter"
+					},
+					"description": "Available filters for the setExceptionBreakpoints request."
+				},
+				"supportsStepBack": {
+					"type": "boolean",
+					"description": "The debug adapter supports stepping back."
+				},
+				"supportsSetVariable": {
+					"type": "boolean",
+					"description": "The debug adapter supports setting a variable to a value."
+				},
+				"supportsRestartFrame": {
+					"type": "boolean",
+					"description": "The debug adapter supports restarting a frame."
+				},
+				"supportsGotoTargetsRequest": {
+					"type": "boolean",
+					"description": "The debug adapter supports the gotoTargetsRequest."
+				},
+				"supportsStepInTargetsRequest": {
+					"type": "boolean",
+					"description": "The debug adapter supports the stepInTargetsRequest."
+				},
+				"supportsCompletionsRequest": {
+					"type": "boolean",
+					"description": "The debug adapter supports the completionsRequest."
+				}
+			}
+		},
+
+		"Module": {
+			"type": "object",
+			"description": "A Module object represents a row in the modules view.\nTwo attributes are mandatory: an id identifies a module in the modules view and is used in a ModuleEvent for identifying a module for adding, updating or deleting.\nThe name is used to minimally render the module in the UI.\n\nAdditional attributes can be added to the module. They will show up in the module View if they have a corresponding ColumnDescriptor.\n\nTo avoid an unnecessary proliferation of additional attributes with similar semantics but different names we recommend to re-use attributes from the 'recommended' list below first, and only introduce new attributes if nothing appropriate could be found.",
+			"properties": {
+				"id": {
+					"type": "integer",
+					"description": "Unique identifier for the module."
+				},
+				"name": {
+					"type": "string",
+					"description": "A name of the module."
+				},
+				"path": {
+					"type": "string",
+					"description": "optional but recommended attributes.\nalways try to use these first before introducing additional attributes.\n\nLogical full path to the module. The exact definition is implementation defined, but usually this would be a full path to the on-disk file for the module."
+				},
+				"isOptimized": {
+					"type": "boolean",
+					"description": "True if the module is optimized."
+				},
+				"isUserCode": {
+					"type": "boolean",
+					"description": "True if the module is considered 'user code' by a debugger that supports 'Just My Code'."
+				},
+				"version": {
+					"type": "string",
+					"description": "Version of Module."
+				},
+				"symbolStatus": {
+					"type": "string",
+					"description": "User understandable description of if symbols were found for the module (ex: 'Symbols Loaded', 'Symbols not found', etc."
+				},
+				"symbolFilePath": {
+					"type": "string",
+					"description": "Logical full path to the symbol file. The exact definition is implementation defined."
+				},
+				"dateTimeStamp": {
+					"type": "string",
+					"description": "Module created or modified."
+				},
+				"addressRange": {
+					"type": "string",
+					"description": "Address range covered by this module."
+				}
+			},
+			"required": [ "id", "name" ]
+		},
+
+		"ExceptionBreakpointsFilter": {
+			"type": "object",
+			"description": "An ExceptionBreakpointsFilter is shown in the UI as an option for configuring how exceptions are dealt with.",
+			"properties": {
+				"filter": {
+					"type": "string",
+					"description": "The internal ID of the filter. This value is passed to the setExceptionBreakpoints request."
+				},
+				"label": {
+					"type": "string",
+					"description": "The name of the filter. This will be shown in the UI."
+				},
+				"default": {
+					"type": "boolean",
+					"description": "Initial value of the filter. If not specified a value 'false' is assumed."
+				}
+			},
+			"required": ["filter", "label"]
+		},
+
+		"Source": {
+			"type": "object",
+			"description": "A Source is a descriptor for source code. It is returned from the debug adapter as part of a StackFrame and it is used by clients when specifying breakpoints.",
+			"properties": {
+				"name": {
+					"type": "string",
+					"description": "The short name of the source. Every source returned from the debug adapter has a name. When specifying a source to the debug adapter this name is optional."
+				},
+				"path": {
+					"type": "string",
+					"description": "The long (absolute) path of the source. It is not guaranteed that the source exists at this location."
+				},
+				"sourceReference": {
+					"type": "boolean",
+					"description": "If sourceReference > 0 the contents of the source can be retrieved through the SourceRequest. A sourceReference is only valid for a session, so it must not be used to persist a source."
+				},
+				"origin": {
+					"type": "boolean",
+					"description": "The (optional) origin of this source: possible values 'internal module', 'inlined content from source map', etc."
+				},
+				"adapterData": {
+					"type": "boolean",
+					"description": "Optional data that a debug adapter might want to loop through the client. The client should leave the data intact and persist it across sessions. The client should not interpret the data."
+				}
+			}
+		},
+
+		"Breakpoint": {
+			"type": "object",
+			"description": " Information about a Breakpoint created in setBreakpoints or setFunctionBreakpoints.",
+			"properties": {
+				"id": {
+					"type": "integer",
+					"description": "An optional unique identifier for the breakpoint."
+				},
+				"verified": {
+					"type": "boolean",
+					"description": "If true breakpoint could be set (but not necessarily at the desired location)."
+				},
+				"message": {
+					"type": "string",
+					"description": "An optional message about the state of the breakpoint. This is shown to the user and can be used to explain why a breakpoint could not be verified."
+				},
+				"source": {
+					"$ref": "#/definitions/Source",
+					"description": "The start line of the actual range covered by the breakpoint."
+				},
+				"line": {
+					"type": "integer",
+					"description": "The start line of the actual range covered by the breakpoint."
+				},
+				"column": {
+					"type": "integer",
+					"description": "An optional start column of the actual range covered by the breakpoint."
+				},
+				"endLine": {
+					"type": "integer",
+					"description": "An optional end line of the actual range covered by the breakpoint."
+				},
+				"endColumn": {
+					"type": "integer",
+					"description": "An optional end column of the actual range covered by the breakpoint. If no end line is given, then the end column is assumed to be in the start line."
+				}
+			},
+			"required": [ "verified" ]
+		}
+	}
+}
