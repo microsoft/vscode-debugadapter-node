@@ -6,7 +6,7 @@
 
 	"properties": {
 		"test": {
-		  "$ref": "#/definitions/ModuleEvent"
+		  "$ref": "#/definitions/CompletionItem"
 		}
 	},
 
@@ -54,7 +54,7 @@
 		"Event": {
 			"allOf": [ { "$ref": "#/definitions/ProtocolMessage" }, {
 				"type": "object",
-				"description": "Event.",
+				"description": "Server-initiated event.",
 				"properties": {
 					"type": {
 						"type": "string",
@@ -473,12 +473,68 @@
 			}
 		},
 
-		"Module": {
+		"ExceptionBreakpointsFilter": {
 			"type": "object",
-			"description": "A Module object represents a row in the modules view.\nTwo attributes are mandatory: an id identifies a module in the modules view and is used in a ModuleEvent for identifying a module for adding, updating or deleting.\nThe name is used to minimally render the module in the UI.\n\nAdditional attributes can be added to the module. They will show up in the module View if they have a corresponding ColumnDescriptor.\n\nTo avoid an unnecessary proliferation of additional attributes with similar semantics but different names we recommend to re-use attributes from the 'recommended' list below first, and only introduce new attributes if nothing appropriate could be found.",
+			"description": "An ExceptionBreakpointsFilter is shown in the UI as an option for configuring how exceptions are dealt with.",
+			"properties": {
+				"filter": {
+					"type": "string",
+					"description": "The internal ID of the filter. This value is passed to the setExceptionBreakpoints request."
+				},
+				"label": {
+					"type": "string",
+					"description": "The name of the filter. This will be shown in the UI."
+				},
+				"default": {
+					"type": "boolean",
+					"description": "Initial value of the filter. If not specified a value 'false' is assumed."
+				}
+			},
+			"required": [ "filter", "label" ]
+		},
+
+		"Message": {
+			"type": "object",
+			"description": "A structured message object. Used to return errors from requests.",
 			"properties": {
 				"id": {
 					"type": "integer",
+					"description": "Unique identifier for the message."
+				},
+				"format": {
+					"type": "string",
+					"description": "A format string for the message. Embedded variables have the form '{name}'.\nIf variable name starts with an underscore character, the variable does not contain user data (PII) and can be safely used for telemetry purposes."
+				},
+				"variables": {
+					"type": "object",
+					"description": "An object used as a dictionary for looking up the variables in the format string."
+				},
+				"sendTelemetry": {
+					"type": "boolean",
+					"description": "If true send to telemetry."
+				},
+				"showUser": {
+					"type": "boolean",
+					"description": "If true show user."
+				},
+				"url": {
+					"type": "string",
+					"description": "An optional url where additional information about this message can be found."
+				},
+				"urlLabel": {
+					"type": "string",
+					"description": "An optional label that is presented to the user as the UI for opening the url."
+				}
+			},
+			"required": [ "id", "format" ]
+		},
+
+		"Module": {
+			"type": "object",
+			"description": "A Module object represents a row in the modules view.\nTwo attributes are mandatory: an id identifies a module in the modules view and is used in a ModuleEvent for identifying a module for adding, updating or deleting.\nThe name is used to minimally render the module in the UI.\n\nAdditional attributes can be added to the module. They will show up in the module View if they have a corresponding ColumnDescriptor.\n\nTo avoid an unnecessary proliferation of additional attributes with similar semantics but different names\nwe recommend to re-use attributes from the 'recommended' list below first, and only introduce new attributes if nothing appropriate could be found.",
+			"properties": {
+				"id": {
+					"type": ["integer", "string"],
 					"description": "Unique identifier for the module."
 				},
 				"name": {
@@ -521,24 +577,58 @@
 			"required": [ "id", "name" ]
 		},
 
-		"ExceptionBreakpointsFilter": {
+		"ColumnDescriptor": {
 			"type": "object",
-			"description": "An ExceptionBreakpointsFilter is shown in the UI as an option for configuring how exceptions are dealt with.",
+			"description": "A ColumnDescriptor specifies what module attribute to show in a column of the ModulesView, how to format it, and what the column's label should be.\nIt is only used if the underlying UI actually supports this level of customization.",
 			"properties": {
-				"filter": {
+				"attributeName": {
 					"type": "string",
-					"description": "The internal ID of the filter. This value is passed to the setExceptionBreakpoints request."
+					"description": "Name of the attribute rendered in this column."
 				},
 				"label": {
 					"type": "string",
-					"description": "The name of the filter. This will be shown in the UI."
+					"description": "Header UI label of column."
 				},
-				"default": {
-					"type": "boolean",
-					"description": "Initial value of the filter. If not specified a value 'false' is assumed."
+				"format": {
+					"type": "string",
+					"description": "Format to use for the rendered values in this column. TBD how the format strings looks like."
+				},
+				"width": {
+					"type": "integer",
+					"description": "Width of this column in characters (hint only)."
 				}
 			},
-			"required": ["filter", "label"]
+			"required": [ "attributeName", "label", "format", "width" ]
+		},
+
+		"ModulesViewDescriptor": {
+			"type": "object",
+			"description": "The ModulesViewDescriptor is the container for all declarative configuration options of a ModuleView.\nFor now it only specifies the columns to be shown in the modules view.",
+			"properties": {
+				"columns": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ColumnDescriptor"
+					}
+				}
+			},
+			"required": [ "columns" ]
+		},
+
+		"Thread": {
+			"type": "object",
+			"description": "A Thread",
+			"properties": {
+				"id": {
+					"type": "integer",
+					"description": "Unique identifier for the thread."
+				},
+				"name": {
+					"type": "string",
+					"description": "A name of the thread."
+				}
+			},
+			"required": [ "id", "name" ]
 		},
 
 		"Source": {
@@ -554,23 +644,159 @@
 					"description": "The long (absolute) path of the source. It is not guaranteed that the source exists at this location."
 				},
 				"sourceReference": {
-					"type": "boolean",
+					"type": "number",
 					"description": "If sourceReference > 0 the contents of the source can be retrieved through the SourceRequest. A sourceReference is only valid for a session, so it must not be used to persist a source."
 				},
 				"origin": {
-					"type": "boolean",
+					"type": "string",
 					"description": "The (optional) origin of this source: possible values 'internal module', 'inlined content from source map', etc."
 				},
 				"adapterData": {
-					"type": "boolean",
+					"type": "object",
 					"description": "Optional data that a debug adapter might want to loop through the client. The client should leave the data intact and persist it across sessions. The client should not interpret the data."
 				}
 			}
 		},
 
+		"StackFrame": {
+			"type": "object",
+			"description": "A Stackframe contains the source location.",
+			"properties": {
+				"id": {
+					"type": "integer",
+					"description": "An identifier for the stack frame. It must be unique across all threads. This id can be used to retrieve the scopes of the frame with the 'scopesRequest' or to restart the execution of a stackframe."
+				},
+				"name": {
+					"type": "string",
+					"description": "The name of the stack frame, typically a method name."
+				},
+				"source": {
+					"$ref": "#/definitions/Source",
+					"description": "The optional source of the frame."
+				},
+				"line": {
+					"type": "integer",
+					"description": "The line within the file of the frame. If source is null or doesn't exist, line is 0 and must be ignored."
+				},
+				"column": {
+					"type": "integer",
+					"description": "The column within the line. If source is null or doesn't exist, column is 0 and must be ignored."
+				},
+				"endLine": {
+					"type": "integer",
+					"description": "An optional end line of the range covered by the stack frame."
+				},
+				"endColumn": {
+					"type": "integer",
+					"description": "An optional end column of the range covered by the stack frame."
+				}
+			},
+			"required": [ "id", "name", "line", "column" ]
+		},
+
+		"Scope": {
+			"type": "object",
+			"description": "A Scope is a named container for variables.",
+			"properties": {
+				"name": {
+					"type": "string",
+					"description": "Name of the scope such as 'Arguments', 'Locals'."
+				},
+				"variablesReference": {
+					"type": "integer",
+					"description": "The variables of this scope can be retrieved by passing the value of variablesReference to the VariablesRequest."
+				},
+				"namedVariables": {
+					"type": "integer",
+					"description": "The number of named variables in this scope.\nThe client can use this optional information to present the variables in a paged UI and fetch them in chunks."
+				},
+				"indexedVariables": {
+					"type": "integer",
+					"description": "The number of indexed variables in this scope.\nThe client can use this optional information to present the variables in a paged UI and fetch them in chunks."
+				},
+				"expensive": {
+					"type": "boolean",
+					"description": "If true, the number of variables in this scope is large or expensive to retrieve."
+				}
+			},
+			"required": [ "name", "variablesReference", "expensive" ]
+		},
+
+		"Variable": {
+			"type": "object",
+			"description": "A Variable is a name/value pair.\nOptionally a variable can have a 'type' that is shown if space permits or when hovering over the variable's name.\nAn optional 'kind' is used to render additional properties of the variable, e.g. different icons can be used to indicate that a variable is public or private.\nIf the value is structured (has children), a handle is provided to retrieve the children with the VariablesRequest.\nIf the number of children is large, the number should be returned via the optional 'totalVariables' attribute.\nThe client can use this optional information to present the children in a paged UI and fetch them in chunks.",
+			"properties": {
+				"name": {
+					"type": "string",
+					"description": "The variable's name."
+				},
+				"type": {
+					"type": "string",
+					"description": "The variable's type."
+				},
+				"value": {
+					"type": "string",
+					"description": "The variable's value. For structured objects this can be a multi line text, e.g. for a function the body of a function."
+				},
+				"kind": {
+					"type": "string",
+					"description": "Properties of a variable that can be used to determine how to render the variable in the UI. Format of the string value: TBD."
+				},
+				"variablesReference": {
+					"type": "integer",
+					"description": "If variablesReference is > 0, the variable is structured and its children can be retrieved by passing variablesReference to the VariablesRequest."
+				},
+				"namedVariables": {
+					"type": "integer",
+					"description": "The number of named child variables in this scope.\nThe client can use this optional information to present the children in a paged UI and fetch them in chunks."
+				},
+				"indexedVariables": {
+					"type": "integer",
+					"description": "The number of indexed child variables in this scope.\nThe client can use this optional information to present the children in a paged UI and fetch them in chunks."
+				}
+			},
+			"required": [ "name", "value", "variablesReference" ]
+		},
+
+		"SourceBreakpoint": {
+			"type": "object",
+			"description": "Properties of a breakpoint passed to the setBreakpoints request.",
+			"properties": {
+				"line": {
+					"type": "integer",
+					"description": "The source line of the breakpoint."
+				},
+				"column": {
+					"type": "integer",
+					"description": "An optional source column of the breakpoint."
+				},
+				"condition": {
+					"type": "string",
+					"description": "An optional expression for conditional breakpoints."
+				}
+			},
+			"required": [ "line" ]
+		},
+
+		"FunctionBreakpoint": {
+			"type": "object",
+			"description": "Properties of a breakpoint passed to the setFunctionBreakpoints request.",
+			"properties": {
+				"name": {
+					"type": "string",
+					"description": "The name of the function."
+				},
+				"condition": {
+					"type": "string",
+					"description": "An optional expression for conditional breakpoints."
+				}
+			},
+			"required": [ "name" ]
+		},
+
 		"Breakpoint": {
 			"type": "object",
-			"description": " Information about a Breakpoint created in setBreakpoints or setFunctionBreakpoints.",
+			"description": "Information about a Breakpoint created in setBreakpoints or setFunctionBreakpoints.",
 			"properties": {
 				"id": {
 					"type": "integer",
@@ -586,7 +812,7 @@
 				},
 				"source": {
 					"$ref": "#/definitions/Source",
-					"description": "The start line of the actual range covered by the breakpoint."
+					"description": "The source where the breakpoint is located."
 				},
 				"line": {
 					"type": "integer",
@@ -606,6 +832,87 @@
 				}
 			},
 			"required": [ "verified" ]
+		},
+
+		"StepInTarget": {
+			"type": "object",
+			"description": "A StepInTarget can be used in the 'stepIn' request and determines into which single target the stepIn request should step.",
+			"properties": {
+				"id": {
+					"type": "integer",
+					"description": "Unique identifier for a stepIn target."
+				},
+				"label": {
+					"type": "string",
+					"description": "The name of the stepIn target (shown in the UI)."
+				}
+			},
+			"required": [ "id", "label" ]
+		},
+
+		"GotoTarget": {
+			"type": "object",
+			"description": "A GotoTarget describes a code location that can be used as a target in the 'goto' request.\nThe possible goto targets can be determined via the 'gotoTargets' request.",
+			"properties": {
+				"id": {
+					"type": "integer",
+					"description": "Unique identifier for a goto target. This is used in the goto request."
+				},
+				"label": {
+					"type": "string",
+					"description": "The name of the goto target (shown in the UI)."
+				},
+				"line": {
+					"type": "integer",
+					"description": "The line of the goto target."
+				},
+				"column": {
+					"type": "integer",
+					"description": "An optional column of the goto target."
+				},
+				"endLine": {
+					"type": "integer",
+					"description": "An optional end line of the range covered by the goto target."
+				},
+				"endColumn": {
+					"type": "integer",
+					"description": "An optional end column of the range covered by the goto target."
+				}
+			},
+			"required": [ "id", "label", "line" ]
+		},
+
+		"CompletionItem": {
+			"type": "object",
+			"description": "CompletionItems are the suggestions returned from the CompletionsRequest.",
+			"properties": {
+				"label": {
+					"type": "string",
+					"description": "The label of this completion item. By default this is also the text that is inserted when selecting this completion."
+				},
+				"text": {
+					"type": "string",
+					"description": "If text is not falsy then it is inserted instead of the label."
+				},
+				"type": {
+					"$ref": "#/definitions/CompletionItemType",
+					"description": "The item's type. Typically the client uses this information to render the item in the UI with an icon."
+				},
+				"start": {
+					"type": "integer",
+					"description": "When a completion is selected it replaces 'length' characters starting at 'start' in the text passed to the CompletionsRequest.\nIf missing the frontend will try to determine these values heuristically."
+				},
+				"length": {
+					"type": "integer"
+				}
+			},
+			"required": [ "label" ]
+		},
+
+		"CompletionItemType": {
+			"type": "string",
+			"description": "Some predefined types for the CompletionItem. Please note that not all clients have specific icons for all of them.",
+			"enum": [ "method", "function", "constructor", "field", "variable", "class", "interface", "module", "property", "unit", "value", "enum", "keyword", "snippet", "text", "color", "file", "reference", "customcolor" ]
 		}
 	}
 }
