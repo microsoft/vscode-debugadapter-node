@@ -27,3 +27,6 @@ node_modules
 
 # Debug log from npm
 npm-debug.log
+
+test.json
+debugProtocol2.d.ts
