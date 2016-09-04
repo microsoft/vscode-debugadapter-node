@@ -6,7 +6,6 @@
 
 import * as fs from 'fs';
 import {IProtocol, Protocol as P} from './json_schema';
-//import {protocol as debugProtocolSchema} from '../debugProtocol'
 
 let numIndents = 0;
 
@@ -18,14 +17,12 @@ function Module(moduleName: string, schema: IProtocol): string {
 	s += line(" *  Licensed under the MIT License. See License.txt in the project root for license information.");
 	s += line(" *--------------------------------------------------------------------------------------------*/");
 	s += line();
-	s += line("/***********************************************************");
-	s += line(" * Auto-generated from json schema. Do not edit manually.");
-	s += line(" ***********************************************************/");
 	s += line();
 
-	s += comment(schema.description);
+	//s += comment(schema.description);
+	s += comment('Declaration module describing the VS Code debug protocol.\nAuto-generated from json schema. Do not edit manually.');
 
-	s += openBlock(`export declare module ${moduleName}`);
+	s += openBlock(`export module ${moduleName}`);
 
 	for (let typeName in schema.definitions) {
 
@@ -42,7 +39,11 @@ function Module(moduleName: string, schema: IProtocol): string {
 				}
 			}
 		} else {
-			s += Interface(typeName, <P.Definition> d2);
+			if ((<P.StringType>d2).enum) {
+				s += Enum(typeName, <P.StringType> d2);
+			} else {
+				s += Interface(typeName, <P.Definition> d2);
+			}
 		}
 	}
 
@@ -74,6 +75,14 @@ function Interface(interfaceName: string, definition: P.Definition, superType?: 
 	return s;
 }
 
+function Enum(typeName: string, definition: P.StringType): string {
+	let s = line();
+	s += comment(definition.description);
+	const x = definition.enum.map(v => `'${v}'`).join(' | ');
+	s += line(`export type ${typeName} = ${x};`);
+	return s;
+}
+
 function comment(description: string): string {
 	if (description) {
 		description = description.replace(/<code>(.*)<\/code>/g, "'$1'");
@@ -89,13 +98,17 @@ function comment(description: string): string {
 	return '';
 }
 
-function openBlock(str: string, openChar = ' {', indent = true): string {
+function openBlock(str: string, openChar?: string, indent?: boolean): string {
+	indent = typeof indent === 'boolean' ?  indent : true;
+	openChar = openChar || ' {';
 	let s = line(`${str}${openChar}`, true, indent);
 	numIndents++;
 	return s;
 }
 
-function closeBlock(closeChar = '}', newline = true): string {
+function closeBlock(closeChar?: string, newline?: boolean): string {
+	newline = typeof newline === 'boolean' ? newline : true;
+	closeChar = closeChar || '}';
 	numIndents--;
 	return line(closeChar, newline);
 }
@@ -120,6 +133,9 @@ function propertyType(prop: any): string {
 			return `string`;
 		case 'integer':
 			return 'number';
+	}
+	if (Object.prototype.toString.call(prop.type) === '[object Array]') {
+		return prop.type.map(v => v === 'integer' ? 'number' : v).join(' | ');
 	}
 	return prop.type;
 }
@@ -160,7 +176,9 @@ function indent(): string {
 	return '\t'.repeat(numIndents);
 }
 
-function line(str?: string, newline = true, indnt = true): string {
+function line(str?: string, newline?: boolean, indnt?: boolean): string {
+	newline = typeof newline === 'boolean' ? newline : true;
+	indnt = typeof indnt === 'boolean' ? indnt : true;
 	let s = '';
 	if (str) {
 		if (indnt) {
@@ -179,6 +197,6 @@ function line(str?: string, newline = true, indnt = true): string {
 
 const debugProtocolSchema = JSON.parse(fs.readFileSync('./debugProtocol.json').toString());
 
-const emitStr = Module('debugProtocol', debugProtocolSchema);
+const emitStr = Module('DebugProtocol', debugProtocolSchema);
 
 fs.writeFileSync(`./protocol/src/debugProtocol2.d.ts`, emitStr, 'utf-8');
