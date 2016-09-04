@@ -5,7 +5,7 @@
 
 'use strict';
 
-/** Declaration module describing the VS Code debug protocol
+/** Declaration module describing the VS Code debug protocol.
  */
 export module DebugProtocol {
 
@@ -804,11 +804,11 @@ export module DebugProtocol {
 	/** An ExceptionBreakpointsFilter is shown in the UI as an option for configuring how exceptions are dealt with. */
 	export interface ExceptionBreakpointsFilter {
 		/** The internal ID of the filter. This value is passed to the setExceptionBreakpoints request. */
-		filter: string,
+		filter: string;
 		/** The name of the filter. This will be shown in the UI. */
-		label: string,
+		label: string;
 		/** Initial value of the filter. If not specified a value 'false' is assumed. */
-		default?: boolean
+		default?: boolean;
 	}
 
 	/** A structured message object. Used to return errors from requests. */
@@ -816,13 +816,14 @@ export module DebugProtocol {
 		/** Unique identifier for the message. */
 		id: number;
 		/** A format string for the message. Embedded variables have the form '{name}'.
-		    If variable name starts with an underscore character, the variable does not contain user data (PII) and can be safely used for telemetry purposes. */
+			If variable name starts with an underscore character, the variable does not contain user data (PII) and can be safely used for telemetry purposes.
+		*/
 		format: string;
 		/** An object used as a dictionary for looking up the variables in the format string. */
 		variables?: { [key: string]: string };
-		/** if true send to telemetry */
+		/** If true send to telemetry. */
 		sendTelemetry?: boolean;
-		/** if true show user */
+		/** If true show user. */
 		showUser?: boolean;
 		/** An optional url where additional information about this message can be found. */
 		url?: string;
@@ -830,46 +831,44 @@ export module DebugProtocol {
 		urlLabel?: string;
 	}
 
-	/**
-	 * A Module object represents a row in the modules view.
-	 * Two attributes are mandatory: an id identifies a module in the modules view and is used in a ModuleEvent for identifying a module for adding, updating or deleting.
-	 * The name is used to minimally render the module in the UI.
-	 *
-	 * Additional attributes can be added to the module. They will show up in the module View if they have a corresponding ColumnDescriptor.
-	 *
-	 * To avoid an unnecessary proliferation of additional attributes with similar semantics but different names
-	 * we recommend to re-use attributes from the 'recommended' list below first, and only introduce new attributes if nothing appropriate could be found.
-	 */
+	/** A Module object represents a row in the modules view.
+		Two attributes are mandatory: an id identifies a module in the modules view and is used in a ModuleEvent for identifying a module for adding, updating or deleting.
+		The name is used to minimally render the module in the UI.
+
+		Additional attributes can be added to the module. They will show up in the module View if they have a corresponding ColumnDescriptor.
+
+		To avoid an unnecessary proliferation of additional attributes with similar semantics but different names
+		we recommend to re-use attributes from the 'recommended' list below first, and only introduce new attributes if nothing appropriate could be found.
+	*/
 	export interface Module {
 		/** Unique identifier for the module. */
 		id: number | string;
 		/** A name of the module. */
 		name: string;
+		/** optional but recommended attributes.
+			always try to use these first before introducing additional attributes.
 
-		// optional but recommended attributes.
-		// always try to use these first before introducing additional attributes.
-
-		/** Logical full path to the module. The exact definition is implementation defined, but usually this would be a full path to the on-disk file for the module. */
-		path?: string
+			Logical full path to the module. The exact definition is implementation defined, but usually this would be a full path to the on-disk file for the module.
+		*/
+		path?: string;
 		/** True if the module is optimized. */
-		isOptimized?: boolean
+		isOptimized?: boolean;
 		/** True if the module is considered 'user code' by a debugger that supports 'Just My Code'. */
-		isUserCode?: boolean
+		isUserCode?: boolean;
 		/** Version of Module. */
-		version? : string
-		/** User understandable description of if symbols were found for the module (ex: 'Symbols Loaded', 'Symbols not found', etc */
-		symbolStatus?: string
+		version?: string;
+		/** User understandable description of if symbols were found for the module (ex: 'Symbols Loaded', 'Symbols not found', etc. */
+		symbolStatus?: string;
 		/** Logical full path to the symbol file. The exact definition is implementation defined. */
-		symbolFilePath?: string
+		symbolFilePath?: string;
 		/** Module created or modified. */
-		dateTimeStamp?: string
+		dateTimeStamp?: string;
 		/** Address range covered by this module. */
-		addressRange?: string
+		addressRange?: string;
 	}
 
-	/**
-	 * A ColumnDescriptor specifies what module attribute to show in a column of the ModulesView, how to format it, and what the column's label should be.
-	 * It is only used if the underlying UI actually supports this level of customization.
+	/** A ColumnDescriptor specifies what module attribute to show in a column of the ModulesView, how to format it, and what the column's label should be.
+		It is only used if the underlying UI actually supports this level of customization.
 	 */
 	export interface ColumnDescriptor {
 		/** Name of the attribute rendered in this column. */
@@ -882,10 +881,9 @@ export module DebugProtocol {
 		width: number;
 	}
 
-	/**
-	 * The ModulesViewDescriptor is the container for all declarative configuration options of a ModuleView.
-	 * For now it only specifies the columns to be shown in the modules view.
-	 */
+	/** The ModulesViewDescriptor is the container for all declarative configuration options of a ModuleView.
+		For now it only specifies the columns to be shown in the modules view.
+	*/
 	export interface ModulesViewDescriptor {
 		columns: ColumnDescriptor[];
 	}
@@ -906,7 +904,7 @@ export module DebugProtocol {
 		path?: string;
 		/** If sourceReference > 0 the contents of the source can be retrieved through the SourceRequest. A sourceReference is only valid for a session, so it must not be used to persist a source. */
 		sourceReference?: number;
-		/** The (optional) origin of this source: possible values "internal module", "inlined content from source map", etc. */
+		/** The (optional) origin of this source: possible values 'internal module', 'inlined content from source map', etc. */
 		origin?: string;
 		/** Optional data that a debug adapter might want to loop through the client. The client should leave the data intact and persist it across sessions. The client should not interpret the data. */
 		adapterData?: any;
@@ -916,7 +914,7 @@ export module DebugProtocol {
 	export interface StackFrame {
 		/** An identifier for the stack frame. It must be unique across all threads. This id can be used to retrieve the scopes of the frame with the 'scopesRequest' or to restart the execution of a stackframe. */
 		id: number;
-		/** The name of the stack frame, typically a method name */
+		/** The name of the stack frame, typically a method name. */
 		name: string;
 		/** The optional source of the frame. */
 		source?: Source;
@@ -932,15 +930,17 @@ export module DebugProtocol {
 
 	/** A Scope is a named container for variables. */
 	export interface Scope {
-		/** name of the scope (as such 'Arguments', 'Locals') */
+		/** Name of the scope such as 'Arguments', 'Locals'. */
 		name: string;
 		/** The variables of this scope can be retrieved by passing the value of variablesReference to the VariablesRequest. */
 		variablesReference: number;
 		/** The number of named variables in this scope.
-			The client can use this optional information to present the variables in a paged UI and fetch them in chunks. */
+			The client can use this optional information to present the variables in a paged UI and fetch them in chunks.
+		*/
 		namedVariables?: number;
 		/** The number of indexed variables in this scope.
-			The client can use this optional information to present the variables in a paged UI and fetch them in chunks. */
+			The client can use this optional information to present the variables in a paged UI and fetch them in chunks.
+		*/
 		indexedVariables?: number;
 		/** If true, the number of variables in this scope is large or expensive to retrieve. */
 		expensive: boolean;
@@ -965,15 +965,16 @@ export module DebugProtocol {
 		/** If variablesReference is > 0, the variable is structured and its children can be retrieved by passing variablesReference to the VariablesRequest. */
 		variablesReference: number;
 		/** The number of named child variables in this scope.
-			The client can use this optional information to present the children in a paged UI and fetch them in chunks. */
+			The client can use this optional information to present the children in a paged UI and fetch them in chunks.
+		*/
 		namedVariables?: number;
 		/** The number of indexed child variables in this scope.
-			The client can use this optional information to present the children in a paged UI and fetch them in chunks. */
+			The client can use this optional information to present the children in a paged UI and fetch them in chunks.
+		*/
 		indexedVariables?: number;
 	}
 
-	/** Properties of a breakpoint passed to the setBreakpoints request.
-	*/
+	/** Properties of a breakpoint passed to the setBreakpoints request. */
 	export interface SourceBreakpoint {
 		/** The source line of the breakpoint. */
 		line: number;
@@ -983,8 +984,7 @@ export module DebugProtocol {
 		condition?: string;
 	}
 
-	/** Properties of a breakpoint passed to the setFunctionBreakpoints request.
-	*/
+	/** Properties of a breakpoint passed to the setFunctionBreakpoints request. */
 	export interface FunctionBreakpoint {
 		/** The name of the function. */
 		name: string;
@@ -992,12 +992,11 @@ export module DebugProtocol {
 		condition?: string;
 	}
 
-	/** Information about a Breakpoint created in setBreakpoints or setFunctionBreakpoints.
-	*/
+	/** Information about a Breakpoint created in setBreakpoints or setFunctionBreakpoints. */
 	export interface Breakpoint {
 		/** An optional unique identifier for the breakpoint. */
 		id?: number;
-		/** If true breakpoint could be set (but not necessarily at the desired location).  */
+		/** If true breakpoint could be set (but not necessarily at the desired location). */
 		verified: boolean;
 		/** An optional message about the state of the breakpoint. This is shown to the user and can be used to explain why a breakpoint could not be verified. */
 		message?: string;
@@ -1009,13 +1008,11 @@ export module DebugProtocol {
 		column?: number;
 		/** An optional end line of the actual range covered by the breakpoint. */
 		endLine?: number;
-		/**  An optional end column of the actual range covered by the breakpoint. If no end line is given, then the end column is assumed to be in the start line. */
+		/** An optional end column of the actual range covered by the breakpoint. If no end line is given, then the end column is assumed to be in the start line. */
 		endColumn?: number;
 	}
 
-	/** A StepInTarget can be used in the 'stepIn' request and determines into
-	 *  which single target the stepIn request should step.
-	 */
+	/** A StepInTarget can be used in the 'stepIn' request and determines into which single target the stepIn request should step. */
 	export interface StepInTarget {
 		/** Unique identifier for a stepIn target. */
 		id: number;
@@ -1041,40 +1038,22 @@ export module DebugProtocol {
 		endColumn?: number;
 	}
 
-	/** CompletionItems are the suggestions returned from the CompletionsRequest.
-	 */
+	/** CompletionItems are the suggestions returned from the CompletionsRequest. */
 	export interface CompletionItem {
 		/** The label of this completion item. By default this is also the text that is inserted when selecting this completion. */
 		label: string;
 		/** If text is not falsy then it is inserted instead of the label. */
 		text?: string;
-        /** The item's type. Typically the client uses this information to render the item in the UI with an icon. */
-        type?: CompletionItemType;
+		/** The item's type. Typically the client uses this information to render the item in the UI with an icon. */
+		type?: CompletionItemType;
 		/** When a completion is selected it replaces 'length' characters starting at 'start' in the text passed to the CompletionsRequest.
-			If missing the frontend will try to determine these values heuristically. */
+			If missing the frontend will try to determine these values heuristically.
+		*/
 		start?: number;
 		length?: number;
 	}
 
-	/** Some predefined types for the CompletionItem. Please note that not all clients have specific icons for all of them.
-	 */
-	export type CompletionItemType = 'method'
-		| 'function'
-		| 'constructor'
-		| 'field'
-		| 'variable'
-		| 'class'
-		| 'interface'
-		| 'module'
-		| 'property'
-		| 'unit'
-		| 'value'
-		| 'enum'
-		| 'keyword'
-		| 'snippet'
-		| 'text'
-		| 'color'
-		| 'file'
-		| 'reference'
-		| 'customcolor';
+	/** Some predefined types for the CompletionItem. Please note that not all clients have specific icons for all of them. */
+	export type CompletionItemType = 'method' | 'function' | 'constructor' | 'field' | 'variable' | 'class' | 'interface' | 'module' | 'property' | 'unit' | 'value' | 'enum' | 'keyword' | 'snippet' | 'text' | 'color' | 'file' | 'reference' | 'customcolor';
 }
+
