@@ -1,4 +1,6 @@
-/**  TypeScript definitions for a subset of the json schema. */
+/**
+ * TypeScript definitions for a subset of the json schema.
+ */
 
 export interface IProtocol {
 
@@ -19,7 +21,7 @@ export module Protocol {
 		allOf: (Definition | RefType ) []
 	}
 
-	export type Definition2 = Definition | AllOf;
+	export type Definition2 = Definition | AllOf | StringType;
 	type PropertyType = PrimitiveType | StringType | ObjectType | ArrayType;
 
 	export interface PrimitiveType extends BaseType {
