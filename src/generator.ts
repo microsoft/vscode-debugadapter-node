@@ -114,10 +114,6 @@ function closeBlock(closeChar?: string, newline?: boolean): string {
 	return line(closeChar, newline);
 }
 
-function propertyDef(name: string, optional: boolean, prop: P.PropertyType): string {
-	return `${name}${optional ? '?' : ''}: ${propertyType(prop)}`
-}
-
 function propertyType(prop: any): string {
 	if (prop.$ref) {
 		return getRef(prop.$ref);
@@ -166,7 +162,13 @@ function objectType(prop: any): string {
 function property(name: string, optional: boolean, prop: P.PropertyType): string {
 	let s = '';
 	s += comment(prop.description);
-	s += line(`${propertyDef(name, optional, prop)};`);
+	const type = propertyType(prop);
+	const propertyDef = `${name}${optional ? '?' : ''}: ${type}`;
+	if (type[0] === '\'' && type[type.length-1] === '\'' && type.indexOf('|') < 0) {
+		s += line(`// ${propertyDef};`);
+	} else {
+		s += line(`${propertyDef};`);
+	}
 	return s;
 }
 

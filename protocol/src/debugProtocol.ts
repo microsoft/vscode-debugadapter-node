@@ -20,25 +20,25 @@ export module DebugProtocol {
 
 	/** A client or server-initiated request. */
 	export interface Request extends ProtocolMessage {
-		type: 'request';
+		// type: 'request';
 		/** The command to execute. */
 		command: string;
 		/** Object containing arguments for the command. */
-		arguments?: {};
+		arguments?: any;
 	}
 
 	/** Server-initiated event. */
 	export interface Event extends ProtocolMessage {
-		type: 'event';
+		// type: 'event';
 		/** Type of event. */
 		event: string;
 		/** Event-specific information. */
-		body?: {};
+		body?: any;
 	}
 
 	/** Response to a request. */
 	export interface Response extends ProtocolMessage {
-		type: 'response';
+		// type: 'response';
 		/** Sequence number of the corresponding request. */
 		request_seq: number;
 		/** Outcome of the request. */
@@ -48,7 +48,7 @@ export module DebugProtocol {
 		/** Contains error message if success == false. */
 		message?: string;
 		/** Contains request result if success is true and optional error details if success is false. */
-		body?: {};
+		body?: any;
 	}
 
 	/** Event message for 'initialized' event type.
@@ -63,7 +63,7 @@ export module DebugProtocol {
 		- frontend sends one ConfigurationDoneRequest to indicate the end of the configuration
 	*/
 	export interface InitializedEvent extends Event {
-		event: 'initialized';
+		// event: 'initialized';
 	}
 
 	/** Event message for 'stopped' event type.
@@ -71,7 +71,7 @@ export module DebugProtocol {
 		This can be caused by a break point previously set, a stepping action has completed, by executing a debugger statement etc.
 	*/
 	export interface StoppedEvent extends Event {
-		event: 'stopped';
+		// event: 'stopped';
 		body: {
 			/** The reason for the event (such as: 'step', 'breakpoint', 'exception', 'pause'). This string is shown in the UI. */
 			reason: string;
@@ -93,7 +93,7 @@ export module DebugProtocol {
 		It is only necessary to send a ContinuedEvent if there was no previous request that implied this.
 	*/
 	export interface ContinuedEvent extends Event {
-		event: 'continued';
+		// event: 'continued';
 		body: {
 			/** The thread which was continued. */
 			threadId: number;
@@ -106,7 +106,7 @@ export module DebugProtocol {
 		The event indicates that the debuggee has exited.
 	*/
 	export interface ExitedEvent extends Event {
-		event: 'exited';
+		// event: 'exited';
 		body: {
 			/** The exit code returned from the debuggee. */
 			exitCode: number;
@@ -117,7 +117,7 @@ export module DebugProtocol {
 		The event indicates that debugging of the debuggee has terminated.
 	*/
 	export interface TerminatedEvent extends Event {
-		event: 'terminated';
+		// event: 'terminated';
 		body?: {
 			/** A debug adapter may set 'restart' to true to request that the front end restarts the session. */
 			restart?: boolean;
@@ -128,7 +128,7 @@ export module DebugProtocol {
 		The event indicates that a thread has started or exited.
 	*/
 	export interface ThreadEvent extends Event {
-		event: 'thread';
+		// event: 'thread';
 		body: {
 			/** The reason for the event (such as: 'started', 'exited'). */
 			reason: string;
@@ -141,14 +141,14 @@ export module DebugProtocol {
 		The event indicates that the target has produced output.
 	*/
 	export interface OutputEvent extends Event {
-		event: 'output';
+		// event: 'output';
 		body: {
 			/** The category of output (such as: 'console', 'stdout', 'stderr', 'telemetry'). If not specified, 'console' is assumed. */
 			category?: string;
 			/** The output to report. */
 			output: string;
 			/** Optional data to report. For the 'telemetry' category the data will be sent to telemetry, for the other categories the data is shown in JSON format. */
-			data?: {};
+			data?: any;
 		};
 	}
 
@@ -156,7 +156,7 @@ export module DebugProtocol {
 		The event indicates that some information about a breakpoint has changed.
 	*/
 	export interface BreakpointEvent extends Event {
-		event: 'breakpoint';
+		// event: 'breakpoint';
 		body: {
 			/** The reason for the event (such as: 'changed', 'new'). */
 			reason: string;
@@ -169,7 +169,7 @@ export module DebugProtocol {
 		The event indicates that some information about a module has changed.
 	*/
 	export interface ModuleEvent extends Event {
-		event: 'module';
+		// event: 'module';
 		body: {
 			/** The reason for the event. */
 			reason: 'new' | 'changed' | 'removed';
@@ -182,7 +182,7 @@ export module DebugProtocol {
 		With this request a debug adapter can run a command in a terminal.
 	*/
 	export interface RunInTerminalRequest extends Request {
-		command: 'runInTerminal';
+		// command: 'runInTerminal';
 		arguments: RunInTerminalRequestArguments;
 	}
 
@@ -218,7 +218,7 @@ export module DebugProtocol {
 
 	/** Initialize request; value of command field is 'initialize'. */
 	export interface InitializeRequest extends Request {
-		command: 'initialize';
+		// command: 'initialize';
 		arguments: InitializeRequestArguments;
 	}
 
@@ -250,7 +250,7 @@ export module DebugProtocol {
 		The client of the debug protocol must send this request at the end of the sequence of configuration requests (which was started by the InitializedEvent).
 	*/
 	export interface ConfigurationDoneRequest extends Request {
-		command: 'configurationDone';
+		// command: 'configurationDone';
 		arguments?: ConfigurationDoneArguments;
 	}
 
@@ -266,7 +266,7 @@ export module DebugProtocol {
 
 	/** Launch request; value of command field is 'launch'. */
 	export interface LaunchRequest extends Request {
-		command: 'launch';
+		// command: 'launch';
 		arguments: LaunchRequestArguments;
 	}
 
@@ -282,7 +282,7 @@ export module DebugProtocol {
 
 	/** Attach request; value of command field is 'attach'. */
 	export interface AttachRequest extends Request {
-		command: 'attach';
+		// command: 'attach';
 		arguments: AttachRequestArguments;
 	}
 
@@ -298,7 +298,7 @@ export module DebugProtocol {
 
 	/** Disconnect request; value of command field is 'disconnect'. */
 	export interface DisconnectRequest extends Request {
-		command: 'disconnect';
+		// command: 'disconnect';
 		arguments?: DisconnectArguments;
 	}
 
@@ -318,7 +318,7 @@ export module DebugProtocol {
 		When a breakpoint is hit, a StoppedEvent (event type 'breakpoint') is generated.
 	*/
 	export interface SetBreakpointsRequest extends Request {
-		command: 'setBreakpoints';
+		// command: 'setBreakpoints';
 		arguments: SetBreakpointsArguments;
 	}
 
@@ -353,7 +353,7 @@ export module DebugProtocol {
 		When a function breakpoint is hit, a StoppedEvent (event type 'function breakpoint') is generated.
 	*/
 	export interface SetFunctionBreakpointsRequest extends Request {
-		command: 'setFunctionBreakpoints';
+		// command: 'setFunctionBreakpoints';
 		arguments: SetFunctionBreakpointsArguments;
 	}
 
@@ -377,7 +377,7 @@ export module DebugProtocol {
 		Enable that the debuggee stops on exceptions with a StoppedEvent (event type 'exception').
 	*/
 	export interface SetExceptionBreakpointsRequest extends Request {
-		command: 'setExceptionBreakpoints';
+		// command: 'setExceptionBreakpoints';
 		arguments: SetExceptionBreakpointsArguments;
 	}
 
@@ -395,7 +395,7 @@ export module DebugProtocol {
 		The request starts the debuggee to run again.
 	*/
 	export interface ContinueRequest extends Request {
-		command: 'continue';
+		// command: 'continue';
 		arguments: ContinueArguments;
 	}
 
@@ -418,7 +418,7 @@ export module DebugProtocol {
 		The debug adapter first sends the NextResponse and then a StoppedEvent (event type 'step') after the step has completed.
 	*/
 	export interface NextRequest extends Request {
-		command: 'next';
+		// command: 'next';
 		arguments: NextArguments;
 	}
 
@@ -441,7 +441,7 @@ export module DebugProtocol {
 		The list of possible targets for a given source line can be retrieved via the 'stepInTargets' request.
 	*/
 	export interface StepInRequest extends Request {
-		command: 'stepIn';
+		// command: 'stepIn';
 		arguments: StepInArguments;
 	}
 
@@ -462,7 +462,7 @@ export module DebugProtocol {
 		The debug adapter first sends the StepOutResponse and then a StoppedEvent (event type 'step') after the step has completed.
 	*/
 	export interface StepOutRequest extends Request {
-		command: 'stepOut';
+		// command: 'stepOut';
 		arguments: StepOutArguments;
 	}
 
@@ -481,7 +481,7 @@ export module DebugProtocol {
 		The debug adapter first sends the StepBackResponse and then a StoppedEvent (event type 'step') after the step has completed.
 	*/
 	export interface StepBackRequest extends Request {
-		command: 'stepBack';
+		// command: 'stepBack';
 		arguments: StepBackArguments;
 	}
 
@@ -500,7 +500,7 @@ export module DebugProtocol {
 		The debug adapter first sends the RestartFrameResponse and then a StoppedEvent (event type 'restart') after the restart has completed.
 	*/
 	export interface RestartFrameRequest extends Request {
-		command: 'restartFrame';
+		// command: 'restartFrame';
 		arguments: RestartFrameArguments;
 	}
 
@@ -521,7 +521,7 @@ export module DebugProtocol {
 		The debug adapter first sends the GotoResponse and then a StoppedEvent (event type 'goto').
 	*/
 	export interface GotoRequest extends Request {
-		command: 'goto';
+		// command: 'goto';
 		arguments: GotoArguments;
 	}
 
@@ -542,7 +542,7 @@ export module DebugProtocol {
 		The debug adapter first sends the PauseResponse and then a StoppedEvent (event type 'pause') after the thread has been paused successfully.
 	*/
 	export interface PauseRequest extends Request {
-		command: 'pause';
+		// command: 'pause';
 		arguments: PauseArguments;
 	}
 
@@ -558,7 +558,7 @@ export module DebugProtocol {
 
 	/** StackTrace request; value of command field is 'stackTrace'. The request returns a stacktrace from the current execution state. */
 	export interface StackTraceRequest extends Request {
-		command: 'stackTrace';
+		// command: 'stackTrace';
 		arguments: StackTraceArguments;
 	}
 
@@ -588,7 +588,7 @@ export module DebugProtocol {
 		The request returns the variable scopes for a given stackframe ID.
 	*/
 	export interface ScopesRequest extends Request {
-		command: 'scopes';
+		// command: 'scopes';
 		arguments: ScopesArguments;
 	}
 
@@ -611,7 +611,7 @@ export module DebugProtocol {
 		An optional filter can be used to limit the fetched children to either named or indexed children.
 	*/
 	export interface VariablesRequest extends Request {
-		command: 'variables';
+		// command: 'variables';
 		arguments: VariablesArguments;
 	}
 
@@ -639,7 +639,7 @@ export module DebugProtocol {
 		Set the variable with the given name in the variable container to a new value.
 	*/
 	export interface SetVariableRequest extends Request {
-		command: 'setVariable';
+		// command: 'setVariable';
 		arguments: SetVariableArguments;
 	}
 
@@ -665,7 +665,7 @@ export module DebugProtocol {
 		The request retrieves the source code for a given source reference.
 	*/
 	export interface SourceRequest extends Request {
-		command: 'source';
+		// command: 'source';
 		arguments: SourceArguments;
 	}
 
@@ -689,7 +689,7 @@ export module DebugProtocol {
 		The request retrieves a list of all threads.
 	*/
 	export interface ThreadsRequest extends Request {
-		command: 'threads';
+		// command: 'threads';
 	}
 
 	/** Response to 'threads' request. */
@@ -702,7 +702,7 @@ export module DebugProtocol {
 
 	/** Modules can be retrieved from the debug adapter with the ModulesRequest which can either return all modules or a range of modules to support paging. */
 	export interface ModulesRequest extends Request {
-		command: 'modules';
+		// command: 'modules';
 		arguments: ModulesArguments;
 	}
 
@@ -729,7 +729,7 @@ export module DebugProtocol {
 		The expression has access to any variables and arguments that are in scope.
 	*/
 	export interface EvaluateRequest extends Request {
-		command: 'evaluate';
+		// command: 'evaluate';
 		arguments: EvaluateArguments;
 	}
 
@@ -769,7 +769,7 @@ export module DebugProtocol {
 		The StepInTargets may only be called if the 'supportsStepInTargetsRequest' capability exists and is true.
 	*/
 	export interface StepInTargetsRequest extends Request {
-		command: 'stepInTargets';
+		// command: 'stepInTargets';
 		arguments: StepInTargetsArguments;
 	}
 
@@ -793,7 +793,7 @@ export module DebugProtocol {
 		The GotoTargets request may only be called if the 'supportsGotoTargetsRequest' capability exists and is true.
 	*/
 	export interface GotoTargetsRequest extends Request {
-		command: 'gotoTargets';
+		// command: 'gotoTargets';
 		arguments: GotoTargetsArguments;
 	}
 
@@ -820,7 +820,7 @@ export module DebugProtocol {
 		The CompletionsRequest may only be called if the 'supportsCompletionsRequest' capability exists and is true.
 	*/
 	export interface CompletionsRequest extends Request {
-		command: 'completions';
+		// command: 'completions';
 		arguments: CompletionsArguments;
 	}
 
