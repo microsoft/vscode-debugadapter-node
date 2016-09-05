@@ -23,8 +23,7 @@ export module DebugProtocol {
 		/** The command to execute. */
 		command: string;
 		/** Object containing arguments for the command. */
-		arguments?: {
-		};
+		arguments?: {};
 	}
 
 	/** Server-initiated event. */
@@ -33,8 +32,7 @@ export module DebugProtocol {
 		/** Type of event. */
 		event: string;
 		/** Event-specific information. */
-		body?: {
-		};
+		body?: {};
 	}
 
 	/** Server-initiated response to client request. */
@@ -190,6 +188,7 @@ export module DebugProtocol {
 		command: 'runInTerminal';
 		arguments: RunInTerminalRequestArguments;
 	}
+
 	/** Arguments for 'runInTerminal' request. */
 	export interface RunInTerminalRequestArguments {
 		/** What kind of terminal to launch. */
@@ -203,6 +202,7 @@ export module DebugProtocol {
 		/** Environment key-value pairs that are added to the default environment. */
 		env?: { [key: string]: string; }
 	}
+
 	/** Response to Initialize request. */
 	export interface RunInTerminalResponse extends Response {
 		body: {
@@ -213,21 +213,21 @@ export module DebugProtocol {
 
 	//---- Debug Adapter Requests
 
-	/** On error that is whenever 'success' is false, the body can provide more details.
-	 */
+	/** On error that is whenever 'success' is false, the body can provide more details. */
 	export interface ErrorResponse extends Response {
 		body: {
 			/** An optional, structured error message. */
-			error?: Message
-		}
+			error?: Message;
+		};
 	}
 
-	/** Initialize request; value of command field is "initialize".
-	*/
+	/** Initialize request; value of command field is 'initialize'. */
 	export interface InitializeRequest extends Request {
+		command: 'initialize';
 		arguments: InitializeRequestArguments;
 	}
-	/** Arguments for "initialize" request. */
+
+	/** Arguments for 'initialize' request. */
 	export interface InitializeRequestArguments {
 		/** The ID of the debugger adapter. Used to select or verify debugger adapter. */
 		adapterID: string;
@@ -237,7 +237,6 @@ export module DebugProtocol {
 		columnsStartAt1?: boolean;
 		/** Determines in what format paths are specified. Possible values are 'path' or 'uri'. The default is 'path', which is the native format. */
 		pathFormat?: string;
-
 		/** Client supports the optional type attribute for variables. */
 		supportsVariableType?: boolean;
 		/** Client supports the paging of variables. */
@@ -245,74 +244,90 @@ export module DebugProtocol {
 		/** Client supports the runInTerminal request. */
 		supportsRunInTerminalRequest?: boolean;
 	}
-	/** Response to Initialize request. */
+
+	/** Response to 'initialize' request. */
 	export interface InitializeResponse extends Response {
-		/** The capabilities of this debug adapter */
-		body?: Capabilites;
+		/** The capabilities of this debug adapter. */
+		body?: Capabilities;
 	}
 
-	/** ConfigurationDone request; value of command field is "configurationDone".
-		The client of the debug protocol must send this request at the end of the sequence of configuration requests (which was started by the InitializedEvent)
+	/** ConfigurationDone request; value of command field is 'configurationDone'.
+		The client of the debug protocol must send this request at the end of the sequence of configuration requests (which was started by the InitializedEvent).
 	*/
 	export interface ConfigurationDoneRequest extends Request {
+		command: 'configurationDone';
 		arguments?: ConfigurationDoneArguments;
 	}
-	/** Arguments for "configurationDone" request. */
+
+	/** Arguments for 'configurationDone' request.
+		The configurationDone request has no standardized attributes.
+	*/
 	export interface ConfigurationDoneArguments {
-		/* The configurationDone request has no standardized attributes. */
 	}
-	/** Response to "configurationDone" request. This is just an acknowledgement, so no body field is required. */
+
+	/** Response to 'configurationDone' request. This is just an acknowledgement, so no body field is required. */
 	export interface ConfigurationDoneResponse extends Response {
 	}
 
-	/** Launch request; value of command field is "launch".
-	*/
+	/** Launch request; value of command field is 'launch'. */
 	export interface LaunchRequest extends Request {
+		command: 'launch';
 		arguments: LaunchRequestArguments;
 	}
-	/** Arguments for "launch" request. */
+
+	/** Arguments for 'launch' request. */
 	export interface LaunchRequestArguments {
-		/* If noDebug is true the launch request should launch the program without enabling debugging. */
+		/** If noDebug is true the launch request should launch the program without enabling debugging. */
 		noDebug?: boolean;
 	}
-	/** Response to "launch" request. This is just an acknowledgement, so no body field is required. */
+
+	/** Response to 'launch' request. This is just an acknowledgement, so no body field is required. */
 	export interface LaunchResponse extends Response {
 	}
 
-	/** Attach request; value of command field is "attach".
-	*/
+	/** Attach request; value of command field is 'attach'. */
 	export interface AttachRequest extends Request {
+		command: 'attach';
 		arguments: AttachRequestArguments;
 	}
-	/** Arguments for "attach" request. */
+
+	/** Arguments for 'attach' request.
+		The attach request has no standardized attributes.
+	*/
 	export interface AttachRequestArguments {
-		/* The attach request has no standardized attributes. */
 	}
-	/** Response to "attach" request. This is just an acknowledgement, so no body field is required. */
+
+	/** Response to 'attach' request. This is just an acknowledgement, so no body field is required. */
 	export interface AttachResponse extends Response {
 	}
 
-	/** Disconnect request; value of command field is "disconnect".
-	*/
+	/** Disconnect request; value of command field is 'disconnect'. */
 	export interface DisconnectRequest extends Request {
+		command: 'disconnect';
 		arguments?: DisconnectArguments;
 	}
-	/** Arguments for "disconnect" request. */
+
+	/** Arguments for 'disconnect' request.
+		The disconnect request has no standardized attributes.
+	*/
 	export interface DisconnectArguments {
 	}
-	/** Response to "disconnect" request. This is just an acknowledgement, so no body field is required. */
+
+	/** Response to 'disconnect' request. This is just an acknowledgement, so no body field is required. */
 	export interface DisconnectResponse extends Response {
 	}
 
-	/** SetBreakpoints request; value of command field is "setBreakpoints".
+	/** SetBreakpoints request; value of command field is 'setBreakpoints'.
 		Sets multiple breakpoints for a single source and clears all previous breakpoints in that source.
 		To clear all breakpoint for a source, specify an empty array.
 		When a breakpoint is hit, a StoppedEvent (event type 'breakpoint') is generated.
 	*/
 	export interface SetBreakpointsRequest extends Request {
+		command: 'setBreakpoints';
 		arguments: SetBreakpointsArguments;
 	}
-	/** Arguments for "setBreakpoints" request. */
+
+	/** Arguments for 'setBreakpoints' request. */
 	export interface SetBreakpointsArguments {
 		/** The source location of the breakpoints; either source.path or source.reference must be specified. */
 		source: Source;
@@ -323,7 +338,8 @@ export module DebugProtocol {
 		/** A value of true indicates that the underlying source has been modified which results in new breakpoint locations. */
 		sourceModified?: boolean;
 	}
-	/** Response to "setBreakpoints" request.
+
+	/** Response to 'setBreakpoints' request.
 		Returned is information about each breakpoint created by this request.
 		This includes the actual code location and whether the breakpoint could be verified.
 		The breakpoints returned are in the same order as the elements of the 'breakpoints'
@@ -336,20 +352,23 @@ export module DebugProtocol {
 		};
 	}
 
-	/** SetFunctionBreakpoints request; value of command field is "setFunctionBreakpoints".
+	/** SetFunctionBreakpoints request; value of command field is 'setFunctionBreakpoints'.
 		Sets multiple function breakpoints and clears all previous function breakpoints.
 		To clear all function breakpoint, specify an empty array.
 		When a function breakpoint is hit, a StoppedEvent (event type 'function breakpoint') is generated.
 	*/
 	export interface SetFunctionBreakpointsRequest extends Request {
+		command: 'setFunctionBreakpoints';
 		arguments: SetFunctionBreakpointsArguments;
 	}
-	/** Arguments for "setFunctionBreakpoints" request. */
+
+	/** Arguments for 'setFunctionBreakpoints' request. */
 	export interface SetFunctionBreakpointsArguments {
 		/** The function names of the breakpoints. */
 		breakpoints: FunctionBreakpoint[];
 	}
-	/** Response to "setFunctionBreakpoints" request.
+
+	/** Response to 'setFunctionBreakpoints' request.
 		Returned is information about each breakpoint created by this request.
 	*/
 	export interface SetFunctionBreakpointsResponse extends Response {
@@ -359,33 +378,39 @@ export module DebugProtocol {
 		};
 	}
 
-	/** SetExceptionBreakpoints request; value of command field is "setExceptionBreakpoints".
+	/** SetExceptionBreakpoints request; value of command field is 'setExceptionBreakpoints'.
 		Enable that the debuggee stops on exceptions with a StoppedEvent (event type 'exception').
 	*/
 	export interface SetExceptionBreakpointsRequest extends Request {
+		command: 'setExceptionBreakpoints';
 		arguments: SetExceptionBreakpointsArguments;
 	}
-	/** Arguments for "setExceptionBreakpoints" request. */
+
+	/** Arguments for 'setExceptionBreakpoints' request. */
 	export interface SetExceptionBreakpointsArguments {
 		/** Names of enabled exception breakpoints. */
 		filters: string[];
 	}
-	/** Response to "setExceptionBreakpoints" request. This is just an acknowledgement, so no body field is required. */
+
+	/** Response to 'setExceptionBreakpoints' request. This is just an acknowledgement, so no body field is required. */
 	export interface SetExceptionBreakpointsResponse extends Response {
 	}
 
-	/** Continue request; value of command field is "continue".
+	/** Continue request; value of command field is 'continue'.
 		The request starts the debuggee to run again.
 	*/
 	export interface ContinueRequest extends Request {
+		command: 'continue';
 		arguments: ContinueArguments;
 	}
-	/** Arguments for "continue" request. */
+
+	/** Arguments for 'continue' request. */
 	export interface ContinueArguments {
 		/** Continue execution for the specified thread (if possible). If the backend cannot continue on a single thread but will continue on all threads, it should set the allThreadsContinued attribute in the response to true. */
 		threadId: number;
 	}
-	/** Response to "continue" request. */
+
+	/** Response to 'continue' request. */
 	export interface ContinueResponse extends Response {
 		body: {
 			/** If true, the continue request has ignored the specified thread and continued all threads instead. If this attribute is missing a value of 'true' is assumed for backward compatibility. */
@@ -393,135 +418,156 @@ export module DebugProtocol {
 		};
 	}
 
-	/** Next request; value of command field is "next".
+	/** Next request; value of command field is 'next'.
 		The request starts the debuggee to run again for one step.
 		The debug adapter first sends the NextResponse and then a StoppedEvent (event type 'step') after the step has completed.
 	*/
 	export interface NextRequest extends Request {
+		command: 'next';
 		arguments: NextArguments;
 	}
-	/** Arguments for "next" request. */
+
+	/** Arguments for 'next' request. */
 	export interface NextArguments {
 		/** Continue execution for this thread. */
 		threadId: number;
 	}
-	/** Response to "next" request. This is just an acknowledgement, so no body field is required. */
+
+	/** Response to 'next' request. This is just an acknowledgement, so no body field is required. */
 	export interface NextResponse extends Response {
 	}
 
-	/** StepIn request; value of command field is "stepIn".
+	/** StepIn request; value of command field is 'stepIn'.
 		The request starts the debuggee to step into a function/method if possible.
-		If it cannot step into a target, "stepIn" behaves like "next".
+		If it cannot step into a target, 'stepIn' behaves like 'next'.
 		The debug adapter first sends the StepInResponse and then a StoppedEvent (event type 'step') after the step has completed.
 		If there are multiple function/method calls (or other targets) on the source line,
-		the optional argument 'targetId' can be used to control into which target the "stepIn" should occur.
-		The list of possible targets for a given source line can be retrieved via the "stepInTargets" request.
+		the optional argument 'targetId' can be used to control into which target the 'stepIn' should occur.
+		The list of possible targets for a given source line can be retrieved via the 'stepInTargets' request.
 	*/
 	export interface StepInRequest extends Request {
+		command: 'stepIn';
 		arguments: StepInArguments;
 	}
-	/** Arguments for "stepIn" request. */
+
+	/** Arguments for 'stepIn' request. */
 	export interface StepInArguments {
 		/** Continue execution for this thread. */
 		threadId: number;
 		/** Optional id of the target to step into. */
 		targetId?: number;
 	}
-	/** Response to "stepIn" request. This is just an acknowledgement, so no body field is required. */
+
+	/** Response to 'stepIn' request. This is just an acknowledgement, so no body field is required. */
 	export interface StepInResponse extends Response {
 	}
 
-	/** StepOut request; value of command field is "stepOut".
+	/** StepOut request; value of command field is 'stepOut'.
 		The request starts the debuggee to run again for one step.
 		The debug adapter first sends the StepOutResponse and then a StoppedEvent (event type 'step') after the step has completed.
 	*/
 	export interface StepOutRequest extends Request {
+		command: 'stepOut';
 		arguments: StepOutArguments;
 	}
-	/** Arguments for "stepOut" request. */
+
+	/** Arguments for 'stepOut' request. */
 	export interface StepOutArguments {
 		/** Continue execution for this thread. */
 		threadId: number;
 	}
-	/** Response to "stepOut" request. This is just an acknowledgement, so no body field is required. */
+
+	/** Response to 'stepOut' request. This is just an acknowledgement, so no body field is required. */
 	export interface StepOutResponse extends Response {
 	}
 
-	/** StepBack request; value of command field is "stepBack".
+	/** StepBack request; value of command field is 'stepBack'.
 		The request starts the debuggee to run one step backwards.
 		The debug adapter first sends the StepBackResponse and then a StoppedEvent (event type 'step') after the step has completed.
 	*/
 	export interface StepBackRequest extends Request {
+		command: 'stepBack';
 		arguments: StepBackArguments;
 	}
-	/** Arguments for "stepBack" request. */
+
+	/** Arguments for 'stepBack' request. */
 	export interface StepBackArguments {
 		/** Continue execution for this thread. */
 		threadId: number;
 	}
-	/** Response to "stepBack" request. This is just an acknowledgement, so no body field is required. */
+
+	/** Response to 'stepBack' request. This is just an acknowledgement, so no body field is required. */
 	export interface StepBackResponse extends Response {
 	}
 
-	/** RestartFrame request; value of command field is "restartFrame".
+	/** RestartFrame request; value of command field is 'restartFrame'.
 		The request restarts execution of the specified stackframe.
 		The debug adapter first sends the RestartFrameResponse and then a StoppedEvent (event type 'restart') after the restart has completed.
 	*/
 	export interface RestartFrameRequest extends Request {
+		command: 'restartFrame';
 		arguments: RestartFrameArguments;
 	}
-	/** Arguments for "restartFrame" request. */
+
+	/** Arguments for 'restartFrame' request. */
 	export interface RestartFrameArguments {
 		/** Restart this stackframe. */
 		frameId: number;
 	}
-	/** Response to "restartFrame" request. This is just an acknowledgement, so no body field is required. */
+
+	/** Response to 'restartFrame' request. This is just an acknowledgement, so no body field is required. */
 	export interface RestartFrameResponse extends Response {
 	}
 
-	/** Goto request; value of command field is "goto".
+	/** Goto request; value of command field is 'goto'.
 		The request sets the location where the debuggee will continue to run.
 		This makes it possible to skip the execution of code or to executed code again.
 		The code between the current location and the goto target is not executed but skipped.
 		The debug adapter first sends the GotoResponse and then a StoppedEvent (event type 'goto').
 	*/
 	export interface GotoRequest extends Request {
+		command: 'goto';
 		arguments: GotoArguments;
 	}
-	/** Arguments for "goto" request. */
+
+	/** Arguments for 'goto' request. */
 	export interface GotoArguments {
 		/** Set the goto target for this thread. */
 		threadId: number;
 		/** The location where the debuggee will continue to run. */
 		targetId: number;
 	}
-	/** Response to "goto" request. This is just an acknowledgement, so no body field is required. */
+
+	/** Response to 'goto' request. This is just an acknowledgement, so no body field is required. */
 	export interface GotoResponse extends Response {
 	}
 
-	/** Pause request; value of command field is "pause".
+	/** Pause request; value of command field is 'pause'.
 		The request suspenses the debuggee.
 		The debug adapter first sends the PauseResponse and then a StoppedEvent (event type 'pause') after the thread has been paused successfully.
 	*/
 	export interface PauseRequest extends Request {
+		command: 'pause';
 		arguments: PauseArguments;
 	}
-	/** Arguments for "pause" request. */
+
+	/** Arguments for 'pause' request. */
 	export interface PauseArguments {
 		/** Pause execution for this thread. */
 		threadId: number;
 	}
-	/** Response to "pause" request. This is just an acknowledgement, so no body field is required. */
+
+	/** Response to 'pause' request. This is just an acknowledgement, so no body field is required. */
 	export interface PauseResponse extends Response {
 	}
 
-	/** StackTrace request; value of command field is "stackTrace".
-		The request returns a stacktrace from the current execution state.
-	*/
+	/** StackTrace request; value of command field is 'stackTrace'. The request returns a stacktrace from the current execution state. */
 	export interface StackTraceRequest extends Request {
+		command: 'stackTrace';
 		arguments: StackTraceArguments;
 	}
-	/** Arguments for "stackTrace" request. */
+
+	/** Arguments for 'stackTrace' request. */
 	export interface StackTraceArguments {
 		/** Retrieve the stacktrace for this thread. */
 		threadId: number;
@@ -530,29 +576,34 @@ export module DebugProtocol {
 		/** The maximum number of frames to return. If levels is not specified or 0, all frames are returned. */
 		levels?: number;
 	}
-	/** Response to "stackTrace" request. */
+
+	/** Response to 'stackTrace' request. */
 	export interface StackTraceResponse extends Response {
 		body: {
 			/** The frames of the stackframe. If the array has length zero, there are no stackframes available.
-				This means that there is no location information available. */
+				This means that there is no location information available.
+			*/
 			stackFrames: StackFrame[];
 			/** The total number of frames available. */
 			totalFrames?: number;
 		};
 	}
 
-	/** Scopes request; value of command field is "scopes".
+	/** Scopes request; value of command field is 'scopes'.
 		The request returns the variable scopes for a given stackframe ID.
 	*/
 	export interface ScopesRequest extends Request {
+		command: 'scopes';
 		arguments: ScopesArguments;
 	}
-	/** Arguments for "scopes" request. */
+
+	/** Arguments for 'scopes' request. */
 	export interface ScopesArguments {
 		/** Retrieve the scopes for this stackframe. */
 		frameId: number;
 	}
-	/** Response to "scopes" request. */
+
+	/** Response to 'scopes' request. */
 	export interface ScopesResponse extends Response {
 		body: {
 			/** The scopes of the stackframe. If the array has length zero, there are no scopes available. */
@@ -560,25 +611,28 @@ export module DebugProtocol {
 		};
 	}
 
-	/** Variables request; value of command field is "variables".
+	/** Variables request; value of command field is 'variables'.
 		Retrieves all child variables for the given variable reference.
 		An optional filter can be used to limit the fetched children to either named or indexed children.
 	*/
 	export interface VariablesRequest extends Request {
+		command: 'variables';
 		arguments: VariablesArguments;
 	}
-	/** Arguments for "variables" request. */
+
+	/** Arguments for 'variables' request. */
 	export interface VariablesArguments {
 		/** The Variable reference. */
 		variablesReference: number;
 		/** Optional filter to limit the child variables to either named or indexed. If ommited, both types are fetched. */
-		filter?: "indexed" | "named";
+		filter?: 'indexed' | 'named';
 		/** The index of the first variable to return; if omitted children start at 0. */
 		start?: number;
 		/** The number of variables to return. If count is missing or 0, all variables are returned. */
 		count?: number;
 	}
-	/** Response to "variables" request. */
+
+	/** Response to 'variables' request. */
 	export interface VariablesResponse extends Response {
 		body: {
 			/** All (or a range) of variables for the given variable reference. */
@@ -586,13 +640,15 @@ export module DebugProtocol {
 		};
 	}
 
-	/** setVariable request; value of command field is "setVariable".
+	/** setVariable request; value of command field is 'setVariable'.
 		Set the variable with the given name in the variable container to a new value.
 	*/
 	export interface SetVariableRequest extends Request {
+		command: 'setVariable';
 		arguments: SetVariableArguments;
 	}
-	/** Arguments for "setVariable" request. */
+
+	/** Arguments for 'setVariable' request. */
 	export interface SetVariableArguments {
 		/** The reference of the variable container. */
 		variablesReference: number;
@@ -601,7 +657,8 @@ export module DebugProtocol {
 		/** The value of the variable. */
 		value: string;
 	}
-	/** Response to "setVariable" request. */
+
+	/** Response to 'setVariable' request. */
 	export interface SetVariableResponse extends Response {
 		body: {
 			/** the new value of the variable. */
@@ -609,33 +666,38 @@ export module DebugProtocol {
 		};
 	}
 
-	/** Source request; value of command field is "source".
+	/** Source request; value of command field is 'source'.
 		The request retrieves the source code for a given source reference.
 	*/
 	export interface SourceRequest extends Request {
+		command: 'source';
 		arguments: SourceArguments;
 	}
-	/** Arguments for "source" request. */
+
+	/** Arguments for 'source' request. */
 	export interface SourceArguments {
 		/** The reference to the source. This is the value received in Source.reference. */
 		sourceReference: number;
 	}
-	/** Response to "source" request. */
+
+	/** Response to 'source' request. */
 	export interface SourceResponse extends Response {
 		body: {
-			/** Content of the source reference */
+			/** Content of the source reference. */
 			content: string;
 			/** Optional content type (mime type) of the source. */
 			mimeType?: string;
 		};
 	}
 
-	/** Thread request; value of command field is "threads".
+	/** Thread request; value of command field is 'threads'.
 		The request retrieves a list of all threads.
 	*/
 	export interface ThreadsRequest extends Request {
+		command: 'threads';
 	}
-	/** Response to "threads" request. */
+
+	/** Response to 'threads' request. */
 	export interface ThreadsResponse extends Response {
 		body: {
 			/** All threads. */
@@ -643,20 +705,21 @@ export module DebugProtocol {
 		};
 	}
 
-	/**
-	 * Modules can be retrieved from the debug adapter with the ModulesRequest which can either return all modules or a range of modules to support paging.
-	 */
+	/** Modules can be retrieved from the debug adapter with the ModulesRequest which can either return all modules or a range of modules to support paging. */
 	export interface ModulesRequest extends Request {
+		command: 'modules';
 		arguments: ModulesArguments;
 	}
-	/** Arguments for "modules" request. */
+
+	/** Arguments for 'modules' request. */
 	export interface ModulesArguments {
 		/** The index of the first module to return; if omitted modules start at 0. */
 		startModule?: number;
 		/** The number of modules to return. If moduleCount is not specified or 0, all modules are returned. */
 		moduleCount?: number;
 	}
-	/** Response to "modules" request. */
+
+	/** Response to 'modules' request. */
 	export interface ModulesResponse extends Response {
 		body: {
 			/** All modules or range of modules. */
@@ -666,14 +729,16 @@ export module DebugProtocol {
 		};
 	}
 
-	/** Evaluate request; value of command field is "evaluate".
+	/** Evaluate request; value of command field is 'evaluate'.
 		Evaluates the given expression in the context of the top most stack frame.
 		The expression has access to any variables and arguments that are in scope.
 	*/
 	export interface EvaluateRequest extends Request {
+		command: 'evaluate';
 		arguments: EvaluateArguments;
 	}
-	/** Arguments for "evaluate" request. */
+
+	/** Arguments for 'evaluate' request. */
 	export interface EvaluateArguments {
 		/** The expression to evaluate. */
 		expression: string;
@@ -682,38 +747,44 @@ export module DebugProtocol {
 		/** The context in which the evaluate request is run. Possible values are 'watch' if evaluate is run in a watch, 'repl' if run from the REPL console, or 'hover' if run from a data hover. */
 		context?: string;
 	}
-	/** Response to "evaluate" request. */
+
+	/** Response to 'evaluate' request. */
 	export interface EvaluateResponse extends Response {
 		body: {
 			/** The result of the evaluate request. */
 			result: string;
 			/** The optional type of the evaluate result. */
 			type?: string;
-			/** If variablesReference is > 0, the evaluate result is structured and its children can be retrieved by passing variablesReference to the VariablesRequest */
+			/** If variablesReference is > 0, the evaluate result is structured and its children can be retrieved by passing variablesReference to the VariablesRequest. */
 			variablesReference: number;
 			/** The number of named child variables.
-				The client can use this optional information to present the variables in a paged UI and fetch them in chunks. */
+				The client can use this optional information to present the variables in a paged UI and fetch them in chunks.
+			*/
 			namedVariables?: number;
 			/** The number of indexed child variables.
-				The client can use this optional information to present the variables in a paged UI and fetch them in chunks. */
+				The client can use this optional information to present the variables in a paged UI and fetch them in chunks.
+			*/
 			indexedVariables?: number;
 		};
 	}
 
-	/** StepInTargets request; value of command field is "stepInTargets".
+	/** StepInTargets request; value of command field is 'stepInTargets'.
 		This request retrieves the possible stepIn targets for the specified stack frame.
-		These targets can be used in the "stepIn" request.
-		The StepInTargets may only be called if the "supportsStepInTargetsRequest" capability exists and is true.
+		These targets can be used in the 'stepIn' request.
+		The StepInTargets may only be called if the 'supportsStepInTargetsRequest' capability exists and is true.
 	 */
 	export interface StepInTargetsRequest extends Request {
+		command: 'stepInTargets';
 		arguments: StepInTargetsArguments;
 	}
-	/** Arguments for "stepInTargets" request. */
+
+	/** Arguments for 'stepInTargets' request. */
 	export interface StepInTargetsArguments {
 		/** The stack frame for which to retrieve the possible stepIn targets. */
 		frameId: number;
 	}
-	/** Response to "stepInTargets" request. */
+
+	/** Response to 'stepInTargets' request. */
 	export interface StepInTargetsResponse extends Response {
 		body: {
 			/** The possible stepIn targets of the specified source location. */
@@ -721,15 +792,17 @@ export module DebugProtocol {
 		};
 	}
 
-	/** GotoTargets request; value of command field is "gotoTargets".
+	/** GotoTargets request; value of command field is 'gotoTargets'.
 		This request retrieves the possible goto targets for the specified source location.
-		These targets can be used in the "goto" request.
-		The GotoTargets request may only be called if the "supportsGotoTargetsRequest" capability exists and is true.
+		These targets can be used in the 'goto' request.
+		The GotoTargets request may only be called if the 'supportsGotoTargetsRequest' capability exists and is true.
 	 */
 	export interface GotoTargetsRequest extends Request {
+		command: 'gotoTargets';
 		arguments: GotoTargetsArguments;
 	}
-	/** Arguments for "gotoTargets" request. */
+
+	/** Arguments for 'gotoTargets' request. */
 	export interface GotoTargetsArguments {
 		/** The source location for which the goto targets are determined. */
 		source: Source;
@@ -738,7 +811,8 @@ export module DebugProtocol {
 		/** An optional column location for which the goto targets are determined. */
 		column?: number;
 	}
-	/** Response to "gotoTargets" request. */
+
+	/** Response to 'gotoTargets' request. */
 	export interface GotoTargetsResponse extends Response {
 		body: {
 			/** The possible goto targets of the specified location. */
@@ -746,15 +820,16 @@ export module DebugProtocol {
 		};
 	}
 
-	/** EXPERIMENTAL, DO NOT USE!
-		CompletionsRequest request; value of command field is "completions".
+	/** CompletionsRequest request; value of command field is 'completions'.
 		Returns a list of possible completions for a given caret position and text.
-		The CompletionsRequest may only be called if the "supportsCompletionsRequest" capability exists and is true.
+		The CompletionsRequest may only be called if the 'supportsCompletionsRequest' capability exists and is true.
 	 */
 	export interface CompletionsRequest extends Request {
+		command: 'completions';
 		arguments: CompletionsArguments;
 	}
-	/** Arguments for "completions" request. */
+
+	/** Arguments for 'completions' request. */
 	export interface CompletionsArguments {
 		/** Returns completions in the scope of this stack frame. If not specified, the completions are returned for the global scope. */
 		frameId?: number;
@@ -765,7 +840,8 @@ export module DebugProtocol {
 		/** An optional line for which to determine the completion proposals. If missing the first line of the text is assumed. */
 		line?: number;
 	}
-	/** Response to "completions" request. */
+
+	/** Response to 'completions' request. */
 	export interface CompletionsResponse extends Response {
 		body: {
 			/** The possible completions for . */
@@ -776,7 +852,7 @@ export module DebugProtocol {
 	//---- Types
 
 	/** Information about the capabilities of a debug adapter. */
-	export interface Capabilites {
+	export interface Capabilities {
 		/** The debug adapter supports the configurationDoneRequest. */
 		supportsConfigurationDoneRequest?: boolean;
 		/** The debug adapter supports functionBreakpoints. */
