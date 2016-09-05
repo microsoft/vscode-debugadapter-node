@@ -135,7 +135,11 @@ function propertyType(prop: any): string {
 			return 'number';
 	}
 	if (Object.prototype.toString.call(prop.type) === '[object Array]') {
-		return prop.type.map(v => v === 'integer' ? 'number' : v).join(' | ');
+		if (prop.type.length === 7 && prop.type.sort().join() === 'array,boolean,integer,null,number,object,string') {	// silly way to detect all possible json schema types
+			return 'any';
+		} else {
+			return prop.type.map(v => v === 'integer' ? 'number' : v).join(' | ');
+		}
 	}
 	return prop.type;
 }
@@ -151,6 +155,9 @@ function objectType(prop: any): string {
 
 		s += closeBlock('}', false);
 		return s;
+	}
+	if (prop.additionalProperties) {
+		return `{ [key: string]: ${prop.additionalProperties.type}; }`;
 	}
 	return '{}';
 }
