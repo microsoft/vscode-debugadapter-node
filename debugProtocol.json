@@ -37,7 +37,7 @@
 						"description": "The command to execute."
 					},
 					"arguments": {
-						"type": "object",
+						"type": [ "array", "boolean", "integer", "null", "number" , "object", "string" ],
 						"description": "Object containing arguments for the command."
 					}
 				},
@@ -59,7 +59,7 @@
 						"description": "Type of event."
 					},
 					"body": {
-						"type": "object",
+						"type": [ "array", "boolean", "integer", "null", "number" , "object", "string" ],
 						"description": "Event-specific information."
 					}
 				},
@@ -93,7 +93,7 @@
 						"description": "Contains error message if success == false."
 					},
 					"body": {
-						"type": "object",
+						"type": [ "array", "boolean", "integer", "null", "number" , "object", "string" ],
 						"description": "Contains request result if success is true and optional error details if success is false."
 					}
 				},
@@ -278,7 +278,7 @@
 								"description": "The output to report."
 							},
 							"data": {
-								"type": "object",
+								"type": [ "array", "boolean", "integer", "null", "number" , "object", "string" ],
 								"description": "Optional data to report. For the 'telemetry' category the data will be sent to telemetry, for the other categories the data is shown in JSON format."
 							}
 						},
