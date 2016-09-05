@@ -200,7 +200,7 @@ export module DebugProtocol {
 		/** List of arguments. The first argument is the command to run. */
 		args: string[];
 		/** Environment key-value pairs that are added to the default environment. */
-		env?: { [key: string]: string; }
+		env?: { [key: string]: string; };
 	}
 
 	/** Response to Initialize request. */
@@ -896,7 +896,7 @@ export module DebugProtocol {
 		*/
 		format: string;
 		/** An object used as a dictionary for looking up the variables in the format string. */
-		variables?: { [key: string]: string };
+		variables?: { [key: string]: string; };
 		/** If true send to telemetry. */
 		sendTelemetry?: boolean;
 		/** If true show user. */
