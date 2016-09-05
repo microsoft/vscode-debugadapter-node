@@ -17,6 +17,7 @@ function Module(moduleName: string, schema: IProtocol): string {
 	s += line(" *  Licensed under the MIT License. See License.txt in the project root for license information.");
 	s += line(" *--------------------------------------------------------------------------------------------*/");
 	s += line();
+	s += line("'use strict';");
 	s += line();
 
 	//s += comment(schema.description);
@@ -206,4 +207,4 @@ const debugProtocolSchema = JSON.parse(fs.readFileSync('./debugProtocol.json').t
 
 const emitStr = Module('DebugProtocol', debugProtocolSchema);
 
-fs.writeFileSync(`./protocol/src/debugProtocol2.d.ts`, emitStr, 'utf-8');
+fs.writeFileSync(`./protocol/src/debugProtocol.ts`, emitStr, 'utf-8');
