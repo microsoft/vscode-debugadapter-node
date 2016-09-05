@@ -17,7 +17,7 @@
 				"type": {
 					"type": "string",
 					"description": "One of 'request', 'response', or 'event'.",
-					"enum": [ "request", "response", "event" ]
+					"_enum": [ "request", "response", "event" ]
 				}
 			},
 			"required": [ "seq", "type" ]
@@ -26,7 +26,7 @@
 		"Request": {
 			"allOf": [ { "$ref": "#/definitions/ProtocolMessage" }, {
 				"type": "object",
-				"description": "Request.",
+				"description": "A client or server-initiated request.",
 				"properties": {
 					"type": {
 						"type": "string",
@@ -130,7 +130,7 @@
 							"reason": {
 								"type": "string",
 								"description": "The reason for the event (such as: 'step', 'breakpoint', 'exception', 'pause'). This string is shown in the UI.",
-								"enum": [ "step", "breakpoint", "exception", "pause" ]
+								"_enum": [ "step", "breakpoint", "exception", "pause" ]
 							},
 							"threadId": {
 								"type": "integer",
@@ -242,7 +242,7 @@
 							"reason": {
 								"type": "string",
 								"description": "The reason for the event (such as: 'started', 'exited').",
-								"enum": [ "started", "exited" ]
+								"_enum": [ "started", "exited" ]
 							},
 							"threadId": {
 								"type": "integer",
@@ -271,7 +271,7 @@
 							"category": {
 								"type": "string",
 								"description": "The category of output (such as: 'console', 'stdout', 'stderr', 'telemetry'). If not specified, 'console' is assumed.",
-								"enum": [ "console", "stdout", "stderr", "telemetry" ]
+								"_enum": [ "console", "stdout", "stderr", "telemetry" ]
 							},
 							"output": {
 								"type": "string",
@@ -304,7 +304,7 @@
 							"reason": {
 								"type": "string",
 								"description": "The reason for the event (such as: 'changed', 'new').",
-								"enum": [ "changed", "new" ]
+								"_enum": [ "changed", "new" ]
 							},
 							"breakpoint": {
 								"$ref": "#/definitions/Breakpoint",
@@ -389,7 +389,11 @@
 				},
 				"env": {
 					"type": "object",
-					"description": "Environment key-value pairs that are added to the default environment."
+					"description": "Environment key-value pairs that are added to the default environment.",
+					"additionalProperties": {
+						"type": "string",
+						"description": "Values must be strings."
+					}
 				}
 			},
 			"required": [ "args", "cwd" ]
@@ -466,7 +470,7 @@
 				},
 				"pathFormat": {
 					"type": "string",
-					"enum": [ "path", "uri" ],
+					"_enum": [ "path", "uri" ],
 					"description": "Determines in what format paths are specified. Possible values are 'path' or 'uri'. The default is 'path', which is the native format."
 				},
 				"supportsVariableType": {
@@ -1465,7 +1469,7 @@
 				},
 				"context": {
 					"type": "string",
-					"enum": [ "watch", "repl", "hover" ],
+					"_enum": [ "watch", "repl", "hover" ],
 					"description": "The context in which the evaluate request is run. Possible values are 'watch' if evaluate is run in a watch, 'repl' if run from the REPL console, or 'hover' if run from a data hover."
 				}
 			},
@@ -1765,7 +1769,11 @@
 				},
 				"variables": {
 					"type": "object",
-					"description": "An object used as a dictionary for looking up the variables in the format string."
+					"description": "An object used as a dictionary for looking up the variables in the format string.",
+					"additionalProperties": {
+						"type": "string",
+						"description": "Values must be strings."
+					}
 				},
 				"sendTelemetry": {
 					"type": "boolean",
@@ -1910,7 +1918,7 @@
 					"description": "The (optional) origin of this source: possible values 'internal module', 'inlined content from source map', etc."
 				},
 				"adapterData": {
-					"type": "object",
+					"type": [ "array", "boolean", "integer", "null", "number" , "object", "string" ],
 					"description": "Optional data that a debug adapter might want to loop through the client. The client should leave the data intact and persist it across sessions. The client should not interpret the data."
 				}
 			}
