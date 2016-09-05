@@ -6,7 +6,8 @@
 'use strict';
 
 /** Declaration module describing the VS Code debug protocol.
- */
+	Auto-generated from json schema. Do not edit manually.
+*/
 export module DebugProtocol {
 
 	/** Base class of requests, responses, and events. */
@@ -17,7 +18,7 @@ export module DebugProtocol {
 		type: string;
 	}
 
-	/** Client-initiated request */
+	/** A client or server-initiated request. */
 	export interface Request extends ProtocolMessage {
 		type: 'request';
 		/** The command to execute. */
@@ -35,7 +36,7 @@ export module DebugProtocol {
 		body?: {};
 	}
 
-	/** Server-initiated response to client request. */
+	/** Response to a request. */
 	export interface Response extends ProtocolMessage {
 		type: 'response';
 		/** Sequence number of the corresponding request. */
@@ -49,8 +50,6 @@ export module DebugProtocol {
 		/** Contains request result if success is true and optional error details if success is false. */
 		body?: {};
 	}
-
-	//---- Events
 
 	/** Event message for 'initialized' event type.
 		This event indicates that the debug adapter is ready to accept configuration requests (e.g. SetBreakpointsRequest, SetExceptionBreakpointsRequest).
@@ -81,9 +80,9 @@ export module DebugProtocol {
 			/** Additional information. E.g. if reason is 'exception', text contains the exception name. This string is shown in the UI. */
 			text?: string;
 			/** If allThreadsStopped is true, a debug adapter can announce that all threads have stopped.
-			 *  The client should use this information to enable that all threads can be expanded to access their stacktraces.
-			 *  If the attribute is missing or false, only the thread with the given threadId can be expanded.
-			 */
+				*  The client should use this information to enable that all threads can be expanded to access their stacktraces.
+				*  If the attribute is missing or false, only the thread with the given threadId can be expanded.
+			*/
 			allThreadsStopped?: boolean;
 		};
 	}
@@ -168,7 +167,7 @@ export module DebugProtocol {
 
 	/** Event message for 'module' event type.
 		The event indicates that some information about a module has changed.
-	 */
+	*/
 	export interface ModuleEvent extends Event {
 		event: 'module';
 		body: {
@@ -178,8 +177,6 @@ export module DebugProtocol {
 			module: Module;
 		};
 	}
-
-	//---- Frontend Requests
 
 	/** runInTerminal request; value of command field is 'runInTerminal'.
 		With this request a debug adapter can run a command in a terminal.
@@ -210,8 +207,6 @@ export module DebugProtocol {
 			processId?: number;
 		};
 	}
-
-	//---- Debug Adapter Requests
 
 	/** On error that is whenever 'success' is false, the body can provide more details. */
 	export interface ErrorResponse extends Response {
@@ -772,7 +767,7 @@ export module DebugProtocol {
 		This request retrieves the possible stepIn targets for the specified stack frame.
 		These targets can be used in the 'stepIn' request.
 		The StepInTargets may only be called if the 'supportsStepInTargetsRequest' capability exists and is true.
-	 */
+	*/
 	export interface StepInTargetsRequest extends Request {
 		command: 'stepInTargets';
 		arguments: StepInTargetsArguments;
@@ -796,7 +791,7 @@ export module DebugProtocol {
 		This request retrieves the possible goto targets for the specified source location.
 		These targets can be used in the 'goto' request.
 		The GotoTargets request may only be called if the 'supportsGotoTargetsRequest' capability exists and is true.
-	 */
+	*/
 	export interface GotoTargetsRequest extends Request {
 		command: 'gotoTargets';
 		arguments: GotoTargetsArguments;
@@ -823,7 +818,7 @@ export module DebugProtocol {
 	/** CompletionsRequest request; value of command field is 'completions'.
 		Returns a list of possible completions for a given caret position and text.
 		The CompletionsRequest may only be called if the 'supportsCompletionsRequest' capability exists and is true.
-	 */
+	*/
 	export interface CompletionsRequest extends Request {
 		command: 'completions';
 		arguments: CompletionsArguments;
@@ -848,8 +843,6 @@ export module DebugProtocol {
 			targets: CompletionItem[];
 		};
 	}
-
-	//---- Types
 
 	/** Information about the capabilities of a debug adapter. */
 	export interface Capabilities {
@@ -910,9 +903,9 @@ export module DebugProtocol {
 	/** A Module object represents a row in the modules view.
 		Two attributes are mandatory: an id identifies a module in the modules view and is used in a ModuleEvent for identifying a module for adding, updating or deleting.
 		The name is used to minimally render the module in the UI.
-
+		
 		Additional attributes can be added to the module. They will show up in the module View if they have a corresponding ColumnDescriptor.
-
+		
 		To avoid an unnecessary proliferation of additional attributes with similar semantics but different names
 		we recommend to re-use attributes from the 'recommended' list below first, and only introduce new attributes if nothing appropriate could be found.
 	*/
@@ -923,7 +916,7 @@ export module DebugProtocol {
 		name: string;
 		/** optional but recommended attributes.
 			always try to use these first before introducing additional attributes.
-
+			
 			Logical full path to the module. The exact definition is implementation defined, but usually this would be a full path to the on-disk file for the module.
 		*/
 		path?: string;
@@ -945,7 +938,7 @@ export module DebugProtocol {
 
 	/** A ColumnDescriptor specifies what module attribute to show in a column of the ModulesView, how to format it, and what the column's label should be.
 		It is only used if the underlying UI actually supports this level of customization.
-	 */
+	*/
 	export interface ColumnDescriptor {
 		/** Name of the attribute rendered in this column. */
 		attributeName: string;
@@ -1093,17 +1086,17 @@ export module DebugProtocol {
 		/** Unique identifier for a stepIn target. */
 		id: number;
 		/** The name of the stepIn target (shown in the UI). */
- 		label: string;
+		label: string;
 	}
 
 	/** A GotoTarget describes a code location that can be used as a target in the 'goto' request.
 		The possible goto targets can be determined via the 'gotoTargets' request.
-	 */
+	*/
 	export interface GotoTarget {
 		/** Unique identifier for a goto target. This is used in the goto request. */
 		id: number;
 		/** The name of the goto target (shown in the UI). */
- 		label: string;
+		label: string;
 		/** The line of the goto target. */
 		line: number;
 		/** An optional column of the goto target. */
