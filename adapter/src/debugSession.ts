@@ -495,6 +495,9 @@ export class DebugSession extends ProtocolServer {
 		// This default debug adapter does not support conditional breakpoints.
 		response.body.supportsConditionalBreakpoints = false;
 
+		// This default debug adapter does not support hit conditional breakpoints.
+		response.body.supportsHitConditionalBreakpoints = false;
+
 		// This default debug adapter does not support function breakpoints.
 		response.body.supportsFunctionBreakpoints = false;
 

@@ -1691,11 +1691,15 @@
 				},
 				"supportsFunctionBreakpoints": {
 					"type": "boolean",
-					"description": "The debug adapter supports functionBreakpoints."
+					"description": "The debug adapter supports function breakpoints."
 				},
 				"supportsConditionalBreakpoints": {
 					"type": "boolean",
-					"description": "The debug adapter supports conditionalBreakpoints."
+					"description": "The debug adapter supports conditional breakpoints."
+				},
+				"supportsHitConditionalBreakpoints": {
+					"type": "boolean",
+					"description": "The debug adapter supports breakpoints that break execution after a specified number of hits."
 				},
 				"supportsEvaluateForHovers": {
 					"type": "boolean",
@@ -2039,6 +2043,10 @@
 				"condition": {
 					"type": "string",
 					"description": "An optional expression for conditional breakpoints."
+				},
+				"hitCondition": {
+					"type": "string",
+					"description": "An optional expression that controls how many hits of the breakpoint are ignored. The backend is expected to interpret the expression as needed."
 				}
 			},
 			"required": [ "line" ]
@@ -2055,6 +2063,10 @@
 				"condition": {
 					"type": "string",
 					"description": "An optional expression for conditional breakpoints."
+				},
+				"hitCondition": {
+					"type": "string",
+					"description": "An optional expression that controls how many hits of the breakpoint are ignored. The backend is expected to interpret the expression as needed."
 				}
 			},
 			"required": [ "name" ]

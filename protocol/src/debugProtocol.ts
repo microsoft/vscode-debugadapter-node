@@ -848,10 +848,12 @@ export module DebugProtocol {
 	export interface Capabilities {
 		/** The debug adapter supports the configurationDoneRequest. */
 		supportsConfigurationDoneRequest?: boolean;
-		/** The debug adapter supports functionBreakpoints. */
+		/** The debug adapter supports function breakpoints. */
 		supportsFunctionBreakpoints?: boolean;
-		/** The debug adapter supports conditionalBreakpoints. */
+		/** The debug adapter supports conditional breakpoints. */
 		supportsConditionalBreakpoints?: boolean;
+		/** The debug adapter supports breakpoints that break execution after a specified number of hits. */
+		supportsHitConditionalBreakpoints?: boolean;
 		/** The debug adapter supports a (side effect free) evaluate request for data hovers. */
 		supportsEvaluateForHovers?: boolean;
 		/** Available filters for the setExceptionBreakpoints request. */
@@ -1051,6 +1053,8 @@ export module DebugProtocol {
 		column?: number;
 		/** An optional expression for conditional breakpoints. */
 		condition?: string;
+		/** An optional expression that controls how many hits of the breakpoint are ignored. The backend is expected to interpret the expression as needed. */
+		hitCondition?: string;
 	}
 
 	/** Properties of a breakpoint passed to the setFunctionBreakpoints request. */
@@ -1059,6 +1063,8 @@ export module DebugProtocol {
 		name: string;
 		/** An optional expression for conditional breakpoints. */
 		condition?: string;
+		/** An optional expression that controls how many hits of the breakpoint are ignored. The backend is expected to interpret the expression as needed. */
+		hitCondition?: string;
 	}
 
 	/** Information about a Breakpoint created in setBreakpoints or setFunctionBreakpoints. */

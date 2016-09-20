@@ -9,6 +9,7 @@ This npm module contains declarations for the json-based Visual Studio Code debu
 
 * 1.13.x:
   * Fix typo in `Capabilities` type.
+  * Adds an optional `hitCondition` attribute to breakpoints and a corresponding `supportsHitConditionalBreakpoints`capability.
 
 * 1.12.x:
   * Adds a new optional attribute `frameId` to the `completionRequest`.
