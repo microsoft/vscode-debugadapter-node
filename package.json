@@ -22,7 +22,8 @@
 	"dependencies": {
 	},
 	"devDependencies": {
-		"typescript": "^1.8.5"
+		"@types/node": "^6.0.39",
+		"typescript": "^2.0.2"
 	},
 	"scripts": {
 		"compile": "node ./node_modules/typescript/bin/tsc -p ./src",

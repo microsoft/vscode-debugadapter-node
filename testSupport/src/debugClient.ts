@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import fs = require('fs');
+import constants = require('constants');
 import cp = require('child_process');
 import assert = require('assert');
 import net = require('net');
@@ -51,8 +52,8 @@ export class DebugClient extends ProtocolClient {
 
 		if (DebugClient.CASE_INSENSITIVE_FILESYSTEM === undefined) {
 			try {
-				fs.accessSync(process.execPath.toLowerCase(), fs.F_OK);
-				fs.accessSync(process.execPath.toUpperCase(), fs.F_OK);
+				fs.accessSync(process.execPath.toLowerCase(), constants.F_OK);
+				fs.accessSync(process.execPath.toUpperCase(), constants.F_OK);
 				DebugClient.CASE_INSENSITIVE_FILESYSTEM = true;
 			} catch (err) {
 				DebugClient.CASE_INSENSITIVE_FILESYSTEM = false;
