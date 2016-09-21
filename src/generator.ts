@@ -131,7 +131,7 @@ function propertyType(prop: any): string {
 		case 'integer':
 			return 'number';
 	}
-	if (Object.prototype.toString.call(prop.type) === '[object Array]') {
+	if (Array.isArray(prop.type)) {
 		if (prop.type.length === 7 && prop.type.sort().join() === 'array,boolean,integer,null,number,object,string') {	// silly way to detect all possible json schema types
 			return 'any';
 		} else {
