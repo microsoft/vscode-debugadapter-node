@@ -1,7 +1,7 @@
 {
 	"name": "vscode-debugadapter-testsupport",
 	"description": "Npm module with mocha test support for Visual Studio Code debug adapters",
-	"version": "1.13.0-pre.3",
+	"version": "1.13.0",
 	"author": "Microsoft Corporation",
 	"license": "MIT",
 	"repository": {
@@ -14,7 +14,7 @@
 	"main": "./lib/main.js",
 	"typings": "./lib/main",
 	"dependencies": {
-		"vscode-debugprotocol": "^1.13.0-pre.5"
+		"vscode-debugprotocol": "^1.13.0"
 	},
 	"devDependencies": {
     	"@types/es6-collections": "^0.5.29",
