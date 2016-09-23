@@ -7,7 +7,6 @@
 		"stripInternal": true,
 		"inlineSourceMap": true,
 		"inlineSources": true,
-		"outDir": "../lib",
-		"typeRoots": [ "../node_modules/@types/" ]
+		"outDir": "../lib"
 	}
 }
