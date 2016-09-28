@@ -1751,6 +1751,13 @@
 				"supportsCompletionsRequest": {
 					"type": "boolean",
 					"description": "The debug adapter supports the completionsRequest."
+				},
+				"supportedChecksumAlgorithms": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ChecksumAlgorithm"
+					},
+					"description": "Checksum algorithms supported by the debug adapter."
 				}
 			}
 		},
@@ -1938,8 +1945,15 @@
 					"description": "The (optional) origin of this source: possible values 'internal module', 'inlined content from source map', etc."
 				},
 				"adapterData": {
-					"type": [ "array", "boolean", "integer", "null", "number" , "object", "string" ],
+					"type": [ "array", "boolean", "integer", "null", "number", "object", "string" ],
 					"description": "Optional data that a debug adapter might want to loop through the client. The client should leave the data intact and persist it across sessions. The client should not interpret the data."
+				},
+				"checksums": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Checksum"
+					},
+					"description": "The checksums associated with this file."
 				}
 			}
 		},
@@ -2207,6 +2221,28 @@
 			"type": "string",
 			"description": "Some predefined types for the CompletionItem. Please note that not all clients have specific icons for all of them.",
 			"enum": [ "method", "function", "constructor", "field", "variable", "class", "interface", "module", "property", "unit", "value", "enum", "keyword", "snippet", "text", "color", "file", "reference", "customcolor" ]
+		},
+
+		"ChecksumAlgorithm": {
+			"type": "string",
+			"description": "Names of checksum algorithms that may be supported by a debug adapter.",
+			"enum": [ "MD5", "SHA1", "SHA256", "SHA1Normalized", "SHA256Normalized", "timestamp" ]
+		},
+
+		"Checksum": {
+			"type": "object",
+			"description": "The checksum of an item calculated by the specified algorithm.",
+			"properties": {
+				"algorithm": {
+					"$ref": "#/definitions/ChecksumAlgorithm",
+					"description": "The algorithm used to calculate this checksum."
+				},
+				"checksum": {
+					"type": "string",
+					"description": "Value of the checksum."
+				}
+			},
+			"required": [ "algorithm", "checksum" ]
 		}
 	}
 }
