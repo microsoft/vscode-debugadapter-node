@@ -211,6 +211,10 @@ export class DebugClient extends ProtocolClient {
 		return this.send('evaluate', args);
 	}
 
+	public completionsRequest(args: DebugProtocol.CompletionsArguments): Promise<DebugProtocol.CompletionsResponse> {
+		return this.send('completions', args);
+	}
+
 	// ---- convenience methods -----------------------------------------------------------------------------------------------
 
 	/*
