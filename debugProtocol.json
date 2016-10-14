@@ -1483,6 +1483,10 @@
 					"type": "integer",
 					"description": "Evaluate the expression in the scope of this stack frame. If not specified, the expression is evaluated in the global scope."
 				},
+				"value":{
+					"type":"string",
+					"description": "The optional value to set the expression to."
+				},
 				"context": {
 					"type": "string",
 					"_enum": [ "watch", "repl", "hover" ],
@@ -1518,6 +1522,10 @@
 							"indexedVariables": {
 								"type": "number",
 								"description": "The number of indexed child variables.\nThe client can use this optional information to present the variables in a paged UI and fetch them in chunks."
+							},
+							"readOnly": {
+								"type": "boolean",
+								"description": "Indicates the expressions value can be modified."
 							}
 						},
 						"required": [ "result", "variablesReference" ]
@@ -2077,6 +2085,10 @@
 				"type": {
 					"type": "string",
 					"description": "The type of the variable's value. Typically shown in the UI when hovering over the value."
+				},
+				"readOnly": {
+					"type": "boolean",
+					"description": "Indicates the variables value can be modified."
 				},
 				"kind": {
 					"type": "string",
