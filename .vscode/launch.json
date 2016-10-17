@@ -2,9 +2,9 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Launch",
 			"type": "node",
 			"request": "launch",
+			"name": "Generate debugProtocol.ts",
 			"program": "${workspaceRoot}/src/generator.ts",
 			"stopOnEntry": false,
 			"args": [ ],

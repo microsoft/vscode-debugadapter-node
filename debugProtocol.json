@@ -1285,7 +1285,11 @@
 						"properties": {
 							"value": {
 								"type": "string",
-								"description": "the new value of the variable."
+								"description": "The new value of the variable."
+							},
+							"type": {
+								"type": "string",
+								"description": "The type of the new value. Typically shown in the UI when hovering over the value."
 							}
 						},
 						"required": [ "value" ]
@@ -2000,13 +2004,13 @@
 					"type": "string",
 					"description": "The variable's name."
 				},
-				"type": {
-					"type": "string",
-					"description": "The variable's type."
-				},
 				"value": {
 					"type": "string",
 					"description": "The variable's value. For structured objects this can be a multi line text, e.g. for a function the body of a function."
+				},
+				"type": {
+					"type": "string",
+					"description": "The type of the variable's value. Typically shown in the UI when hovering over the value."
 				},
 				"kind": {
 					"type": "string",
@@ -2018,11 +2022,11 @@
 				},
 				"namedVariables": {
 					"type": "integer",
-					"description": "The number of named child variables in this scope.\nThe client can use this optional information to present the children in a paged UI and fetch them in chunks."
+					"description": "The number of named child variables.\nThe client can use this optional information to present the children in a paged UI and fetch them in chunks."
 				},
 				"indexedVariables": {
 					"type": "integer",
-					"description": "The number of indexed child variables in this scope.\nThe client can use this optional information to present the children in a paged UI and fetch them in chunks."
+					"description": "The number of indexed child variables.\nThe client can use this optional information to present the children in a paged UI and fetch them in chunks."
 				}
 			},
 			"required": [ "name", "value", "variablesReference" ]

@@ -7,6 +7,9 @@ This npm module contains declarations for the json-based Visual Studio Code debu
 
 ## History
 
+* 1.14.x:
+  * Adds optional `type` attribute to the `SetVariableResponse` type.
+
 * 1.13.x:
   * Fix typo in `Capabilities` type.
   * Adds an optional `hitCondition` attribute to breakpoints and a corresponding `supportsHitConditionalBreakpoints`capability.
