@@ -1290,6 +1290,18 @@
 							"type": {
 								"type": "string",
 								"description": "The type of the new value. Typically shown in the UI when hovering over the value."
+							},
+							"variablesReference": {
+								"type": "number",
+								"description": "If variablesReference is > 0, the new value is structured and its children can be retrieved by passing variablesReference to the VariablesRequest."
+							},
+							"namedVariables": {
+								"type": "number",
+								"description": "The number of named child variables.\nThe client can use this optional information to present the variables in a paged UI and fetch them in chunks."
+							},
+							"indexedVariables": {
+								"type": "number",
+								"description": "The number of indexed child variables.\nThe client can use this optional information to present the variables in a paged UI and fetch them in chunks."
 							}
 						},
 						"required": [ "value" ]

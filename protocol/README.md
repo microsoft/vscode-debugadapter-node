@@ -9,6 +9,7 @@ This npm module contains declarations for the json-based Visual Studio Code debu
 
 * 1.14.x:
   * Adds optional `type` attribute to the `SetVariableResponse` type.
+  * Support to return a structured object from the `SetVariableRequest`.
 
 * 1.13.x:
   * Fix typo in `Capabilities` type.
