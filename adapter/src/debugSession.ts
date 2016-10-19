@@ -187,14 +187,16 @@ export class TerminatedEvent extends Event implements DebugProtocol.TerminatedEv
 export class OutputEvent extends Event implements DebugProtocol.OutputEvent {
 	body: {
 		category: string,
-		output: string
+		output: string,
+		data?: any
 	};
 
-	public constructor(output: string, category: string = 'console') {
+	public constructor(output: string, category: string = 'console', data?: any) {
 		super('output');
 		this.body = {
 			category: category,
-			output: output
+			output: output,
+			data: data
 		};
 	}
 }
