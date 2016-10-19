@@ -882,6 +882,10 @@ export module DebugProtocol {
 		supportsStepInTargetsRequest?: boolean;
 		/** The debug adapter supports the completionsRequest. */
 		supportsCompletionsRequest?: boolean;
+		/** The debug adapter supports the modules request. */
+		supportsModulesRequest?: boolean;
+		/** The set of additional module information exposed by the debug adapter. */
+		additionalModuleColumns?: ColumnDescriptor[];
 	}
 
 	/** An ExceptionBreakpointsFilter is shown in the UI as an option for configuring how exceptions are dealt with. */
@@ -959,9 +963,11 @@ export module DebugProtocol {
 		/** Header UI label of column. */
 		label: string;
 		/** Format to use for the rendered values in this column. TBD how the format strings looks like. */
-		format: string;
+		format?: string;
+		/** Datatype of values in this column.  Defaults to 'string' if not specified. */
+		type?: 'string' | 'number' | 'boolean' | 'unixTimestampUTC';
 		/** Width of this column in characters (hint only). */
-		width: number;
+		width?: number;
 	}
 
 	/** The ModulesViewDescriptor is the container for all declarative configuration options of a ModuleView.
@@ -1009,6 +1015,8 @@ export module DebugProtocol {
 		endLine?: number;
 		/** An optional end column of the range covered by the stack frame. */
 		endColumn?: number;
+		/** The module associated with this frame, if any. */
+		moduleId?: number | string;
 	}
 
 	/** A Scope is a named container for variables. */
