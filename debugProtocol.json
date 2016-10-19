@@ -1751,6 +1751,17 @@
 				"supportsCompletionsRequest": {
 					"type": "boolean",
 					"description": "The debug adapter supports the completionsRequest."
+				},
+				"supportsModulesRequest": {
+					"type": "boolean",
+					"description": "The debug adapter supports the modules request."
+				},
+				"additionalModuleColumns": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ColumnDescriptor"
+					},
+					"description": "The set of additional module information exposed by the debug adapter."
 				}
 			}
 		},
@@ -1879,12 +1890,17 @@
 					"type": "string",
 					"description": "Format to use for the rendered values in this column. TBD how the format strings looks like."
 				},
+				"type": {
+					"type": "string",
+					"enum": [ "string", "number", "boolean", "unixTimestampUTC" ],
+					"description": "Datatype of values in this column.  Defaults to 'string' if not specified."
+				},
 				"width": {
 					"type": "integer",
 					"description": "Width of this column in characters (hint only)."
 				}
 			},
-			"required": [ "attributeName", "label", "format", "width" ]
+			"required": [ "attributeName", "label"]
 		},
 
 		"ModulesViewDescriptor": {
@@ -1975,6 +1991,10 @@
 				"endColumn": {
 					"type": "integer",
 					"description": "An optional end column of the range covered by the stack frame."
+				},
+				"moduleId": {
+					"type": ["integer", "string"],
+					"description": "The module associated with this frame, if any."
 				}
 			},
 			"required": [ "id", "name", "line", "column" ]
