@@ -886,6 +886,8 @@ export module DebugProtocol {
 		supportsModulesRequest?: boolean;
 		/** The set of additional module information exposed by the debug adapter. */
 		additionalModuleColumns?: ColumnDescriptor[];
+		/** Checksum algorithms supported by the debug adapter. */
+		supportedChecksumAlgorithms?: ChecksumAlgorithm[];
 	}
 
 	/** An ExceptionBreakpointsFilter is shown in the UI as an option for configuring how exceptions are dealt with. */
@@ -921,9 +923,9 @@ export module DebugProtocol {
 	/** A Module object represents a row in the modules view.
 		Two attributes are mandatory: an id identifies a module in the modules view and is used in a ModuleEvent for identifying a module for adding, updating or deleting.
 		The name is used to minimally render the module in the UI.
-		
+
 		Additional attributes can be added to the module. They will show up in the module View if they have a corresponding ColumnDescriptor.
-		
+
 		To avoid an unnecessary proliferation of additional attributes with similar semantics but different names
 		we recommend to re-use attributes from the 'recommended' list below first, and only introduce new attributes if nothing appropriate could be found.
 	*/
@@ -934,7 +936,7 @@ export module DebugProtocol {
 		name: string;
 		/** optional but recommended attributes.
 			always try to use these first before introducing additional attributes.
-			
+
 			Logical full path to the module. The exact definition is implementation defined, but usually this would be a full path to the on-disk file for the module.
 		*/
 		path?: string;
@@ -997,6 +999,8 @@ export module DebugProtocol {
 		origin?: string;
 		/** Optional data that a debug adapter might want to loop through the client. The client should leave the data intact and persist it across sessions. The client should not interpret the data. */
 		adapterData?: any;
+		/** The checksums associated with this file. */
+		checksums?: Checksum[];
 	}
 
 	/** A Stackframe contains the source location. */
@@ -1150,5 +1154,16 @@ export module DebugProtocol {
 
 	/** Some predefined types for the CompletionItem. Please note that not all clients have specific icons for all of them. */
 	export type CompletionItemType = 'method' | 'function' | 'constructor' | 'field' | 'variable' | 'class' | 'interface' | 'module' | 'property' | 'unit' | 'value' | 'enum' | 'keyword' | 'snippet' | 'text' | 'color' | 'file' | 'reference' | 'customcolor';
+
+	/** Names of checksum algorithms that may be supported by a debug adapter. */
+	export type ChecksumAlgorithm = 'MD5' | 'SHA1' | 'SHA256' | 'SHA1Normalized' | 'SHA256Normalized' | 'timestamp';
+
+	/** The checksum of an item calculated by the specified algorithm. */
+	export interface Checksum {
+		/** The algorithm used to calculate this checksum. */
+		algorithm: ChecksumAlgorithm;
+		/** Value of the checksum. */
+		checksum: string;
+	}
 }
 
