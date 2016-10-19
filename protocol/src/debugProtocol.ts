@@ -882,6 +882,8 @@ export module DebugProtocol {
 		supportsStepInTargetsRequest?: boolean;
 		/** The debug adapter supports the completionsRequest. */
 		supportsCompletionsRequest?: boolean;
+		/** Checksum algorithms supported by the debug adapter. */
+		supportedChecksumAlgorithms?: ChecksumAlgorithm[];
 	}
 
 	/** An ExceptionBreakpointsFilter is shown in the UI as an option for configuring how exceptions are dealt with. */
@@ -991,6 +993,8 @@ export module DebugProtocol {
 		origin?: string;
 		/** Optional data that a debug adapter might want to loop through the client. The client should leave the data intact and persist it across sessions. The client should not interpret the data. */
 		adapterData?: any;
+		/** The checksums associated with this file. */
+		checksums?: Checksum[];
 	}
 
 	/** A Stackframe contains the source location. */
@@ -1142,5 +1146,16 @@ export module DebugProtocol {
 
 	/** Some predefined types for the CompletionItem. Please note that not all clients have specific icons for all of them. */
 	export type CompletionItemType = 'method' | 'function' | 'constructor' | 'field' | 'variable' | 'class' | 'interface' | 'module' | 'property' | 'unit' | 'value' | 'enum' | 'keyword' | 'snippet' | 'text' | 'color' | 'file' | 'reference' | 'customcolor';
+
+	/** Names of checksum algorithms that may be supported by a debug adapter. */
+	export type ChecksumAlgorithm = 'MD5' | 'SHA1' | 'SHA256' | 'SHA1Normalized' | 'SHA256Normalized' | 'timestamp';
+
+	/** The checksum of an item calculated by the specified algorithm. */
+	export interface Checksum {
+		/** The algorithm used to calculate this checksum. */
+		algorithm: ChecksumAlgorithm;
+		/** Value of the checksum. */
+		checksum: string;
+	}
 }
 
