@@ -1045,7 +1045,7 @@ export module DebugProtocol {
 		Optionally a variable can have a 'type' that is shown if space permits or when hovering over the variable's name.
 		An optional 'kind' is used to render additional properties of the variable, e.g. different icons can be used to indicate that a variable is public or private.
 		If the value is structured (has children), a handle is provided to retrieve the children with the VariablesRequest.
-		If the number of children is large, the number should be returned via the optional 'totalVariables' attribute.
+		If the number of named or indexed children is large, the numbers should be returned via the optional 'namedVariables' and 'indexedVariables' attributes.
 		The client can use this optional information to present the children in a paged UI and fetch them in chunks.
 	*/
 	export interface Variable {
@@ -1057,6 +1057,8 @@ export module DebugProtocol {
 		type?: string;
 		/** Properties of a variable that can be used to determine how to render the variable in the UI. Format of the string value: TBD. */
 		kind?: string;
+		/** Optional evaluatable name of this variable which can be passed to the 'EvaluateRequest' to fetch the variable's value. */
+		evaluateName?: string;
 		/** If variablesReference is > 0, the variable is structured and its children can be retrieved by passing variablesReference to the VariablesRequest. */
 		variablesReference: number;
 		/** The number of named child variables.

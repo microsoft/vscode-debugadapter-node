@@ -2062,6 +2062,10 @@
 					"type": "string",
 					"description": "Properties of a variable that can be used to determine how to render the variable in the UI. Format of the string value: TBD."
 				},
+				"evaluateName": {
+					"type": "string",
+					"description": "Optional evaluatable name of this variable which can be passed to the 'EvaluateRequest' to fetch the variable's value."
+				},
 				"variablesReference": {
 					"type": "integer",
 					"description": "If variablesReference is > 0, the variable is structured and its children can be retrieved by passing variablesReference to the VariablesRequest."
