@@ -2044,7 +2044,7 @@
 
 		"Variable": {
 			"type": "object",
-			"description": "A Variable is a name/value pair.\nOptionally a variable can have a 'type' that is shown if space permits or when hovering over the variable's name.\nAn optional 'kind' is used to render additional properties of the variable, e.g. different icons can be used to indicate that a variable is public or private.\nIf the value is structured (has children), a handle is provided to retrieve the children with the VariablesRequest.\nIf the number of children is large, the number should be returned via the optional 'totalVariables' attribute.\nThe client can use this optional information to present the children in a paged UI and fetch them in chunks.",
+			"description": "A Variable is a name/value pair.\nOptionally a variable can have a 'type' that is shown if space permits or when hovering over the variable's name.\nAn optional 'kind' is used to render additional properties of the variable, e.g. different icons can be used to indicate that a variable is public or private.\nIf the value is structured (has children), a handle is provided to retrieve the children with the VariablesRequest.\nIf the number of named or indexed children is large, the numbers should be returned via the optional 'namedVariables' and 'indexedVariables' attributes.\nThe client can use this optional information to present the children in a paged UI and fetch them in chunks.",
 			"properties": {
 				"name": {
 					"type": "string",
