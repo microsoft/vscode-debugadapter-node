@@ -882,6 +882,10 @@ export module DebugProtocol {
 		supportsStepInTargetsRequest?: boolean;
 		/** The debug adapter supports the completionsRequest. */
 		supportsCompletionsRequest?: boolean;
+		/** The debug adapter supports the modules request. */
+		supportsModulesRequest?: boolean;
+		/** The set of additional module information exposed by the debug adapter. */
+		additionalModuleColumns?: ColumnDescriptor[];
 		/** Checksum algorithms supported by the debug adapter. */
 		supportedChecksumAlgorithms?: ChecksumAlgorithm[];
 	}
@@ -919,9 +923,9 @@ export module DebugProtocol {
 	/** A Module object represents a row in the modules view.
 		Two attributes are mandatory: an id identifies a module in the modules view and is used in a ModuleEvent for identifying a module for adding, updating or deleting.
 		The name is used to minimally render the module in the UI.
-		
+
 		Additional attributes can be added to the module. They will show up in the module View if they have a corresponding ColumnDescriptor.
-		
+
 		To avoid an unnecessary proliferation of additional attributes with similar semantics but different names
 		we recommend to re-use attributes from the 'recommended' list below first, and only introduce new attributes if nothing appropriate could be found.
 	*/
@@ -932,7 +936,7 @@ export module DebugProtocol {
 		name: string;
 		/** optional but recommended attributes.
 			always try to use these first before introducing additional attributes.
-			
+
 			Logical full path to the module. The exact definition is implementation defined, but usually this would be a full path to the on-disk file for the module.
 		*/
 		path?: string;
@@ -961,9 +965,11 @@ export module DebugProtocol {
 		/** Header UI label of column. */
 		label: string;
 		/** Format to use for the rendered values in this column. TBD how the format strings looks like. */
-		format: string;
+		format?: string;
+		/** Datatype of values in this column.  Defaults to 'string' if not specified. */
+		type?: 'string' | 'number' | 'boolean' | 'unixTimestampUTC';
 		/** Width of this column in characters (hint only). */
-		width: number;
+		width?: number;
 	}
 
 	/** The ModulesViewDescriptor is the container for all declarative configuration options of a ModuleView.
@@ -1013,6 +1019,8 @@ export module DebugProtocol {
 		endLine?: number;
 		/** An optional end column of the range covered by the stack frame. */
 		endColumn?: number;
+		/** The module associated with this frame, if any. */
+		moduleId?: number | string;
 	}
 
 	/** A Scope is a named container for variables. */
