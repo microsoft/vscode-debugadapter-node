@@ -195,9 +195,11 @@ export class OutputEvent extends Event implements DebugProtocol.OutputEvent {
 		super('output');
 		this.body = {
 			category: category,
-			output: output,
-			data: data
+			output: output
 		};
+		if (data !== undefined) {
+			this.body.data = data;
+		}
 	}
 }
 
