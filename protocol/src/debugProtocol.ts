@@ -1023,7 +1023,7 @@ export module DebugProtocol {
 		moduleId?: number | string;
 	}
 
-	/** A Scope is a named container for variables. */
+	/** A Scope is a named container for variables. Optionally a scope can map to a source or a range within a source. */
 	export interface Scope {
 		/** Name of the scope such as 'Arguments', 'Locals'. */
 		name: string;
@@ -1039,6 +1039,16 @@ export module DebugProtocol {
 		indexedVariables?: number;
 		/** If true, the number of variables in this scope is large or expensive to retrieve. */
 		expensive: boolean;
+		/** Optional source for this scope. */
+		source?: Source;
+		/** Optional start line of the range covered by this scope. */
+		line?: number;
+		/** Optional start column of the range covered by this scope. */
+		column?: number;
+		/** Optional end line of the range covered by this scope. */
+		endLine?: number;
+		/** Optional end column of the range covered by this scope. */
+		endColumn?: number;
 	}
 
 	/** A Variable is a name/value pair.

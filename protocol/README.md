@@ -12,6 +12,7 @@ This npm module contains declarations for the json-based Visual Studio Code debu
   * Support to return a structured object from the `SetVariableRequest`.
   * Fine tuning of `Module` part of the protocol.
   * Adds optional checksum support to `Source` type.
+  * Adds optional source range to `Scope` type.
 
 * 1.13.x:
   * Fix typo in `Capabilities` type.

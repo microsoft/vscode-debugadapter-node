@@ -2016,7 +2016,7 @@
 
 		"Scope": {
 			"type": "object",
-			"description": "A Scope is a named container for variables.",
+			"description": "A Scope is a named container for variables. Optionally a scope can map to a source or a range within a source.",
 			"properties": {
 				"name": {
 					"type": "string",
@@ -2037,6 +2037,26 @@
 				"expensive": {
 					"type": "boolean",
 					"description": "If true, the number of variables in this scope is large or expensive to retrieve."
+				},
+				"source": {
+					"$ref": "#/definitions/Source",
+					"description": "Optional source for this scope."
+				},
+				"line": {
+					"type": "integer",
+					"description": "Optional start line of the range covered by this scope."
+				},
+				"column": {
+					"type": "integer",
+					"description": "Optional start column of the range covered by this scope."
+				},
+				"endLine": {
+					"type": "integer",
+					"description": "Optional end line of the range covered by this scope."
+				},
+				"endColumn": {
+					"type": "integer",
+					"description": "Optional end column of the range covered by this scope."
 				}
 			},
 			"required": [ "name", "variablesReference", "expensive" ]
