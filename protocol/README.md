@@ -11,6 +11,7 @@ This npm module contains declarations for the json-based Visual Studio Code debu
   * Adds optional `type` attribute to the `SetVariableResponse` type.
   * Support to return a structured object from the `SetVariableRequest`.
   * Fine tuning of `Module` part of the protocol.
+  * Adds optional attribute `evaluatable` to `Variable` type.
   * Adds optional checksum support to `Source` type.
   * Adds optional source range to `Scope` type.
 
