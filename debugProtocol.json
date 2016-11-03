@@ -1770,7 +1770,7 @@
 					},
 					"description": "Checksum algorithms supported by the debug adapter."
 				},
-				"disableValueEscaping": {
+				"supportsValueEscaping": {
 					"type": "boolean",
 					"description": "The debug adapter will be responsible for escaping newlines in variable values and evaluation results, and the client will display them as-is."
 				}

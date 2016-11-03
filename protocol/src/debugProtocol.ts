@@ -889,7 +889,7 @@ export module DebugProtocol {
 		/** Checksum algorithms supported by the debug adapter. */
 		supportedChecksumAlgorithms?: ChecksumAlgorithm[];
 		/** The debug adapter will be responsible for escaping newlines in variable values and evaluation results, and the client will display them as-is. */
-		disableValueEscaping?: boolean;
+		supportsValueEscaping?: boolean;
 	}
 
 	/** An ExceptionBreakpointsFilter is shown in the UI as an option for configuring how exceptions are dealt with. */
