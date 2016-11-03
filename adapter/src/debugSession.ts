@@ -529,6 +529,9 @@ export class DebugSession extends ProtocolServer {
 		// This default debug adapter does not support the 'completionsRequest' request.
 		response.body.supportsCompletionsRequest = false;
 
+		// The debug adapter leaves escaping newlines in variable values and evaluation results to the client.
+		response.body.supportsValueEscaping = false;
+
 		this.sendResponse(response);
 	}
 
