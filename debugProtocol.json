@@ -1285,7 +1285,7 @@
 						"properties": {
 							"value": {
 								"type": "string",
-								"description": "The new value of the variable."
+								"description": "The new value of the variable. See capability 'supportsValueEscaping' for details about how to treat newlines in multi-line strings."
 							},
 							"type": {
 								"type": "string",
@@ -1501,7 +1501,7 @@
 						"properties": {
 							"result": {
 								"type": "string",
-								"description": "The result of the evaluate request."
+								"description": "The result of the evaluate request. See capability 'supportsValueEscaping' for details about how to treat newlines in multi-lines strings."
 							},
 							"type": {
 								"type": "string",
@@ -1772,7 +1772,7 @@
 				},
 				"supportsValueEscaping": {
 					"type": "boolean",
-					"description": "The debug adapter will be responsible for escaping newlines in variable values and evaluation results, and the client will display them as-is."
+					"description": "The debug adapter will be responsible for escaping newlines in variable values and evaluation results, and the client will display them as-is. If missing or false the client will escape newlines as needed."
 				}
 			}
 		},
@@ -2076,7 +2076,7 @@
 				},
 				"value": {
 					"type": "string",
-					"description": "The variable's value. For structured objects this can be a multi line text, e.g. for a function the body of a function."
+					"description": "The variable's value. This can be a multi-line text, e.g. for a function the body of a function. See capability 'supportsValueEscaping' for details about how to treat newlines in multi-line strings."
 				},
 				"type": {
 					"type": "string",
