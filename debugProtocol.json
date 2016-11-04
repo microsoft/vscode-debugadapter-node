@@ -761,7 +761,7 @@
 					"items": {
 						"type": "string"
 					},
-					"description": "Names of enabled exception breakpoints."
+					"description": "Ids of enabled exception breakpoints."
 				}
 			},
 			"required": [ "filters" ]
