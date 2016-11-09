@@ -447,6 +447,9 @@ export class DebugSession extends ProtocolServer {
 			} else if (request.command === 'stepBack') {
 				this.stepBackRequest(<DebugProtocol.StepBackResponse> response, request.arguments);
 
+			} else if (request.command === 'reverseContinue') {
+				this.reverseContinueRequest(<DebugProtocol.ReverseContinueResponse> response, request.arguments);
+
 			} else if (request.command === 'restartFrame') {
 				this.restartFrameRequest(<DebugProtocol.RestartFrameResponse> response, request.arguments);
 
@@ -581,6 +584,10 @@ export class DebugSession extends ProtocolServer {
 	}
 
 	protected stepBackRequest(response: DebugProtocol.StepBackResponse, args: DebugProtocol.StepBackArguments) : void {
+		this.sendResponse(response);
+	}
+
+	protected reverseContinueRequest(response: DebugProtocol.ReverseContinueResponse, args: DebugProtocol.ReverseContinueArguments) : void {
 		this.sendResponse(response);
 	}
 

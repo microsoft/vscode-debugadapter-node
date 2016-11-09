@@ -841,7 +841,7 @@
 			"properties": {
 				"threadId": {
 					"type": "integer",
-					"description": "Continue execution for this thread."
+					"description": "Execute 'next' for this thread."
 				}
 			},
 			"required": [ "threadId" ]
@@ -875,7 +875,7 @@
 			"properties": {
 				"threadId": {
 					"type": "integer",
-					"description": "Continue execution for this thread."
+					"description": "Execute 'stepIn' for this thread."
 				},
 				"targetId": {
 					"type": "integer",
@@ -913,7 +913,7 @@
 			"properties": {
 				"threadId": {
 					"type": "integer",
-					"description": "Continue execution for this thread."
+					"description": "Execute 'stepOut' for this thread."
 				}
 			},
 			"required": [ "threadId" ]
@@ -928,7 +928,7 @@
 		"StepBackRequest": {
 			"allOf": [ { "$ref": "#/definitions/Request" }, {
 				"type": "object",
-				"description": "StepBack request; value of command field is 'stepBack'.\nThe request starts the debuggee to run one step backwards.\nThe debug adapter first sends the StepBackResponse and then a StoppedEvent (event type 'step') after the step has completed.",
+				"description": "StepBack request; value of command field is 'stepBack'.\nThe request starts the debuggee to run one step backwards.\nThe debug adapter first sends the StepBackResponse and then a StoppedEvent (event type 'step') after the step has completed. Clients should only call this request if the capability supportsStepBack is true.",
 				"properties": {
 					"command": {
 						"type": "string",
@@ -947,7 +947,7 @@
 			"properties": {
 				"threadId": {
 					"type": "integer",
-					"description": "Continue execution for this thread."
+					"description": "Exceute 'stepBack' for this thread."
 				}
 			},
 			"required": [ "threadId" ]
@@ -956,6 +956,40 @@
 			"allOf": [ { "$ref": "#/definitions/Response" }, {
 				"type": "object",
 				"description": "Response to 'stepBack' request. This is just an acknowledgement, so no body field is required."
+			}]
+		},
+
+		"ReverseContinueRequest": {
+			"allOf": [ { "$ref": "#/definitions/Request" }, {
+				"type": "object",
+				"description": "ReverseContinue request; value of command field is 'reverseContinue'.\nThe request starts the debuggee to run backward. Clients should only call this request if the capability supportsStepBack is true.",
+				"properties": {
+					"command": {
+						"type": "string",
+						"enum": [ "reverseContinue" ]
+					},
+					"arguments": {
+						"$ref": "#/definitions/ReverseContinueArguments"
+					}
+				},
+				"required": [ "command", "arguments"  ]
+			}]
+		},
+		"ReverseContinueArguments": {
+			"type": "object",
+			"description": "Arguments for 'reverseContinue' request.",
+			"properties": {
+				"threadId": {
+					"type": "integer",
+					"description": "Exceute 'reverseContinue' for this thread."
+				}
+			},
+			"required": [ "threadId" ]
+		},
+		"ReverseContinueResponse": {
+			"allOf": [ { "$ref": "#/definitions/Response" }, {
+				"type": "object",
+				"description": "Response to 'reverseContinue' request. This is just an acknowledgement, so no body field is required."
 			}]
 		},
 
@@ -1730,7 +1764,7 @@
 				},
 				"supportsStepBack": {
 					"type": "boolean",
-					"description": "The debug adapter supports stepping back."
+					"description": "The debug adapter supports stepping back via the stepBack and reverseContinue requests."
 				},
 				"supportsSetVariable": {
 					"type": "boolean",
