@@ -10,6 +10,7 @@ This npm module contains declarations for the json-based Visual Studio Code debu
 * 1.15.x:
   * Adds a `supportsValueEscaping` capability that indicates whether the debug adapter takes care of escaping newlines in variable values and evaluation results.
   * Adds a `reverseContinue` request.
+  * Adds a `restart` request and a corresponding `supportsRestartRequest` capability.
 
 * 1.14.x:
   * Adds optional `type` attribute to the `SetVariableResponse` type.

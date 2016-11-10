@@ -588,6 +588,33 @@
 			}]
 		},
 
+		"RestartRequest": {
+			"allOf": [ { "$ref": "#/definitions/Request" }, {
+				"type": "object",
+				"description": "Restart request; value of command field is 'restart'.\nRestarts a debug session. If the capability 'supportsRestartRequest' is missing or has the value false,\nthe client will implement 'restart' by terminating the debug adapter first and then launching it anew.\nA debug adapter can override this default behaviour by implementing a restart request\nand setting the capability 'supportsRestartRequest' to true.",
+				"properties": {
+					"command": {
+						"type": "string",
+						"enum": [ "restart" ]
+					},
+					"arguments": {
+						"$ref": "#/definitions/RestartArguments"
+					}
+				},
+				"required": [ "command" ]
+			}]
+		},
+		"RestartArguments": {
+			"type": "object",
+			"description": "Arguments for 'restart' request.\nThe restart request has no standardized attributes."
+		},
+		"RestartResponse": {
+			"allOf": [ { "$ref": "#/definitions/Response" }, {
+				"type": "object",
+				"description": "Response to 'restart' request. This is just an acknowledgement, so no body field is required."
+			}]
+		},
+
 		"DisconnectRequest": {
 			"allOf": [ { "$ref": "#/definitions/Request" }, {
 				"type": "object",
@@ -1807,6 +1834,10 @@
 				"supportsValueEscaping": {
 					"type": "boolean",
 					"description": "The debug adapter will be responsible for escaping newlines in variable values and evaluation results, and the client will display them as-is. If missing or false the client will escape newlines as needed."
+				},
+				"supportsRestartRequest": {
+					"type": "boolean",
+					"description": "The debug adapter supports the RestartRequest. In this case a client should not implement 'restart' by terminating and relaunching the adapter but by calling the RestartRequest."
 				}
 			}
 		},

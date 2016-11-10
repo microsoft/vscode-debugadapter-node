@@ -420,6 +420,9 @@ export class DebugSession extends ProtocolServer {
 			} else if (request.command === 'disconnect') {
 				this.disconnectRequest(<DebugProtocol.DisconnectResponse> response, request.arguments);
 
+			} else if (request.command === 'restart') {
+				this.restartRequest(<DebugProtocol.RestartResponse> response, request.arguments);
+
 			} else if (request.command === 'setBreakpoints') {
 				this.setBreakPointsRequest(<DebugProtocol.SetBreakpointsResponse> response, request.arguments);
 
@@ -535,6 +538,9 @@ export class DebugSession extends ProtocolServer {
 		// The debug adapter leaves escaping newlines in variable values and evaluation results to the client.
 		response.body.supportsValueEscaping = false;
 
+		// This default debug adapter does not support the 'restart' request.
+		response.body.supportsRestartRequest = false;
+
 		this.sendResponse(response);
 	}
 
@@ -548,6 +554,10 @@ export class DebugSession extends ProtocolServer {
 	}
 
 	protected attachRequest(response: DebugProtocol.AttachResponse, args: DebugProtocol.AttachRequestArguments): void {
+		this.sendResponse(response);
+	}
+
+	protected restartRequest(response: DebugProtocol.RestartResponse, args: DebugProtocol.RestartArguments): void {
 		this.sendResponse(response);
 	}
 
