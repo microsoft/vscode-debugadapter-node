@@ -6,17 +6,9 @@
 			"request": "launch",
 			"name": "Generate debugProtocol.ts",
 			"program": "${workspaceRoot}/src/generator.ts",
-			"stopOnEntry": false,
-			"args": [ ],
 			"cwd": "${workspaceRoot}",
-			"runtimeArgs": [
-				"--nolazy"
-			],
-			"env": {
-				"NODE_ENV": "development"
-			},
 			"sourceMaps": true,
-			"outDir": "${workspaceRoot}/out"
+			"outFiles": [ "${workspaceRoot}/out/**/*.js" ]
 		}
 	]
 }
