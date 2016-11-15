@@ -1346,7 +1346,7 @@
 						"properties": {
 							"value": {
 								"type": "string",
-								"description": "The new value of the variable. See capability 'supportsValueEscaping' for details about how to treat newlines in multi-line strings."
+								"description": "The new value of the variable."
 							},
 							"type": {
 								"type": "string",
@@ -1562,7 +1562,7 @@
 						"properties": {
 							"result": {
 								"type": "string",
-								"description": "The result of the evaluate request. See capability 'supportsValueEscaping' for details about how to treat newlines in multi-lines strings."
+								"description": "The result of the evaluate request."
 							},
 							"type": {
 								"type": "string",
@@ -1830,10 +1830,6 @@
 						"$ref": "#/definitions/ChecksumAlgorithm"
 					},
 					"description": "Checksum algorithms supported by the debug adapter."
-				},
-				"supportsValueEscaping": {
-					"type": "boolean",
-					"description": "The debug adapter will be responsible for escaping newlines in variable values and evaluation results, and the client will display them as-is. If missing or false the client will escape newlines as needed."
 				},
 				"supportsRestartRequest": {
 					"type": "boolean",
@@ -2141,7 +2137,7 @@
 				},
 				"value": {
 					"type": "string",
-					"description": "The variable's value. This can be a multi-line text, e.g. for a function the body of a function. See capability 'supportsValueEscaping' for details about how to treat newlines in multi-line strings."
+					"description": "The variable's value. This can be a multi-line text, e.g. for a function the body of a function."
 				},
 				"type": {
 					"type": "string",
