@@ -10,6 +10,7 @@ This npm module contains declarations for the json-based Visual Studio Code debu
 * 1.15.x:
   * Adds a `reverseContinue` request.
   * Adds a `restart` request and a corresponding `supportsRestartRequest` capability.
+  * Adds a `variablesReference` attribute to the `OutputEvent`.
 
 * 1.14.x:
   * Adds optional `type` attribute to the `SetVariableResponse` type.

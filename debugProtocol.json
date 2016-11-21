@@ -259,7 +259,7 @@
 		"OutputEvent": {
 			"allOf": [ { "$ref": "#/definitions/Event" }, {
 				"type": "object",
-				"description": "Event message for 'output' event type.\nThe event indicates that the target has produced output.",
+				"description": "Event message for 'output' event type.\nThe event indicates that the target has produced some output.",
 				"properties": {
 					"event": {
 						"type": "string",
@@ -276,6 +276,10 @@
 							"output": {
 								"type": "string",
 								"description": "The output to report."
+							},
+							"variablesReference": {
+								"type": "number",
+								"description": "If an attribute 'variablesReference' exists and its value is > 0, the output contains objects which can be retrieved by passing variablesReference to the VariablesRequest."
 							},
 							"data": {
 								"type": [ "array", "boolean", "integer", "null", "number" , "object", "string" ],
