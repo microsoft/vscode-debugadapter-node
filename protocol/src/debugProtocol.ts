@@ -611,6 +611,8 @@ export module DebugProtocol {
 		startFrame?: number;
 		/** The maximum number of frames to return. If levels is not specified or 0, all frames are returned. */
 		levels?: number;
+		/** Specifies details on how to format the stack frames. */
+		format?: StackFrameFormat;
 	}
 
 	/** Response to 'stackTrace' request. */
@@ -666,6 +668,8 @@ export module DebugProtocol {
 		start?: number;
 		/** The number of variables to return. If count is missing or 0, all variables are returned. */
 		count?: number;
+		/** Specifies details on how to format the values. */
+		format?: ValueFormat;
 	}
 
 	/** Response to 'variables' request. */
@@ -794,6 +798,8 @@ export module DebugProtocol {
 		frameId?: number;
 		/** The context in which the evaluate request is run. Possible values are 'watch' if evaluate is run in a watch, 'repl' if run from the REPL console, or 'hover' if run from a data hover. */
 		context?: string;
+		/** Specifies details on how to format the result. */
+		format?: ValueFormat;
 	}
 
 	/** Response to 'evaluate' request. */
@@ -1219,6 +1225,28 @@ export module DebugProtocol {
 		algorithm: ChecksumAlgorithm;
 		/** Value of the checksum. */
 		checksum: string;
+	}
+
+	/** Provides formatting information for a value. */
+	export interface ValueFormat {
+		/** Displays the value in hex. */
+		hex?: boolean;
+	}
+
+	/** Provides formatting information for a stack frame. */
+	export interface StackFrameFormat extends ValueFormat {
+		/** Displays parameters for the stack frame. */
+		parameters?: boolean;
+		/** Displays the types of parameters for the stack frame. */
+		parameterTypes?: boolean;
+		/** Displays the names of parameters for the stack frame. */
+		parameterNames?: boolean;
+		/** Displays the values of parameters for the stack frame. */
+		parameterValues?: boolean;
+		/** Displays the line number of the stack frame. */
+		line?: boolean;
+		/** Displays the module of the stack frame. */
+		module?: boolean;
 	}
 }
 
