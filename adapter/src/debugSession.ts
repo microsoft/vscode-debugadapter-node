@@ -538,6 +538,12 @@ export class DebugSession extends ProtocolServer {
 		// This default debug adapter does not support the 'restart' request.
 		response.body.supportsRestartRequest = false;
 
+		// This default debug adapter does not support the 'exceptionOptions' attribute on the 'setExceptionBreakpointsRequest'.
+		response.body.supportsExceptionOptions = false;
+
+		// This default debug adapter does not support the 'format' attribute on the 'variablesRequest', 'evaluateRequest', and 'stackTraceRequest'.
+		response.body.supportsValueFormattingOptions = false;
+
 		this.sendResponse(response);
 	}
 

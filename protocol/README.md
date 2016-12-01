@@ -12,6 +12,7 @@ This npm module contains declarations for the json-based Visual Studio Code debu
   * Adds a `restart` request and a corresponding `supportsRestartRequest` capability.
   * Adds a `variablesReference` attribute to the `OutputEvent`.
   * Adds support for exception configuration options.
+  * Adds formatting options support for vlues returned from `VariablesRequest`, `EvaluateRequest`, and `StackTraceRequest`.
 
 * 1.14.x:
   * Adds optional `type` attribute to the `SetVariableResponse` type.

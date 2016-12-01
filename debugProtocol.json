@@ -1168,6 +1168,10 @@
 				"levels": {
 					"type": "integer",
 					"description": "The maximum number of frames to return. If levels is not specified or 0, all frames are returned."
+				},
+				"format": {
+					"$ref": "#/definitions/StackFrameFormat",
+					"description": "Specifies details on how to format the stack frames."
 				}
 			},
 			"required": [ "threadId" ]
@@ -1285,6 +1289,10 @@
 				"count": {
 					"type": "integer",
 					"description": "The number of variables to return. If count is missing or 0, all variables are returned."
+				},
+				"format": {
+					"$ref": "#/definitions/ValueFormat",
+					"description": "Specifies details on how to format the Variable values."
 				}
 			},
 			"required": [ "variablesReference" ]
@@ -1559,6 +1567,10 @@
 					"type": "string",
 					"_enum": [ "watch", "repl", "hover" ],
 					"description": "The context in which the evaluate request is run. Possible values are 'watch' if evaluate is run in a watch, 'repl' if run from the REPL console, or 'hover' if run from a data hover."
+				},
+				"format": {
+					"$ref": "#/definitions/ValueFormat",
+					"description": "Specifies details on how to format the Evaluate result."
 				}
 			},
 			"required": [ "expression" ]
@@ -1849,6 +1861,10 @@
 				"supportsExceptionOptions": {
 					"type": "boolean",
 					"description": "The debug adapter supports 'exceptionOptions' on the setExceptionBreakpoints request."
+				},
+				"supportsValueFormattingOptions": {
+					"type": "boolean",
+					"description": "The debug adapter supports a 'format' attribute on the stackTraceRequest, variablesRequest, and evaluateRequest."
 				}
 			}
 		},
@@ -2367,6 +2383,50 @@
 				}
 			},
 			"required": [ "algorithm", "checksum" ]
+		},
+
+		"ValueFormat": {
+			"type": "object",
+			"description": "Provides formatting information for a value.",
+			"properties": {
+				"hex": {
+					"type": "boolean",
+					"description": "Display the value in hex."
+				}
+			}
+		},
+
+		"StackFrameFormat": {
+			"allOf": [ { "$ref": "#/definitions/ValueFormat" }, {
+				"type": "object",
+				"description": "Provides formatting information for a stack frame.",
+				"properties": {
+					"parameters": {
+						"type": "boolean",
+						"description": "Displays parameters for the stack frame."
+					},
+					"parameterTypes": {
+						"type": "boolean",
+						"description": "Displays the types of parameters for the stack frame."
+					},
+					"parameterNames": {
+						"type": "boolean",
+						"description": "Displays the names of parameters for the stack frame."
+					},
+					"parameterValues": {
+						"type": "boolean",
+						"description": "Displays the values of parameters for the stack frame."
+					},
+					"line": {
+						"type": "boolean",
+						"description": "Displays the line number of the stack frame."
+					},
+					"module": {
+						"type": "boolean",
+						"description": "Displays the module of the stack frame."
+					}
+				}
+			}]
 		},
 
 		"ExceptionOptions": {
