@@ -397,7 +397,7 @@ export module DebugProtocol {
 	}
 
 	/** SetExceptionBreakpoints request; value of command field is 'setExceptionBreakpoints'.
-		Enable that the debuggee stops on exceptions with a StoppedEvent (event type 'exception').
+		The request configures the debuggers response to thrown exceptions. If an execption is configured to break, a StoppedEvent is fired (event type 'exception').
 	*/
 	export interface SetExceptionBreakpointsRequest extends Request {
 		// command: 'setExceptionBreakpoints';
@@ -406,8 +406,10 @@ export module DebugProtocol {
 
 	/** Arguments for 'setExceptionBreakpoints' request. */
 	export interface SetExceptionBreakpointsArguments {
-		/** Ids of enabled exception breakpoints. */
+		/** IDs of checked exception options. The set of IDs is returned via the 'exceptionBreakpointFilters' capability. */
 		filters: string[];
+		/** Configuration options for selected exceptions. */
+		exceptionOptions?: ExceptionOptions[];
 	}
 
 	/** Response to 'setExceptionBreakpoints' request. This is just an acknowledgement, so no body field is required. */
@@ -909,7 +911,7 @@ export module DebugProtocol {
 		supportsHitConditionalBreakpoints?: boolean;
 		/** The debug adapter supports a (side effect free) evaluate request for data hovers. */
 		supportsEvaluateForHovers?: boolean;
-		/** Available filters for the setExceptionBreakpoints request. */
+		/** Available filters or options for the setExceptionBreakpoints request. */
 		exceptionBreakpointFilters?: ExceptionBreakpointsFilter[];
 		/** The debug adapter supports stepping back via the stepBack and reverseContinue requests. */
 		supportsStepBack?: boolean;
@@ -931,6 +933,8 @@ export module DebugProtocol {
 		supportedChecksumAlgorithms?: ChecksumAlgorithm[];
 		/** The debug adapter supports the RestartRequest. In this case a client should not implement 'restart' by terminating and relaunching the adapter but by calling the RestartRequest. */
 		supportsRestartRequest?: boolean;
+		/** The debug adapter supports 'exceptionOptions' on the setExceptionBreakpoints request. */
+		supportsExceptionOptions?: boolean;
 	}
 
 	/** An ExceptionBreakpointsFilter is shown in the UI as an option for configuring how exceptions are dealt with. */
@@ -1219,6 +1223,30 @@ export module DebugProtocol {
 		algorithm: ChecksumAlgorithm;
 		/** Value of the checksum. */
 		checksum: string;
+	}
+
+	/** An ExceptionOptions assigns configuration options to a set of exceptions. */
+	export interface ExceptionOptions {
+		/** A path that selects a single or multiple exceptions in a tree. If 'path' is missing, the whole tree is selected. By convention the first segment of the path is a category that is used to group exceptions in the UI. */
+		path?: ExceptionPathSegment[];
+		/** Condition when a thrown exception should result in a break. */
+		breakMode: ExceptionBreakMode;
+	}
+
+	/** This enumeration defines all possible conditions when a thrown exception should result in a break.
+		never: never breaks,
+		always: always breaks,
+		unhandled: breaks when excpetion unhandled,
+		userUnhandled: breaks if the exception is not handled by user code.
+	*/
+	export type ExceptionBreakMode = 'never' | 'always' | 'unhandled' | 'userUnhandled';
+
+	/** An ExceptionPathSegment represents a segment in a path that is used to match leafs or nodes in a tree of exceptions. If a segment consists of more than one name, it matches the names provided if 'negate' is false or missing or it matches anything except the names provided if 'negate' is true. */
+	export interface ExceptionPathSegment {
+		/** If false or missing this segment matches the names provided, otherwise it matches anything except the names provided. */
+		negate?: boolean;
+		/** Depending on the value of 'negate' the names that should match or not match. */
+		names: string[];
 	}
 }
 

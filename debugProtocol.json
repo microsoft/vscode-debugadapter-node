@@ -770,7 +770,7 @@
 		"SetExceptionBreakpointsRequest": {
 			"allOf": [ { "$ref": "#/definitions/Request" }, {
 				"type": "object",
-				"description": "SetExceptionBreakpoints request; value of command field is 'setExceptionBreakpoints'.\nEnable that the debuggee stops on exceptions with a StoppedEvent (event type 'exception').",
+				"description": "SetExceptionBreakpoints request; value of command field is 'setExceptionBreakpoints'.\nThe request configures the debuggers response to thrown exceptions. If an execption is configured to break, a StoppedEvent is fired (event type 'exception').",
 				"properties": {
 					"command": {
 						"type": "string",
@@ -792,7 +792,14 @@
 					"items": {
 						"type": "string"
 					},
-					"description": "Ids of enabled exception breakpoints."
+					"description": "IDs of checked exception options. The set of IDs is returned via the 'exceptionBreakpointFilters' capability."
+				},
+				"exceptionOptions": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ExceptionOptions"
+					},
+					"description": "Configuration options for selected exceptions."
 				}
 			},
 			"required": [ "filters" ]
@@ -1791,7 +1798,7 @@
 					"items": {
 						"$ref": "#/definitions/ExceptionBreakpointsFilter"
 					},
-					"description": "Available filters for the setExceptionBreakpoints request."
+					"description": "Available filters or options for the setExceptionBreakpoints request."
 				},
 				"supportsStepBack": {
 					"type": "boolean",
@@ -1838,6 +1845,10 @@
 				"supportsRestartRequest": {
 					"type": "boolean",
 					"description": "The debug adapter supports the RestartRequest. In this case a client should not implement 'restart' by terminating and relaunching the adapter but by calling the RestartRequest."
+				},
+				"supportsExceptionOptions": {
+					"type": "boolean",
+					"description": "The debug adapter supports 'exceptionOptions' on the setExceptionBreakpoints request."
 				}
 			}
 		},
@@ -2356,6 +2367,50 @@
 				}
 			},
 			"required": [ "algorithm", "checksum" ]
+		},
+
+		"ExceptionOptions": {
+			"type": "object",
+			"description": "An ExceptionOptions assigns configuration options to a set of exceptions.",
+			"properties": {
+				"path": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ExceptionPathSegment"
+					},
+					"description": "A path that selects a single or multiple exceptions in a tree. If 'path' is missing, the whole tree is selected. By convention the first segment of the path is a category that is used to group exceptions in the UI."
+				},
+				"breakMode": {
+					"$ref": "#/definitions/ExceptionBreakMode",
+					"description": "Condition when a thrown exception should result in a break."
+				}
+			},
+			"required": [ "breakMode" ]
+		},
+
+		"ExceptionBreakMode": {
+			"type": "string",
+			"description": "This enumeration defines all possible conditions when a thrown exception should result in a break.\nnever: never breaks,\nalways: always breaks,\nunhandled: breaks when excpetion unhandled,\nuserUnhandled: breaks if the exception is not handled by user code.",
+			"enum": [ "never", "always", "unhandled", "userUnhandled" ]
+		},
+
+		"ExceptionPathSegment": {
+			"type": "object",
+			"description": "An ExceptionPathSegment represents a segment in a path that is used to match leafs or nodes in a tree of exceptions. If a segment consists of more than one name, it matches the names provided if 'negate' is false or missing or it matches anything except the names provided if 'negate' is true.",
+			"properties": {
+				"negate": {
+					"type": "boolean",
+					"description": "If false or missing this segment matches the names provided, otherwise it matches anything except the names provided."
+				},
+				"names": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"description": "Depending on the value of 'negate' the names that should match or not match."
+				}
+			},
+			"required": [ "names" ]
 		}
 	}
 }
