@@ -16,7 +16,7 @@ export class Source implements DebugProtocol.Source {
 	path: string;
 	sourceReference: number;
 
-	public constructor(name: string, path: string, id: number = 0, origin?: string, data?: any) {
+	public constructor(name: string, path?: string, id: number = 0, origin?: string, data?: any) {
 		this.name = name;
 		this.path = path;
 		this.sourceReference = id;
