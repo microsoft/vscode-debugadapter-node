@@ -698,6 +698,8 @@ export module DebugProtocol {
 		name: string;
 		/** The value of the variable. */
 		value: string;
+		/** Specifies details on how to format the response value. */
+		format?: ValueFormat;
 	}
 
 	/** Response to 'setVariable' request. */
