@@ -7,6 +7,9 @@ This npm module contains declarations for the json-based Visual Studio Code debu
 
 ## History
 
+* 1.16.x:
+  * Updated comments for `path` and `sourceReference` attributes of `Source` type (the frontend no longer needs to have a notion of 'internal' modules; it just loads the content of a Source either through the sourceReference or the path).
+
 * 1.15.x:
   * Adds a `reverseContinue` request.
   * Adds a `restart` request and a corresponding `supportsRestartRequest` capability.
