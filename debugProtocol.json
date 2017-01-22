@@ -2371,7 +2371,7 @@
 		"ChecksumAlgorithm": {
 			"type": "string",
 			"description": "Names of checksum algorithms that may be supported by a debug adapter.",
-			"enum": [ "MD5", "SHA1", "SHA256", "SHA1Normalized", "SHA256Normalized", "timestamp" ]
+			"enum": [ "MD5", "SHA1", "SHA256", "timestamp" ]
 		},
 
 		"Checksum": {
