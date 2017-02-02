@@ -17,7 +17,7 @@ This npm module contains declarations for the json-based Visual Studio Code debu
   * Adds a `restart` request and a corresponding `supportsRestartRequest` capability.
   * Adds a `variablesReference` attribute to the `OutputEvent`.
   * Adds support for exception configuration options.
-  * Adds formatting options support for vlues returned from `VariablesRequest`, `EvaluateRequest`, and `StackTraceRequest`.
+  * Adds formatting options support for values returned from `VariablesRequest`, `EvaluateRequest`, and `StackTraceRequest`.
 
 * 1.14.x:
   * Adds optional `type` attribute to the `SetVariableResponse` type.
@@ -34,7 +34,7 @@ This npm module contains declarations for the json-based Visual Studio Code debu
 * 1.12.x:
   * Adds a new optional attribute `frameId` to the `completionRequest`.
   * Introduces a `runInTerminalRequest` so that a debug adapter can run a debuggee in a terminal managed by the frontend.
-  " Adds a `type` attribute (and a value set) to the `CompletionItem`.
+  * Adds a `type` attribute (and a value set) to the `CompletionItem`.
 
 * 1.11.x:
   * Adds a new optional attribute `mimeType` to the `SourceResponse`.
