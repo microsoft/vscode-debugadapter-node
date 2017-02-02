@@ -7,6 +7,9 @@ This npm module contains declarations for the json-based Visual Studio Code debu
 
 ## History
 
+* 1.17.x:
+  * Adds optional attribute `clientID` to the `InitializeRequestArguments`.
+
 * 1.16.x:
   * Updated comments for `path` and `sourceReference` attributes of `Source` type (the frontend no longer needs to have a notion of 'internal' modules; it just loads the content of a Source either through the sourceReference or the path).
   * Adds optional `presentationHint` attribute to `Source` type. This allows to control how the frontend shows a source reference in th UI.

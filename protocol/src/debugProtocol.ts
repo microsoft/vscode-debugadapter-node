@@ -226,7 +226,9 @@ export module DebugProtocol {
 
 	/** Arguments for 'initialize' request. */
 	export interface InitializeRequestArguments {
-		/** The ID of the debugger adapter. Used to select or verify debugger adapter. */
+		/** The ID of the (frontend) client using this adapter. */
+		clientID?: string;
+		/** The ID of the debug adapter. */
 		adapterID: string;
 		/** If true all line numbers are 1-based (default). */
 		linesStartAt1?: boolean;

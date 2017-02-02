@@ -460,9 +460,13 @@
 			"type": "object",
 			"description": "Arguments for 'initialize' request.",
 			"properties": {
+				"clientID": {
+					"type": "string",
+					"description": "The ID of the (frontend) client using this adapter."
+				},
 				"adapterID": {
 					"type": "string",
-					"description": "The ID of the debugger adapter. Used to select or verify debugger adapter."
+					"description": "The ID of the debug adapter."
 				},
 				"linesStartAt1": {
 					"type": "boolean",
