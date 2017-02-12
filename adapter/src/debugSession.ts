@@ -263,7 +263,7 @@ export class DebugSession extends ProtocolServer {
 	private _clientColumnsStartAt1: boolean;
 	private _clientPathsAreURIs: boolean;
 
-	private _isServer: boolean;
+	protected _isServer: boolean;
 
 	public constructor(obsolete_debuggerLinesAndColumnsStartAt1?: boolean, obsolete_isServer?: boolean) {
 		super();
