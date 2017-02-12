@@ -19,32 +19,32 @@ export class LoggingDebugSession extends DebugSession {
 	}
 
 	/**
-     * Overload sendEvent to log
-     */
-    public sendEvent(event: DebugProtocol.Event): void {
-        if (!(event instanceof logger.LogOutputEvent)) {
-            // Don't create an infinite loop...
-            logger.verbose(`To client: ${JSON.stringify(event)}`);
-        }
+	 * Overload sendEvent to log
+	 */
+	public sendEvent(event: DebugProtocol.Event): void {
+		if (!(event instanceof logger.LogOutputEvent)) {
+			// Don't create an infinite loop...
+			logger.verbose(`To client: ${JSON.stringify(event)}`);
+		}
 
-        super.sendEvent(event);
-    }
+		super.sendEvent(event);
+	}
 
-    /**
-     * Overload sendRequest to log
-     */
-    public sendRequest(command: string, args: any, timeout: number, cb: (response: DebugProtocol.Response) => void): void {
-        logger.verbose(`To client: ${JSON.stringify(command)}(${JSON.stringify(args)}), timeout: ${timeout}`);
-        super.sendRequest(command, args, timeout, cb);
-    }
+	/**
+	 * Overload sendRequest to log
+	 */
+	public sendRequest(command: string, args: any, timeout: number, cb: (response: DebugProtocol.Response) => void): void {
+		logger.verbose(`To client: ${JSON.stringify(command)}(${JSON.stringify(args)}), timeout: ${timeout}`);
+		super.sendRequest(command, args, timeout, cb);
+	}
 
-    /**
-     * Overload sendResponse to log
-     */
-    public sendResponse(response: DebugProtocol.Response): void {
-        logger.verbose(`To client: ${JSON.stringify(response)}`);
-        super.sendResponse(response);
-    }
+	/**
+	 * Overload sendResponse to log
+	 */
+	public sendResponse(response: DebugProtocol.Response): void {
+		logger.verbose(`To client: ${JSON.stringify(response)}`);
+		super.sendResponse(response);
+	}
 
 	protected dispatchRequest(request: DebugProtocol.Request): void {
 		logger.verbose(`From client: ${request.command}(${JSON.stringify(request.arguments) })`);
