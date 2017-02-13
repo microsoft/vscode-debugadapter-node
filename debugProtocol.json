@@ -2357,10 +2357,11 @@
 				},
 				"start": {
 					"type": "integer",
-					"description": "When a completion is selected it replaces 'length' characters starting at 'start' in the text passed to the CompletionsRequest.\nIf missing the frontend will try to determine these values heuristically."
+					"description": "If specified, this value determines the location (in the CompletionsRequest's 'text' attribute) where the completion text is added.\nIf missing the text is added at the location specified by the CompletionsRequest's 'column' attribute."
 				},
 				"length": {
-					"type": "integer"
+					"type": "integer",
+					"description": "If specified, this value determines how many characters are overwritten by the completion text.\nIf missing all text to the right of the CompletionsRequest's 'column' attribute is replaced."
 				}
 			},
 			"required": [ "label" ]
