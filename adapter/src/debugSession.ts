@@ -492,6 +492,9 @@ export class DebugSession extends ProtocolServer {
 			} else if (request.command === 'completions') {
 				this.completionsRequest(<DebugProtocol.CompletionsResponse> response, request.arguments);
 
+			} else if (request.command === 'exceptionInfo') {
+				this.exceptionInfoRequest(<DebugProtocol.ExceptionInfoResponse> response, request.arguments);
+
 			} else {
 				this.customRequest(request.command, <DebugProtocol.Response> response, request.arguments);
 			}
@@ -543,6 +546,9 @@ export class DebugSession extends ProtocolServer {
 
 		// This default debug adapter does not support the 'format' attribute on the 'variablesRequest', 'evaluateRequest', and 'stackTraceRequest'.
 		response.body.supportsValueFormattingOptions = false;
+
+		// This debug adapter does not support the 'exceptionInfoRequest' request.
+		response.body.supportsExceptionInfoRequest = false;
 
 		this.sendResponse(response);
 	}
@@ -653,6 +659,10 @@ export class DebugSession extends ProtocolServer {
 	}
 
 	protected completionsRequest(response: DebugProtocol.CompletionsResponse, args: DebugProtocol.CompletionsArguments): void {
+		this.sendResponse(response);
+	}
+
+	protected exceptionInfoRequest(response: DebugProtocol.ExceptionInfoResponse, args: DebugProtocol.ExceptionInfoArguments): void {
 		this.sendResponse(response);
 	}
 
