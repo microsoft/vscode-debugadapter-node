@@ -907,6 +907,34 @@ export module DebugProtocol {
 		};
 	}
 
+	/** ExceptionInfoRequest request; value of command field is 'exceptionInfo'.
+		Retrieves the details of the exception that caused the StoppedEvent to be raised.
+	*/
+	export interface ExceptionInfoRequest extends Request {
+		// command: 'completions';
+		arguments: ExceptionInfoArguments;
+	}
+
+	/** Arguments for 'exceptionInfo' request. */
+	export interface ExceptionInfoArguments {
+		/** Thread for which exception information should be retrieved. */
+		threadId: number;
+	}
+
+	/** Response to 'exceptionInfo' request. */
+	export interface ExceptionInfoResponse extends Response {
+		body: {
+			/** ID of the exception that was thrown. */
+			exceptionId: string;
+			/** Descriptive text for the exception provided by the debug adapter. */
+			description?: string;
+			/** Mode that caused the exception notification to be raised. */
+			breakMode: ExceptionBreakMode;
+			/** Detailed information about the exception. */
+			details?: ExceptionDetails;
+		};
+	}
+
 	/** Information about the capabilities of a debug adapter. */
 	export interface Capabilities {
 		/** The debug adapter supports the configurationDoneRequest. */
@@ -945,6 +973,8 @@ export module DebugProtocol {
 		supportsExceptionOptions?: boolean;
 		/** The debug adapter supports a 'format' attribute on the stackTraceRequest, variablesRequest, and evaluateRequest. */
 		supportsValueFormattingOptions?: boolean;
+		/** The debug adapter supports the exceptionInfo request. */
+		supportsExceptionInfoRequest?: boolean;
 	}
 
 	/** An ExceptionBreakpointsFilter is shown in the UI as an option for configuring how exceptions are dealt with. */
@@ -980,9 +1010,9 @@ export module DebugProtocol {
 	/** A Module object represents a row in the modules view.
 		Two attributes are mandatory: an id identifies a module in the modules view and is used in a ModuleEvent for identifying a module for adding, updating or deleting.
 		The name is used to minimally render the module in the UI.
-		
+
 		Additional attributes can be added to the module. They will show up in the module View if they have a corresponding ColumnDescriptor.
-		
+
 		To avoid an unnecessary proliferation of additional attributes with similar semantics but different names
 		we recommend to re-use attributes from the 'recommended' list below first, and only introduce new attributes if nothing appropriate could be found.
 	*/
@@ -993,7 +1023,7 @@ export module DebugProtocol {
 		name: string;
 		/** optional but recommended attributes.
 			always try to use these first before introducing additional attributes.
-			
+
 			Logical full path to the module. The exact definition is implementation defined, but usually this would be a full path to the on-disk file for the module.
 		*/
 		path?: string;
@@ -1284,6 +1314,22 @@ export module DebugProtocol {
 		negate?: boolean;
 		/** Depending on the value of 'negate' the names that should match or not match. */
 		names: string[];
+	}
+
+	/** Detailed information about an exception that has occurred. */
+	export interface ExceptionDetails {
+		/** Message contained in the exception. */
+		message?: string;
+		/** Short type name of the exception object. */
+		typeName?: string;
+		/** Fully-qualified type name of the exception object. */
+		fullTypeName?: string;
+		/** Optional expression that can be evaluated in the current scope to obtain the exception object. */
+		evaluateName?: string;
+		/** Stack trace at the time the exception was thrown. */
+		stackTrace?: string;
+		/** Details of the exception contained by this exception, if any. */
+		innerException?: ExceptionDetails[];
 	}
 }
 
