@@ -9,6 +9,7 @@ This npm module contains declarations for the json-based Visual Studio Code debu
 
 * 1.17.x:
   * Adds optional attribute `clientID` to the `InitializeRequestArguments`.
+  * Adds support for obtaining exception details: `ExceptionInfoRequest`, `ExceptionDetails`.
 
 * 1.16.x:
   * Updated comments for `path` and `sourceReference` attributes of `Source` type (the frontend no longer needs to have a notion of 'internal' modules; it just loads the content of a Source either through the sourceReference or the path).
