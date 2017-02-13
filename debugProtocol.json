@@ -1792,10 +1792,10 @@
 				"properties": {
 					"command": {
 						"type": "string",
-						"enum": [ "completions" ]
+						"enum": [ "exceptionInfo" ]
 					},
 					"arguments": {
-						"$ref": "#/definitions/CompletionsArguments"
+						"$ref": "#/definitions/ExceptionInfoArguments"
 					}
 				},
 				"required": [ "command", "arguments"  ]
