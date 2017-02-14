@@ -1355,6 +1355,10 @@
 				"value": {
 					"type": "string",
 					"description": "The value of the variable."
+				},
+				"format": {
+					"$ref": "#/definitions/ValueFormat",
+					"description": "Specifies details on how to format the response value."
 				}
 			},
 			"required": [ "variablesReference", "name", "value" ]
