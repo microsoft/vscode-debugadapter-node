@@ -2424,11 +2424,11 @@
 				},
 				"start": {
 					"type": "integer",
-					"description": "If specified, this value determines the location (in the CompletionsRequest's 'text' attribute) where the completion text is added.\nIf missing the text is added at the location specified by the CompletionsRequest's 'column' attribute."
+					"description": "This value determines the location (in the CompletionsRequest's 'text' attribute) where the completion text is added.\nIf missing the text is added at the location specified by the CompletionsRequest's 'column' attribute."
 				},
 				"length": {
 					"type": "integer",
-					"description": "If specified, this value determines how many characters are overwritten by the completion text.\nIf missing all text to the right of the CompletionsRequest's 'column' attribute is replaced."
+					"description": "This value determines how many characters are overwritten by the completion text.\nIf missing the value 0 is assumed which results in the completion text being inserted."
 				}
 			},
 			"required": [ "label" ]

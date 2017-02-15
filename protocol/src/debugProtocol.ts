@@ -1248,12 +1248,12 @@ export module DebugProtocol {
 		text?: string;
 		/** The item's type. Typically the client uses this information to render the item in the UI with an icon. */
 		type?: CompletionItemType;
-		/** If specified, this value determines the location (in the CompletionsRequest's 'text' attribute) where the completion text is added.
+		/** This value determines the location (in the CompletionsRequest's 'text' attribute) where the completion text is added.
 			If missing the text is added at the location specified by the CompletionsRequest's 'column' attribute.
 		*/
 		start?: number;
-		/** If specified, this value determines how many characters are overwritten by the completion text.
-			If missing all text to the right of the CompletionsRequest's 'column' attribute is replaced.
+		/** This value determines how many characters are overwritten by the completion text.
+			If missing the value 0 is assumed which results in the completion text being inserted.
 		*/
 		length?: number;
 	}
