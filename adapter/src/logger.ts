@@ -8,7 +8,8 @@ import {OutputEvent} from './debugSession';
 export enum LogLevel {
 	Verbose = 0,
 	Log = 1,
-	Error = 2
+	Warn = 2,
+	Error = 3
 }
 
 export type ILogCallback = (outputEvent: OutputEvent) => void;
@@ -21,45 +22,49 @@ interface ILogItem {
 /** Logger singleton */
 let _logger: Logger;
 let _pendingLogQ: ILogItem[] = [];
-export function log(msg: string, forceLog = false, level = LogLevel.Log): void {
+export function log(msg: string, level = LogLevel.Log): void {
 	msg = msg + '\n';
-	write(msg, forceLog, level);
+	write(msg, level);
 }
 
 export function verbose(msg: string): void {
-	log(msg, undefined, LogLevel.Verbose);
+	log(msg, LogLevel.Verbose);
 }
 
-export function error(msg: string, forceLog = true): void {
-	log(msg, forceLog, LogLevel.Error);
+export function warn(msg: string): void {
+	log(msg, LogLevel.Warn);
+}
+
+export function error(msg: string): void {
+	log(msg, LogLevel.Error);
 }
 
 /**
  * `log` adds a newline, this one doesn't
  */
-function write(msg: string, forceLog = false, level = LogLevel.Log): void {
+function write(msg: string, level = LogLevel.Log): void {
 	// [null, undefined] => string
 	msg = msg + '';
 	if (_pendingLogQ) {
 		_pendingLogQ.push({ msg, level });
 	} else {
-		_logger.log(msg, level, forceLog);
+		_logger.log(msg, level);
 	}
 }
 
 /**
- * Set the logger's minimum level to log. Log messages are queued before this is
- * called the first time, because minLogLevel defaults to Error.
+ * Set the logger's minimum level to log in the console, and whether to log to the file. Log messages are queued before this is
+ * called the first time, because minLogLevel defaults to Warn.
  */
-export function setMinLogLevel(logLevel: LogLevel): void {
+export function setup(consoleMinLogLevel: LogLevel, logToFile: boolean): void {
 	if (_logger) {
-		_logger.minLogLevel = logLevel;
+		_logger.setup(consoleMinLogLevel, logToFile);
 
-		// Clear out the queue of pending messages
+		// Now that we have a minimum logLevel, we can clear out the queue of pending messages
 		if (_pendingLogQ) {
 			const logQ = _pendingLogQ;
 			_pendingLogQ = null;
-			logQ.forEach(item => write(item.msg, undefined, item.level));
+			logQ.forEach(item => write(item.msg, item.level));
 		}
 	}
 }
@@ -69,8 +74,8 @@ export function init(logCallback: ILogCallback, logFilePath?: string, logToConso
 	_pendingLogQ = _pendingLogQ || [];
 	_logger = new Logger(logCallback, logFilePath, logToConsole);
 	if (logFilePath) {
-		log(`Verbose logs are written to:`);
-		log(logFilePath);
+		warn(`Verbose logs are written to:`);
+		warn(logFilePath);
 
 		const d = new Date();
 		const timestamp = d.toLocaleTimeString() + ', ' + d.toLocaleDateString();
@@ -94,13 +99,19 @@ class Logger {
 	/** Write steam for log file */
 	private _logFileStream: fs.WriteStream;
 
-	public get minLogLevel(): LogLevel { return this._minLogLevel; }
+	constructor(logCallback: ILogCallback, logFilePath?: string, isServer?: boolean) {
+		this._logCallback = logCallback;
+		this._logFilePath = logFilePath;
+		this._logToConsole = isServer;
 
-	public set minLogLevel(logLevel: LogLevel) {
-		this._minLogLevel = logLevel;
+		this._minLogLevel = LogLevel.Warn;
+	}
+
+	public setup(consoleMinLogLevel: LogLevel, logToFile: boolean): void {
+		this._minLogLevel = consoleMinLogLevel;
 
 		// Open a log file in the specified location. Overwritten on each run.
-		if (logLevel < LogLevel.Error && this._logFilePath) {
+		if (logToFile) {
 			this._logFileStream = fs.createWriteStream(this._logFilePath);
 			this._logFileStream.on('error', e => {
 				this.sendLog(`Error involving log file at path: ${this._logFilePath}. Error: ${e.toString()}`, LogLevel.Error);
@@ -108,25 +119,16 @@ class Logger {
 		}
 	}
 
-	constructor(logCallback: ILogCallback, logFilePath?: string, isServer?: boolean) {
-		this._logCallback = logCallback;
-		this._logFilePath = logFilePath;
-		this._logToConsole = isServer;
-
-		this.minLogLevel = LogLevel.Error;
-	}
-
-	/**
-	 * @param forceLog - Writes to the diagnostic logging channel, even if diagnostic logging is not enabled.
-	 *      (For messages that appear whether logging is enabled or not.)
-	 */
-	public log(msg: string, level: LogLevel, forceLog: boolean): void {
-		if (level >= this.minLogLevel || forceLog) {
+	public log(msg: string, level: LogLevel): void {
+		if (level >= this._minLogLevel) {
 			this.sendLog(msg, level);
 		}
 
 		if (this._logToConsole) {
-			const logFn = level === LogLevel.Error ? console.error : console.log;
+			const logFn =
+				level === LogLevel.Error ? console.error :
+				level === LogLevel.Warn ? console.warn :
+				console.log;
 			logFn(trimLastNewline(msg));
 		}
 
@@ -159,7 +161,11 @@ class Logger {
 
 export class LogOutputEvent extends OutputEvent {
 	constructor(msg: string, level: LogLevel) {
-		super(msg, level === LogLevel.Error ? 'stderr' : 'console');
+		const category =
+			level === LogLevel.Error ? 'stderr' :
+			level === LogLevel.Warn ? 'console' :
+			'stdout';
+		super(msg, category);
 	}
 }
 
