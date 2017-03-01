@@ -66,7 +66,7 @@ export function setMinLogLevel(logLevel: LogLevel): void {
 
 export function init(logCallback: ILogCallback, logFilePath?: string, logToConsole?: boolean): void {
 	// Re-init, create new global Logger
-	_pendingLogQ = [];
+	_pendingLogQ = _pendingLogQ || [];
 	_logger = new Logger(logCallback, logFilePath, logToConsole);
 	if (logFilePath) {
 		log(`Verbose logs are written to:`);
