@@ -74,9 +74,6 @@ export function init(logCallback: ILogCallback, logFilePath?: string, logToConso
 	_pendingLogQ = _pendingLogQ || [];
 	_logger = new Logger(logCallback, logFilePath, logToConsole);
 	if (logFilePath) {
-		warn(`Verbose logs are written to:`);
-		warn(logFilePath);
-
 		const d = new Date();
 		const timestamp = d.toLocaleTimeString() + ', ' + d.toLocaleDateString();
 		verbose(timestamp);
@@ -112,6 +109,9 @@ class Logger {
 
 		// Open a log file in the specified location. Overwritten on each run.
 		if (logToFile) {
+			this.log(`Verbose logs are written to:`, LogLevel.Warn);
+			this.log(this._logFilePath, LogLevel.Warn);
+
 			this._logFileStream = fs.createWriteStream(this._logFilePath);
 			this._logFileStream.on('error', e => {
 				this.sendLog(`Error involving log file at path: ${this._logFilePath}. Error: ${e.toString()}`, LogLevel.Error);
