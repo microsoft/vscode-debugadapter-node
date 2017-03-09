@@ -7,6 +7,9 @@ This npm module contains declarations for the json-based Visual Studio Code debu
 
 ## History
 
+* 1.18.x:
+  * Adds optional attribute `source` to the `SourceArguments`.
+
 * 1.17.x:
   * Adds optional attribute `clientID` to the `InitializeRequestArguments`.
   * Adds support for obtaining exception details: `ExceptionInfoRequest`, `ExceptionDetails`.

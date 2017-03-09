@@ -734,7 +734,9 @@ export module DebugProtocol {
 
 	/** Arguments for 'source' request. */
 	export interface SourceArguments {
-		/** The reference to the source. This is the value received in Source.reference. */
+		/** Specifies the source content to load. Either source.path or source.sourceReference must be specified. */
+		source?: Source;
+		/** The reference to the source. This is the same as source.sourceReference. This is provided for backward compatibility since old backends do not understand the 'source' attribute. */
 		sourceReference: number;
 	}
 
