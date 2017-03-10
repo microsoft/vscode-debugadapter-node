@@ -73,7 +73,7 @@ export module DebugProtocol {
 	export interface StoppedEvent extends Event {
 		// event: 'stopped';
 		body: {
-			/** The reason for the event (such as: 'step', 'breakpoint', 'exception', 'pause'). This string is shown in the UI. */
+			/** The reason for the event (such as: 'step', 'breakpoint', 'exception', 'pause', 'entry'). This string is shown in the UI. */
 			reason: string;
 			/** The thread which was stopped. */
 			threadId?: number;

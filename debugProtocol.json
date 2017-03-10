@@ -129,8 +129,8 @@
 						"properties": {
 							"reason": {
 								"type": "string",
-								"description": "The reason for the event (such as: 'step', 'breakpoint', 'exception', 'pause'). This string is shown in the UI.",
-								"_enum": [ "step", "breakpoint", "exception", "pause" ]
+								"description": "The reason for the event (such as: 'step', 'breakpoint', 'exception', 'pause', 'entry'). This string is shown in the UI.",
+								"_enum": [ "step", "breakpoint", "exception", "pause", "entry" ]
 							},
 							"threadId": {
 								"type": "integer",
