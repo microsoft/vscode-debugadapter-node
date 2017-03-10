@@ -9,6 +9,7 @@ This npm module contains declarations for the json-based Visual Studio Code debu
 
 * 1.18.x:
   * Adds optional attribute `source` to the `SourceArguments`.
+  * Made StoppedEvent's `reason` attribute robust against translation by introducing a new `description` attribute.
 
 * 1.17.x:
   * Adds optional attribute `clientID` to the `InitializeRequestArguments`.

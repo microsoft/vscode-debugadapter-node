@@ -129,8 +129,12 @@
 						"properties": {
 							"reason": {
 								"type": "string",
-								"description": "The reason for the event (such as: 'step', 'breakpoint', 'exception', 'pause'). This string is shown in the UI.",
-								"_enum": [ "step", "breakpoint", "exception", "pause" ]
+								"description": "The reason for the event (such as: 'step', 'breakpoint', 'exception', 'pause', 'entry').\nFor backward compatibility this string is shown in the UI if the 'description' attribute is missing (but it must not be translated).",
+								"_enum": [ "step", "breakpoint", "exception", "pause", "entry" ]
+							},
+							"description": {
+								"type": "string",
+								"description": "The full reason for the event, e.g. 'Paused on exception'. This string is shown in the UI as is."
 							},
 							"threadId": {
 								"type": "integer",
