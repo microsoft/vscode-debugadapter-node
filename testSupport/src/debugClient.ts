@@ -226,7 +226,7 @@ export class DebugClient extends ProtocolClient {
 		timeout = timeout || this.defaultTimeout;
 
 		return new Promise((resolve, reject) => {
-			this.on(eventType, event => {
+			this.once(eventType, event => {
 				resolve(event);
 			});
 			if (!this._socket) {	// no timeouts if debugging the tests
