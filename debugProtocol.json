@@ -2189,6 +2189,11 @@
 				"moduleId": {
 					"type": ["integer", "string"],
 					"description": "The module associated with this frame, if any."
+				},
+				"presentationHint": {
+					"type": "string",
+					"enum": [ "normal", "label" ],
+					"description": "An optional hint for how to present this frame in the UI. A value of 'label' can be used to indicate that the frame is an artificial frame that is used as a visual label or separator."
 				}
 			},
 			"required": [ "id", "name", "line", "column" ]
