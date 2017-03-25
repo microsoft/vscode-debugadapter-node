@@ -109,8 +109,8 @@ class Logger {
 
 		// Open a log file in the specified location. Overwritten on each run.
 		if (logToFile) {
-			this.log(`Verbose logs are written to:`, LogLevel.Warn);
-			this.log(this._logFilePath, LogLevel.Warn);
+			this.log(`Verbose logs are written to:\n`, LogLevel.Warn);
+			this.log(this._logFilePath + '\n', LogLevel.Warn);
 
 			this._logFileStream = fs.createWriteStream(this._logFilePath);
 			this._logFileStream.on('error', e => {
