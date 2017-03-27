@@ -778,7 +778,7 @@
 		"SetExceptionBreakpointsRequest": {
 			"allOf": [ { "$ref": "#/definitions/Request" }, {
 				"type": "object",
-				"description": "SetExceptionBreakpoints request; value of command field is 'setExceptionBreakpoints'.\nThe request configures the debuggers response to thrown exceptions. If an execption is configured to break, a StoppedEvent is fired (event type 'exception').",
+				"description": "SetExceptionBreakpoints request; value of command field is 'setExceptionBreakpoints'.\nThe request configures the debuggers response to thrown exceptions. If an exception is configured to break, a StoppedEvent is fired (event type 'exception').",
 				"properties": {
 					"command": {
 						"type": "string",

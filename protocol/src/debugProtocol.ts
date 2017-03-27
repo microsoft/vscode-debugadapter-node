@@ -403,7 +403,7 @@ export module DebugProtocol {
 	}
 
 	/** SetExceptionBreakpoints request; value of command field is 'setExceptionBreakpoints'.
-		The request configures the debuggers response to thrown exceptions. If an execption is configured to break, a StoppedEvent is fired (event type 'exception').
+		The request configures the debuggers response to thrown exceptions. If an exception is configured to break, a StoppedEvent is fired (event type 'exception').
 	*/
 	export interface SetExceptionBreakpointsRequest extends Request {
 		// command: 'setExceptionBreakpoints';
