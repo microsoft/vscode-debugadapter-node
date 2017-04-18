@@ -11,6 +11,20 @@ import net = require('net');
 import {DebugProtocol} from 'vscode-debugprotocol';
 import {ProtocolClient} from './protocolClient';
 
+export interface ILocation {
+	path: string;
+	line: number;
+	column?: number;
+	verified?: boolean;
+}
+
+export interface IPartialLocation {
+	path?: string;
+	line?: number;
+	column?: number;
+	verified?: boolean;
+}
+
 export class DebugClient extends ProtocolClient {
 
 	private static CASE_INSENSITIVE_FILESYSTEM : boolean;
@@ -298,6 +312,18 @@ export class DebugClient extends ProtocolClient {
 		});
 	}
 
+	private assertPartialLocationsEqual(locA: IPartialLocation, locB: IPartialLocation): void {
+        if (locA.path) {
+            this.assertPath(locA.path, locB.path, 'breakpoint verification mismatch: path');
+        }
+        if (typeof locA.line === 'number') {
+            assert.equal(locA.line, locB.line, 'breakpoint verification mismatch: line');
+        }
+        if (typeof locB.column === 'number' && typeof locA.column === 'number') {
+            assert.equal(locA.column, locB.column, 'breakpoint verification mismatch: column');
+        }
+	}
+
 	/*
 	 * Returns a promise that will resolve if enough output events with the given category have been received
 	 * and the concatenated data match the expected data.
@@ -348,7 +374,7 @@ export class DebugClient extends ProtocolClient {
 	 * and the event's reason and line number was asserted.
 	 * The promise will be rejected if a timeout occurs, the assertions fail, or if the requests fails.
 	 */
-	public hitBreakpoint(launchArgs: any, location: { path: string, line: number, column?: number, verified?: boolean }, expected?: { path?: string, line?: number, column?: number, verified?: boolean }) : Promise<any> {
+	public hitBreakpoint(launchArgs: any, location: ILocation, expectedStopLocation?: IPartialLocation, expectedBPLocation?: IPartialLocation) : Promise<any> {
 
 		return Promise.all([
 
@@ -365,21 +391,19 @@ export class DebugClient extends ProtocolClient {
 				const verified = (typeof location.verified === 'boolean') ? location.verified : true;
 				assert.equal(bp.verified, verified, 'breakpoint verification mismatch: verified');
 
-				if (bp.source && bp.source.path) {
-					this.assertPath(bp.source.path, location.path, 'breakpoint verification mismatch: path');
-				}
-				if (typeof bp.line === 'number') {
-					assert.equal(bp.line, location.line, 'breakpoint verification mismatch: line');
-				}
-				if (typeof location.column === 'number' && typeof bp.column === 'number') {
-					assert.equal(bp.column, location.column, 'breakpoint verification mismatch: column');
-				}
+				const actualLocation: ILocation = {
+					column: bp.column,
+					line: bp.line,
+					path: bp.source && bp.source.path
+				};
+				this.assertPartialLocationsEqual(actualLocation, expectedBPLocation || location);
+
 				return this.configurationDone();
 			}),
 
 			this.launch(launchArgs),
 
-			this.assertStoppedLocation('breakpoint', expected || location)
+			this.assertStoppedLocation('breakpoint', expectedStopLocation || location)
 
 		]);
 	}
