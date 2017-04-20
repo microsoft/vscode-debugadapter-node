@@ -290,7 +290,7 @@ export class DebugClient extends ProtocolClient {
 	 * and the event's reason and line number was asserted.
 	 * The promise will be rejected if a timeout occurs, the assertions fail, or if the 'stackTrace' request fails.
 	 */
-	public assertStoppedLocation(reason: string, expected: { path?: string, line?: number, column?: number } ) : Promise<DebugProtocol.StackTraceResponse> {
+	public assertStoppedLocation(reason: string, expected: { path?: string | RegExp, line?: number, column?: number } ) : Promise<DebugProtocol.StackTraceResponse> {
 
 		return this.waitForEvent('stopped').then(event => {
 			assert.equal(event.body.reason, reason);
@@ -299,7 +299,7 @@ export class DebugClient extends ProtocolClient {
 			});
 		}).then(response => {
 			const frame = response.body.stackFrames[0];
-			if (typeof expected.path === 'string') {
+			if (typeof expected.path === 'string' || expected.path instanceof RegExp) {
 				this.assertPath(frame.source.path, expected.path, 'stopped location: path mismatch');
 			}
 			if (typeof expected.line === 'number') {
@@ -313,15 +313,15 @@ export class DebugClient extends ProtocolClient {
 	}
 
 	private assertPartialLocationsEqual(locA: IPartialLocation, locB: IPartialLocation): void {
-        if (locA.path) {
-            this.assertPath(locA.path, locB.path, 'breakpoint verification mismatch: path');
-        }
-        if (typeof locA.line === 'number') {
-            assert.equal(locA.line, locB.line, 'breakpoint verification mismatch: line');
-        }
-        if (typeof locB.column === 'number' && typeof locA.column === 'number') {
-            assert.equal(locA.column, locB.column, 'breakpoint verification mismatch: column');
-        }
+		if (locA.path) {
+			this.assertPath(locA.path, locB.path, 'breakpoint verification mismatch: path');
+		}
+		if (typeof locA.line === 'number') {
+			assert.equal(locA.line, locB.line, 'breakpoint verification mismatch: line');
+		}
+		if (typeof locB.column === 'number' && typeof locA.column === 'number') {
+			assert.equal(locA.column, locB.column, 'breakpoint verification mismatch: column');
+		}
 	}
 
 	/*
@@ -355,16 +355,21 @@ export class DebugClient extends ProtocolClient {
 		});
 	}
 
-	public assertPath(path: string, expected: string, message?: string) {
-		if (DebugClient.CASE_INSENSITIVE_FILESYSTEM) {
-			if (typeof path === 'string') {
-				path = path.toLowerCase();
+	public assertPath(path: string, expected: string | RegExp, message?: string) {
+
+		if (expected instanceof RegExp) {
+			assert.ok((<RegExp>expected).test(path), message);
+		} else {
+			if (DebugClient.CASE_INSENSITIVE_FILESYSTEM) {
+				if (typeof path === 'string') {
+					path = path.toLowerCase();
+				}
+				if (typeof expected === 'string') {
+					expected = (<string>expected).toLowerCase();
+				}
 			}
-			if (typeof expected === 'string') {
-				expected = expected.toLowerCase();
-			}
+			assert.equal(path, expected, message);
 		}
-		assert.equal(path, expected, message);
 	}
 
 	// ---- scenarios ---------------------------------------------------------------------------------------------------------
