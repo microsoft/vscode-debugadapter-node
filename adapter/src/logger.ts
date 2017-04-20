@@ -19,71 +19,83 @@ interface ILogItem {
 	level: LogLevel;
 }
 
-/** Logger singleton */
-let _logger: Logger;
-let _pendingLogQ: ILogItem[] = [];
-export function log(msg: string, level = LogLevel.Log): void {
-	msg = msg + '\n';
-	write(msg, level);
+export interface ILogger {
+	log(msg: string, level?: LogLevel): void;
+	verbose(msg: string): void;
+	warn(msg: string): void;
+	error(msg: string): void;
 }
 
-export function verbose(msg: string): void {
-	log(msg, LogLevel.Verbose);
-}
+export class Logger {
+	private _currentLogger: InternalLogger;
+	private _pendingLogQ: ILogItem[] = [];
 
-export function warn(msg: string): void {
-	log(msg, LogLevel.Warn);
-}
-
-export function error(msg: string): void {
-	log(msg, LogLevel.Error);
-}
-
-/**
- * `log` adds a newline, this one doesn't
- */
-function write(msg: string, level = LogLevel.Log): void {
-	// [null, undefined] => string
-	msg = msg + '';
-	if (_pendingLogQ) {
-		_pendingLogQ.push({ msg, level });
-	} else {
-		_logger.log(msg, level);
+	log(msg: string, level = LogLevel.Log): void {
+		msg = msg + '\n';
+		this._write(msg, level);
 	}
-}
 
-/**
- * Set the logger's minimum level to log in the console, and whether to log to the file. Log messages are queued before this is
- * called the first time, because minLogLevel defaults to Warn.
- */
-export function setup(consoleMinLogLevel: LogLevel, logToFile: boolean): void {
-	if (_logger) {
-		_logger.setup(consoleMinLogLevel, logToFile);
+	verbose(msg: string): void {
+		this.log(msg, LogLevel.Verbose);
+	}
 
-		// Now that we have a minimum logLevel, we can clear out the queue of pending messages
-		if (_pendingLogQ) {
-			const logQ = _pendingLogQ;
-			_pendingLogQ = null;
-			logQ.forEach(item => write(item.msg, item.level));
+	warn(msg: string): void {
+		this.log(msg, LogLevel.Warn);
+	}
+
+	error(msg: string): void {
+		this.log(msg, LogLevel.Error);
+	}
+
+	/**
+	 * `log` adds a newline, `write` doesn't
+	 */
+	private _write(msg: string, level = LogLevel.Log): void {
+		// [null, undefined] => string
+		msg = msg + '';
+		if (this._pendingLogQ) {
+			this._pendingLogQ.push({ msg, level });
+		} else {
+			this._currentLogger.log(msg, level);
+		}
+	}
+
+	/**
+	 * Set the logger's minimum level to log in the console, and whether to log to the file. Log messages are queued before this is
+	 * called the first time, because minLogLevel defaults to Warn.
+	 */
+	setup(consoleMinLogLevel: LogLevel, logToFile: boolean): void {
+		if (this._currentLogger) {
+			this._currentLogger.setup(consoleMinLogLevel, logToFile);
+
+			// Now that we have a minimum logLevel, we can clear out the queue of pending messages
+			if (this._pendingLogQ) {
+				const logQ = this._pendingLogQ;
+				this._pendingLogQ = null;
+				logQ.forEach(item => this._write(item.msg, item.level));
+			}
+		}
+	}
+
+	init(logCallback: ILogCallback, logFilePath?: string, logToConsole?: boolean): void {
+		// Re-init, create new global Logger
+		this._pendingLogQ = this._pendingLogQ || [];
+		this._currentLogger = new InternalLogger(logCallback, logFilePath, logToConsole);
+		if (logFilePath) {
+			const d = new Date();
+			const timestamp = d.toLocaleTimeString() + ', ' + d.toLocaleDateString();
+			this.verbose(timestamp);
 		}
 	}
 }
 
-export function init(logCallback: ILogCallback, logFilePath?: string, logToConsole?: boolean): void {
-	// Re-init, create new global Logger
-	_pendingLogQ = _pendingLogQ || [];
-	_logger = new Logger(logCallback, logFilePath, logToConsole);
-	if (logFilePath) {
-		const d = new Date();
-		const timestamp = d.toLocaleTimeString() + ', ' + d.toLocaleDateString();
-		verbose(timestamp);
-	}
-}
+export const logger = new Logger();
 
 /**
  * Manages logging, whether to console.log, file, or VS Code console.
+ * Encapsulates the state specific to each logging session
  */
-class Logger {
+class InternalLogger {
 	/** The path of the log file */
 	private _logFilePath: string;
 

@@ -5,7 +5,8 @@
 
 import {DebugProtocol} from 'vscode-debugprotocol';
 
-import * as logger from './logger';
+import * as Logger from './logger';
+const logger = Logger.logger;
 import {DebugSession} from './debugSession';
 
 export class LoggingDebugSession extends DebugSession {
@@ -22,7 +23,7 @@ export class LoggingDebugSession extends DebugSession {
 	 * Overload sendEvent to log
 	 */
 	public sendEvent(event: DebugProtocol.Event): void {
-		if (!(event instanceof logger.LogOutputEvent)) {
+		if (!(event instanceof Logger.LogOutputEvent)) {
 			// Don't create an infinite loop...
 			logger.verbose(`To client: ${JSON.stringify(event)}`);
 		}

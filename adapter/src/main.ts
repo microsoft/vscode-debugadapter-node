@@ -16,10 +16,13 @@ import * as Logger from './logger';
 import { Event, Response } from './messages';
 import { Handles } from './handles';
 
+const logger = Logger.logger;
+
 export {
 	DebugSession,
 	LoggingDebugSession,
 	Logger,
+	logger,
 	InitializedEvent, TerminatedEvent, StoppedEvent, ContinuedEvent, OutputEvent, ThreadEvent, BreakpointEvent, ModuleEvent,
 	Thread, StackFrame, Scope, Variable,
 	Breakpoint, Source, Module, CompletionItem,
