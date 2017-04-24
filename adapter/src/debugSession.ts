@@ -550,6 +550,9 @@ export class DebugSession extends ProtocolServer {
 		// This debug adapter does not support the 'exceptionInfoRequest' request.
 		response.body.supportsExceptionInfoRequest = false;
 
+		// This debug adapter does not support the 'TerminateDebuggee' attribute on the 'disconnect' request.
+		response.body.supportTerminateDebuggee = false;
+
 		this.sendResponse(response);
 	}
 

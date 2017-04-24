@@ -645,7 +645,13 @@
 		},
 		"DisconnectArguments": {
 			"type": "object",
-			"description": "Arguments for 'disconnect' request.\nThe disconnect request has no standardized attributes."
+			"description": "Arguments for 'disconnect' request.",
+			"properties": {
+				"terminateDebuggee": {
+					"type": "boolean",
+					"description": "Indicates whether the debuggee should be terminated when the debugger is disconnected.\nIf unspecified, the debug adapter is free to do whatever it thinks is best.\nA client can only rely on this attribute being properly honored if a debug adapter returns true for the 'supportTerminateDebuggee' capability."
+				}
+			}
 		},
 		"DisconnectResponse": {
 			"allOf": [ { "$ref": "#/definitions/Response" }, {
@@ -1944,6 +1950,10 @@
 				"supportsExceptionInfoRequest": {
 					"type": "boolean",
 					"description": "The debug adapter supports the exceptionInfo request."
+				},
+				"supportTerminateDebuggee": {
+					"type": "boolean",
+					"description": "The debug adapter supports the 'terminateDebuggee' attribute on the 'disconnect' request."
 				}
 			}
 		},

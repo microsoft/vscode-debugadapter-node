@@ -7,6 +7,9 @@ This npm module contains declarations for the json-based Visual Studio Code debu
 
 ## History
 
+* 1.19.x:
+  * Adds a new optional argument `terminateDebuggee` to the `disconnect` request. If a debug adapter has opted into this feature with the 'supportTerminateDebuggee' capability, a client can use this to control whether the debuggee should be terminated when the debugger is disconnected.
+
 * 1.18.x:
   * Adds optional attribute `source` to the `SourceArguments`.
   * Made StoppedEvent's `reason` attribute robust against translation by introducing a new `description` attribute.
