@@ -9,7 +9,8 @@ export enum LogLevel {
 	Verbose = 0,
 	Log = 1,
 	Warn = 2,
-	Error = 3
+	Error = 3,
+	Stop = 4
 }
 
 export type ILogCallback = (outputEvent: OutputEvent) => void;
@@ -132,6 +133,11 @@ class InternalLogger {
 	}
 
 	public log(msg: string, level: LogLevel): void {
+
+		if (this._minLogLevel === LogLevel.Stop) {
+			return;
+		}
+
 		if (level >= this._minLogLevel) {
 			this.sendLog(msg, level);
 		}
