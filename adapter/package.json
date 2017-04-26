@@ -1,7 +1,7 @@
 {
 	"name": "vscode-debugadapter",
 	"description": "Debug adapter implementation for node",
-	"version": "1.19.0-pre.2",
+	"version": "1.19.0",
 	"author": "Microsoft Corporation",
 	"license": "MIT",
 	"repository": {
@@ -14,7 +14,7 @@
 	"main": "./lib/main.js",
 	"typings": "./lib/main",
 	"dependencies": {
-		"vscode-debugprotocol": "^1.19.0-pre.0"
+		"vscode-debugprotocol": "^1.19.0"
 	},
 	"devDependencies": {
 		"typescript": "^1.8.10"
