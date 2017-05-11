@@ -173,9 +173,9 @@ export class InitializedEvent extends Event implements DebugProtocol.Initialized
 }
 
 export class TerminatedEvent extends Event implements DebugProtocol.TerminatedEvent {
-	public constructor(restart?: boolean) {
+	public constructor(restart?: any) {
 		super('terminated');
-		if (typeof restart === 'boolean') {
+		if (typeof restart === 'boolean' || restart) {
 			const e: DebugProtocol.TerminatedEvent = this;
 			e.body = {
 				restart: restart
