@@ -26,8 +26,8 @@
 		"typescript": "^2.0.2"
 	},
 	"scripts": {
-		"compile": "node ./node_modules/typescript/bin/tsc -p ./src",
-		"watch": "node ./node_modules/typescript/bin/tsc -w -p ./src"
+		"compile": "tsc -p ./src",
+		"watch": "tsc -w -p ./src"
 	},
 	"main": "./out/generator"
 }

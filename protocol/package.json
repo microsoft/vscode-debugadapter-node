@@ -17,8 +17,8 @@
 		"typescript": "^2.0.2"
 	},
 	"scripts": {
-		"prepublish": "node ./node_modules/typescript/bin/tsc -p ./src",
-		"compile": "node ./node_modules/typescript/bin/tsc -p ./src",
-		"watch": "node ./node_modules/typescript/bin/tsc -w -p ./src"
+		"prepublish": "tsc -p ./src",
+		"compile": "tsc -p ./src",
+		"watch": "tsc -w -p ./src"
 	}
 }
