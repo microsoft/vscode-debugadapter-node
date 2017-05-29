@@ -4,10 +4,9 @@
 		{
 			"type": "node",
 			"request": "launch",
+			"protocol": "legacy",
 			"name": "Generate debugProtocol.ts",
 			"program": "${workspaceRoot}/src/generator.ts",
-			"cwd": "${workspaceRoot}",
-			"sourceMaps": true,
 			"outFiles": [ "${workspaceRoot}/out/**/*.js" ]
 		}
 	]

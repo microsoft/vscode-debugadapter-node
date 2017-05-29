@@ -9,6 +9,7 @@ This npm module contains declarations for the json-based Visual Studio Code debu
 
 * 1.20.x:
   * Extends the type of the `TerminatedEvent.body.restart` attribute from `boolean` to `any`. This makes it possible to loop arbitrary data from one debug session to the next.
+  * Adds a new enum value `subtle` for the `presentationHint` attribute of type `StackFrame`.
 
 * 1.19.x:
   * Adds a new optional argument `terminateDebuggee` to the `disconnect` request. If a debug adapter has opted into this feature with the 'supportTerminateDebuggee' capability, a client can use this to control whether the debuggee should be terminated when the debugger is disconnected.
