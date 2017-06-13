@@ -1307,6 +1307,8 @@ export module DebugProtocol {
 		line?: boolean;
 		/** Displays the module of the stack frame. */
 		module?: boolean;
+		/** Includes all stack frames, including those the debug adapter might otherwise hide. */
+		includeAll?: boolean;
 	}
 
 	/** An ExceptionOptions assigns configuration options to a set of exceptions. */

@@ -2524,6 +2524,10 @@
 					"module": {
 						"type": "boolean",
 						"description": "Displays the module of the stack frame."
+					},
+					"includeAll": {
+						"type": "boolean",
+						"description": "Includes all stack frames, including those the debug adapter might otherwise hide."
 					}
 				}
 			}]

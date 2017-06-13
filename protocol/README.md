@@ -7,6 +7,9 @@ This npm module contains declarations for the json-based Visual Studio Code debu
 
 ## History
 
+* 1.21.x:
+  * Added optional attribute `includeAll` to type `StackFrameFormat`. With this a the `StackTraceRequest` can be parameterized to include all stack frames, including those the DA might otherwise hide.
+
 * 1.20.x:
   * Extends the type of the `TerminatedEvent.body.restart` attribute from `boolean` to `any`. This makes it possible to loop arbitrary data from one debug session to the next.
   * Adds a new enum value `subtle` for the `presentationHint` attribute of type `StackFrame`.
