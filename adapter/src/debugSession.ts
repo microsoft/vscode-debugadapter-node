@@ -553,6 +553,9 @@ export class DebugSession extends ProtocolServer {
 		// This debug adapter does not support the 'TerminateDebuggee' attribute on the 'disconnect' request.
 		response.body.supportTerminateDebuggee = false;
 
+		// This debug adapter does not support delayed loading of stack frames.
+		response.body.supportsDelayedStackTraceLoading = false;
+
 		this.sendResponse(response);
 	}
 

@@ -1954,6 +1954,10 @@
 				"supportTerminateDebuggee": {
 					"type": "boolean",
 					"description": "The debug adapter supports the 'terminateDebuggee' attribute on the 'disconnect' request."
+				},
+				"supportsDelayedStackTraceLoading": {
+					"type": "boolean",
+					"description": "The debug adapter supports the delayed loading of parts of the stack, which requires that both the 'startFrame' and 'levels' arguments and the 'totalFrames' result of the 'StackTrace' request are supported."
 				}
 			}
 		},
