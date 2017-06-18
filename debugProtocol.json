@@ -2148,7 +2148,7 @@
 				"presentationHint": {
 					"type": "string",
 					"description": "An optional hint for how to present the source in the UI. A value of 'deemphasize' can be used to indicate that the source is not available or that it is skipped on stepping.",
-					"enum": [ "emphasize", "deemphasize" ]
+					"enum": [ "normal", "emphasize", "deemphasize" ]
 				},
 				"origin": {
 					"type": "string",
