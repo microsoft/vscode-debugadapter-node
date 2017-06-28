@@ -8,7 +8,7 @@ This npm module contains declarations for the json-based Visual Studio Code debu
 ## History
 
 * 1.21.x:
-  * Adds optional attribute `includeAll` to type `StackFrameFormat`. With this a the `StackTraceRequest` can be parameterized to include all stack frames, including those the DA might otherwise hide.
+  * Adds optional attribute `includeAll` to type `StackFrameFormat`. With this the `StackTraceRequest` can be parameterized to include all stack frames, including those the DA might otherwise hide.
   * Adds capability `supportsDelayedStackTraceLoading` that indicates that a debug adapter supports the delayed loading of parts of the stack. This requires that both the `startFrame` and `levels` arguments and the `totalFrames` result of the `StackTraceRequest` are supported.
 
 * 1.20.x:
