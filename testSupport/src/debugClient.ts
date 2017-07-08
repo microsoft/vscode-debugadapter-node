@@ -269,6 +269,10 @@ export class DebugClient extends ProtocolClient {
 		return this.send('exceptionInfo', args);
 	}
 
+	public customRequest(command: string, args?: any): Promise<DebugProtocol.Response> {
+		return this.send(command, args);
+	}
+
 	// ---- convenience methods -----------------------------------------------------------------------------------------------
 
 	/*
