@@ -165,6 +165,10 @@ export class DebugClient extends ProtocolClient {
 		return this.send('attach', args);
 	}
 
+	public restartRequest(args: DebugProtocol.RestartArguments): Promise<DebugProtocol.RestartResponse> {
+		return this.send('restart', args);
+	}
+
 	public disconnectRequest(args?: DebugProtocol.DisconnectArguments): Promise<DebugProtocol.DisconnectResponse> {
 		return this.send('disconnect', args);
 	}
@@ -197,6 +201,22 @@ export class DebugClient extends ProtocolClient {
 		return this.send('stepOut', args);
 	}
 
+	public stepBackRequest(args: DebugProtocol.StepBackArguments): Promise<DebugProtocol.StepBackResponse> {
+		return this.send('stepBack', args);
+	}
+
+	public reverseContinueRequest(args: DebugProtocol.ReverseContinueArguments): Promise<DebugProtocol.ReverseContinueResponse> {
+		return this.send('reverseContinue', args);
+	}
+
+	public restartFrameRequest(args: DebugProtocol.RestartFrameArguments): Promise<DebugProtocol.RestartFrameResponse> {
+		return this.send('restartFrame', args);
+	}
+
+	public gotoRequest(args: DebugProtocol.GotoArguments): Promise<DebugProtocol.GotoResponse> {
+		return this.send('goto', args);
+	}
+
 	public pauseRequest(args: DebugProtocol.PauseArguments): Promise<DebugProtocol.PauseResponse> {
 		return this.send('pause', args);
 	}
@@ -213,6 +233,10 @@ export class DebugClient extends ProtocolClient {
 		return this.send('variables', args);
 	}
 
+	public setVariableRequest(args: DebugProtocol.SetVariableArguments): Promise<DebugProtocol.SetVariableResponse> {
+		return this.send('setVariable', args);
+	}
+
 	public sourceRequest(args: DebugProtocol.SourceArguments): Promise<DebugProtocol.SourceResponse> {
 		return this.send('source', args);
 	}
@@ -221,12 +245,32 @@ export class DebugClient extends ProtocolClient {
 		return this.send('threads');
 	}
 
+	public modulesRequest(args: DebugProtocol.ModulesArguments): Promise<DebugProtocol.ModulesResponse> {
+		return this.send('modules');
+	}
+
 	public evaluateRequest(args: DebugProtocol.EvaluateArguments): Promise<DebugProtocol.EvaluateResponse> {
 		return this.send('evaluate', args);
 	}
 
+	public stepInTargetsRequest(args: DebugProtocol.StepInTargetsArguments): Promise<DebugProtocol.StepInTargetsResponse> {
+		return this.send('stepInTargets', args);
+	}
+
+	public gotoTargetsRequest(args: DebugProtocol.GotoTargetsArguments): Promise<DebugProtocol.GotoTargetsResponse> {
+		return this.send('gotoTargets', args);
+	}
+
 	public completionsRequest(args: DebugProtocol.CompletionsArguments): Promise<DebugProtocol.CompletionsResponse> {
 		return this.send('completions', args);
+	}
+
+	public exceptionInfoRequest(args: DebugProtocol.ExceptionInfoArguments): Promise<DebugProtocol.ExceptionInfoResponse> {
+		return this.send('exceptionInfo', args);
+	}
+
+	public customRequest(command: string, args?: any): Promise<DebugProtocol.Response> {
+		return this.send(command, args);
 	}
 
 	// ---- convenience methods -----------------------------------------------------------------------------------------------
