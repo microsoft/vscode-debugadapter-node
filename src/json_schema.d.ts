@@ -32,6 +32,8 @@ export module Protocol {
 		type: "string"
 		/** Possible values of a string. */
 		enum?: string[]
+		/** Possible descriptions for the values of a string. */
+		enumDescriptions?: string[]
 	}
 
 	export interface ObjectType extends BaseType {

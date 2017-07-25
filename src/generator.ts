@@ -78,14 +78,19 @@ function Interface(interfaceName: string, definition: P.Definition, superType?: 
 
 function Enum(typeName: string, definition: P.StringType): string {
 	let s = line();
-	s += comment(definition.description);
+	s += comment(definition.description, definition.enum, definition.enumDescriptions);
 	const x = definition.enum.map(v => `'${v}'`).join(' | ');
 	s += line(`export type ${typeName} = ${x};`);
 	return s;
 }
 
-function comment(description: string): string {
+function comment(description: string, enums?: string[], enumDescriptions?: string[]): string {
 	if (description) {
+		if (enums && enumDescriptions) {
+			for (let i = 0; i < enums.length; i++) {
+				description += `\n${enums[i]}: ${enumDescriptions[i]}`;
+			}
+		}
 		description = description.replace(/<code>(.*)<\/code>/g, "'$1'");
 		numIndents++;
 		description = description.replace(/\n/g, '\n' + indent());
@@ -161,7 +166,7 @@ function objectType(prop: any): string {
 
 function property(name: string, optional: boolean, prop: P.PropertyType): string {
 	let s = '';
-	s += comment(prop.description);
+	s += comment(prop.description, (<P.StringType>prop).enum, (<P.StringType>prop).enumDescriptions);
 	const type = propertyType(prop);
 	const propertyDef = `${name}${optional ? '?' : ''}: ${type}`;
 	if (type[0] === '\'' && type[type.length-1] === '\'' && type.indexOf('|') < 0) {
