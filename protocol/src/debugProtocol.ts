@@ -186,6 +186,27 @@ export module DebugProtocol {
 		};
 	}
 
+	/** Event message for 'process' event type.
+		The event indicates that the debugger has begun debugging a new process. Either one that it has launched, or one that it has attached to.
+	*/
+	export interface ProcessEvent extends Event {
+		// event: 'process';
+		body: {
+			/** The logical name of the process. This is usually the full path to process's executable file. Example: /home/example/myproj/program.js. */
+			name: string;
+			/** The system process id of the debugged process. This property will be missing for non-system processes. */
+			systemProcessId?: number;
+			/** If true, the process is running on the same computer as the debug adapter. */
+			isLocalProcess?: boolean;
+			/** Describes how the debug engine started debugging this process.
+				launch: Process was launched under the debugger.
+				attach: Debugger attached to an existing process.
+				attachForSuspendedLaunch: A project launcher component has launched a new process in a suspended state and then asked the debugger to attach.
+			*/
+			startMethod?: 'launch' | 'attach' | 'attachForSuspendedLaunch';
+		};
+	}
+
 	/** runInTerminal request; value of command field is 'runInTerminal'.
 		With this request a debug adapter can run a command in a terminal.
 	*/
