@@ -9,6 +9,7 @@ This npm module contains declarations for the json-based Visual Studio Code debu
 
 * 1.22.x:
   * Adds a new enum value `normal` for the `presentationHint` attribute of type `Source`.
+  * Adds a new event `process` that conveys process ID and other information about the debuggee.
 
 * 1.21.x:
   * Adds optional attribute `includeAll` to type `StackFrameFormat`. With this the `StackTraceRequest` can be parameterized to include all stack frames, including those the DA might otherwise hide.
