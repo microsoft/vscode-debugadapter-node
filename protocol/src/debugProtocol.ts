@@ -155,6 +155,12 @@ export module DebugProtocol {
 			output: string;
 			/** If an attribute 'variablesReference' exists and its value is > 0, the output contains objects which can be retrieved by passing variablesReference to the VariablesRequest. */
 			variablesReference?: number;
+			/** An optional source location where the output was produced. */
+			source?: Source;
+			/** An optional source location line where the output was produced. */
+			line?: number;
+			/** An optional source location column where the output was produced. */
+			column?: number;
 			/** Optional data to report. For the 'telemetry' category the data will be sent to telemetry, for the other categories the data is shown in JSON format. */
 			data?: any;
 		};

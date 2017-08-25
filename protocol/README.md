@@ -7,6 +7,9 @@ This npm module contains declarations for the json-based Visual Studio Code debu
 
 ## History
 
+* 1.23.x:
+  * Adds a `source`, `line`, and `column` attributes to the `Output` event. With this a frontend can show a link to the source where the output was generated.
+
 * 1.22.x:
   * Adds a new enum value `normal` for the `presentationHint` attribute of type `Source`.
   * Adds a new event `process` that conveys process ID and other information about the debuggee.
