@@ -840,6 +840,8 @@ export module DebugProtocol {
 		expression: string;
 		/** Evaluate the expression in the scope of this stack frame. If not specified, the expression is evaluated in the global scope. */
 		frameId?: number;
+		/** The optional value to set the expression to. */
+		value?: string;
 		/** The context in which the evaluate request is run. Possible values are 'watch' if evaluate is run in a watch, 'repl' if run from the REPL console, or 'hover' if run from a data hover. */
 		context?: string;
 		/** Specifies details on how to format the Evaluate result. */
@@ -863,6 +865,8 @@ export module DebugProtocol {
 				The client can use this optional information to present the variables in a paged UI and fetch them in chunks.
 			*/
 			indexedVariables?: number;
+			/** Indicates the expressions value can be modified. */
+			readOnly?: boolean;
 		};
 	}
 
@@ -1200,6 +1204,8 @@ export module DebugProtocol {
 		value: string;
 		/** The type of the variable's value. Typically shown in the UI when hovering over the value. */
 		type?: string;
+		/** Indicates the variables value can be modified. */
+		readOnly?: boolean;
 		/** Properties of a variable that can be used to determine how to render the variable in the UI. Format of the string value: TBD. */
 		kind?: string;
 		/** Optional evaluatable name of this variable which can be passed to the 'EvaluateRequest' to fetch the variable's value. */
