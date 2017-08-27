@@ -14,7 +14,9 @@ export module DebugProtocol {
 	export interface ProtocolMessage {
 		/** Sequence number. */
 		seq: number;
-		/** One of 'request', 'response', or 'event'. */
+		/** Message type.
+			Values: 'request', 'response', 'event', etc.
+		*/
 		type: string;
 	}
 
@@ -73,8 +75,9 @@ export module DebugProtocol {
 	export interface StoppedEvent extends Event {
 		// event: 'stopped';
 		body: {
-			/** The reason for the event (such as: 'step', 'breakpoint', 'exception', 'pause', 'entry').
+			/** The reason for the event.
 				For backward compatibility this string is shown in the UI if the 'description' attribute is missing (but it must not be translated).
+				Values: 'step', 'breakpoint', 'exception', 'pause', 'entry', etc.
 			*/
 			reason: string;
 			/** The full reason for the event, e.g. 'Paused on exception'. This string is shown in the UI as is. */
@@ -136,7 +139,9 @@ export module DebugProtocol {
 	export interface ThreadEvent extends Event {
 		// event: 'thread';
 		body: {
-			/** The reason for the event (such as: 'started', 'exited'). */
+			/** The reason for the event.
+				Values: 'started', 'exited', etc.
+			*/
 			reason: string;
 			/** The identifier of the thread. */
 			threadId: number;
@@ -149,7 +154,9 @@ export module DebugProtocol {
 	export interface OutputEvent extends Event {
 		// event: 'output';
 		body: {
-			/** The category of output (such as: 'console', 'stdout', 'stderr', 'telemetry'). If not specified, 'console' is assumed. */
+			/** The output category. If not specified, 'console' is assumed.
+				Values: 'console', 'stdout', 'stderr', 'telemetry', etc.
+			*/
 			category?: string;
 			/** The output to report. */
 			output: string;
@@ -172,7 +179,9 @@ export module DebugProtocol {
 	export interface BreakpointEvent extends Event {
 		// event: 'breakpoint';
 		body: {
-			/** The reason for the event (such as: 'changed', 'new'). */
+			/** The reason for the event.
+				Values: 'changed', 'new', etc.
+			*/
 			reason: string;
 			/** The breakpoint. */
 			breakpoint: Breakpoint;
@@ -205,9 +214,9 @@ export module DebugProtocol {
 			/** If true, the process is running on the same computer as the debug adapter. */
 			isLocalProcess?: boolean;
 			/** Describes how the debug engine started debugging this process.
-				launch: Process was launched under the debugger.
-				attach: Debugger attached to an existing process.
-				attachForSuspendedLaunch: A project launcher component has launched a new process in a suspended state and then asked the debugger to attach.
+				'launch': Process was launched under the debugger.
+				'attach': Debugger attached to an existing process.
+				'attachForSuspendedLaunch': A project launcher component has launched a new process in a suspended state and then asked the debugger to attach.
 			*/
 			startMethod?: 'launch' | 'attach' | 'attachForSuspendedLaunch';
 		};
@@ -267,7 +276,9 @@ export module DebugProtocol {
 		linesStartAt1?: boolean;
 		/** If true all column numbers are 1-based (default). */
 		columnsStartAt1?: boolean;
-		/** Determines in what format paths are specified. Possible values are 'path' or 'uri'. The default is 'path', which is the native format. */
+		/** Determines in what format paths are specified. The default is 'path', which is the native format.
+			Values: 'path', 'uri', etc.
+		*/
 		pathFormat?: string;
 		/** Client supports the optional type attribute for variables. */
 		supportsVariableType?: boolean;
@@ -840,7 +851,13 @@ export module DebugProtocol {
 		expression: string;
 		/** Evaluate the expression in the scope of this stack frame. If not specified, the expression is evaluated in the global scope. */
 		frameId?: number;
-		/** The context in which the evaluate request is run. Possible values are 'watch' if evaluate is run in a watch, 'repl' if run from the REPL console, or 'hover' if run from a data hover. */
+		/** The context in which the evaluate request is run.
+			Values: 
+			'watch': evaluate is run in a watch.
+			'repl': evaluate is run from REPL console.
+			'hover': evaluate is run from a data hover.
+			etc.
+		*/
 		context?: string;
 		/** Specifies details on how to format the Evaluate result. */
 		format?: ValueFormat;

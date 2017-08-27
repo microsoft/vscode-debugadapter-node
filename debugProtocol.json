@@ -16,7 +16,7 @@
 				},
 				"type": {
 					"type": "string",
-					"description": "One of 'request', 'response', or 'event'.",
+					"description": "Message type.",
 					"_enum": [ "request", "response", "event" ]
 				}
 			},
@@ -129,7 +129,7 @@
 						"properties": {
 							"reason": {
 								"type": "string",
-								"description": "The reason for the event (such as: 'step', 'breakpoint', 'exception', 'pause', 'entry').\nFor backward compatibility this string is shown in the UI if the 'description' attribute is missing (but it must not be translated).",
+								"description": "The reason for the event.\nFor backward compatibility this string is shown in the UI if the 'description' attribute is missing (but it must not be translated).",
 								"_enum": [ "step", "breakpoint", "exception", "pause", "entry" ]
 							},
 							"description": {
@@ -245,7 +245,7 @@
 						"properties": {
 							"reason": {
 								"type": "string",
-								"description": "The reason for the event (such as: 'started', 'exited').",
+								"description": "The reason for the event.",
 								"_enum": [ "started", "exited" ]
 							},
 							"threadId": {
@@ -274,7 +274,7 @@
 						"properties": {
 							"category": {
 								"type": "string",
-								"description": "The category of output (such as: 'console', 'stdout', 'stderr', 'telemetry'). If not specified, 'console' is assumed.",
+								"description": "The output category. If not specified, 'console' is assumed.",
 								"_enum": [ "console", "stdout", "stderr", "telemetry" ]
 							},
 							"output": {
@@ -323,7 +323,7 @@
 						"properties": {
 							"reason": {
 								"type": "string",
-								"description": "The reason for the event (such as: 'changed', 'new').",
+								"description": "The reason for the event.",
 								"_enum": [ "changed", "new" ]
 							},
 							"breakpoint": {
@@ -540,7 +540,7 @@
 				"pathFormat": {
 					"type": "string",
 					"_enum": [ "path", "uri" ],
-					"description": "Determines in what format paths are specified. Possible values are 'path' or 'uri'. The default is 'path', which is the native format."
+					"description": "Determines in what format paths are specified. The default is 'path', which is the native format."
 				},
 				"supportsVariableType": {
 					"type": "boolean",
@@ -1645,7 +1645,12 @@
 				"context": {
 					"type": "string",
 					"_enum": [ "watch", "repl", "hover" ],
-					"description": "The context in which the evaluate request is run. Possible values are 'watch' if evaluate is run in a watch, 'repl' if run from the REPL console, or 'hover' if run from a data hover."
+					"enumDescriptions": [
+						"evaluate is run in a watch.",
+						"evaluate is run from REPL console.",
+						"evaluate is run from a data hover."
+					],
+					"description": "The context in which the evaluate request is run."
 				},
 				"format": {
 					"$ref": "#/definitions/ValueFormat",

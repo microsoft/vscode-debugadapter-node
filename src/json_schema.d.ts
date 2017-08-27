@@ -28,12 +28,25 @@ export module Protocol {
 		type: "number" | "integer" | "boolean"
 	}
 
-	export interface StringType extends BaseType {
+	export interface Commentable {
+		/** Description of the type */
+		description?: string
+		/** Possible values of a string. */
+		enum?: string[]
+		/** Possible descriptions for the values of a string. */
+		enumDescriptions?: string[]
+		/** Possible values of a string. */
+		_enum?: string[]
+	}
+
+	export interface StringType extends BaseType, Commentable {
 		type: "string"
 		/** Possible values of a string. */
 		enum?: string[]
 		/** Possible descriptions for the values of a string. */
 		enumDescriptions?: string[]
+		/** Possible values of a string. */
+		_enum?: string[]
 	}
 
 	export interface ObjectType extends BaseType {

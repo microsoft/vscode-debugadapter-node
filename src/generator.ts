@@ -21,7 +21,7 @@ function Module(moduleName: string, schema: IProtocol): string {
 	s += line();
 
 	//s += comment(schema.description);
-	s += comment('Declaration module describing the VS Code debug protocol.\nAuto-generated from json schema. Do not edit manually.');
+	s += comment({ description : 'Declaration module describing the VS Code debug protocol.\nAuto-generated from json schema. Do not edit manually.'});
 
 	s += openBlock(`export module ${moduleName}`);
 
@@ -58,7 +58,7 @@ function Interface(interfaceName: string, definition: P.Definition, superType?: 
 
 	let s = line();
 
-	s += comment(definition.description);
+	s += comment({ description : definition.description });
 
 	let x = `export interface ${interfaceName}`;
 	if (superType) {
@@ -78,19 +78,45 @@ function Interface(interfaceName: string, definition: P.Definition, superType?: 
 
 function Enum(typeName: string, definition: P.StringType): string {
 	let s = line();
-	s += comment(definition.description, definition.enum, definition.enumDescriptions);
-	const x = definition.enum.map(v => `'${v}'`).join(' | ');
+	s += comment(definition);
+	const x = enumAsOrType(definition.enum);
 	s += line(`export type ${typeName} = ${x};`);
 	return s;
 }
 
-function comment(description: string, enums?: string[], enumDescriptions?: string[]): string {
-	if (description) {
-		if (enums && enumDescriptions) {
-			for (let i = 0; i < enums.length; i++) {
-				description += `\n${enums[i]}: ${enumDescriptions[i]}`;
-			}
+function enumAsOrType(enm: string[]) {
+	return enm.map(v => `'${v}'`).join(' | ');
+}
+
+function comment(c: P.Commentable): string {
+
+	let description = c.description || '';
+
+	if ((<any>c).items) {	// array
+		c = (<any>c).items;
+	}
+
+	// a 'closed' enum with individual descriptions
+	if (c.enum && c.enumDescriptions) {
+		for (let i = 0; i < c.enum.length; i++) {
+			description += `\n'${c.enum[i]}': ${c.enumDescriptions[i]}`;
 		}
+	}
+
+	// an 'open' enum
+	if (c._enum) {
+		description += '\nValues: ';
+		if (c.enumDescriptions) {
+			for (let i = 0; i < c._enum.length; i++) {
+				description += `\n'${c._enum[i]}': ${c.enumDescriptions[i]}`;
+			}
+			description += '\netc.';
+		} else {
+			description += `${c._enum.map(v => `'${v}'`).join(', ')}, etc.`;
+		}
+	}
+
+	if (description) {
 		description = description.replace(/<code>(.*)<\/code>/g, "'$1'");
 		numIndents++;
 		description = description.replace(/\n/g, '\n' + indent());
@@ -125,12 +151,16 @@ function propertyType(prop: any): string {
 	}
 	switch (prop.type) {
 		case 'array':
-			return `${propertyType(prop.items)}[]`;
+			const s = propertyType(prop.items);
+			if (s.indexOf(' ') >= 0) {
+				return `(${s})[]`;
+			}
+			return `${s}[]`;
 		case 'object':
 			return objectType(prop);
 		case 'string':
 			if (prop.enum) {
-				return prop.enum.map(v => `'${v}'`).join(' | ');
+				return enumAsOrType(prop.enum);
 			}
 			return `string`;
 		case 'integer':
@@ -166,7 +196,7 @@ function objectType(prop: any): string {
 
 function property(name: string, optional: boolean, prop: P.PropertyType): string {
 	let s = '';
-	s += comment(prop.description, (<P.StringType>prop).enum, (<P.StringType>prop).enumDescriptions);
+	s += comment(prop);
 	const type = propertyType(prop);
 	const propertyDef = `${name}${optional ? '?' : ''}: ${type}`;
 	if (type[0] === '\'' && type[type.length-1] === '\'' && type.indexOf('|') < 0) {
@@ -214,4 +244,4 @@ const debugProtocolSchema = JSON.parse(fs.readFileSync('./debugProtocol.json').t
 
 const emitStr = Module('DebugProtocol', debugProtocolSchema);
 
-fs.writeFileSync(`./protocol/src/debugProtocol.ts`, emitStr, 'utf-8');
+fs.writeFileSync(`./protocol/src/debugProtocol.ts`, emitStr, { encoding: 'utf-8'});
