@@ -1675,6 +1675,10 @@
 								"type": "string",
 								"description": "The optional type of the evaluate result."
 							},
+							"presentationHint": {
+								"$ref": "#/definitions/VariablePresentationHint",
+								"description": "Properties of a evaluate result that can be used to determine how to render the result in the UI."
+							},
 							"variablesReference": {
 								"type": "number",
 								"description": "If variablesReference is > 0, the evaluate result is structured and its children can be retrieved by passing variablesReference to the VariablesRequest."
@@ -2339,9 +2343,9 @@
 					"type": "string",
 					"description": "The type of the variable's value. Typically shown in the UI when hovering over the value."
 				},
-				"kind": {
-					"type": "string",
-					"description": "Properties of a variable that can be used to determine how to render the variable in the UI. Format of the string value: TBD."
+				"presentationHint": {
+					"$ref": "#/definitions/VariablePresentationHint",
+					"description": "Properties of a variable that can be used to determine how to render the variable in the UI."
 				},
 				"evaluateName": {
 					"type": "string",
@@ -2361,6 +2365,40 @@
 				}
 			},
 			"required": [ "name", "value", "variablesReference" ]
+		},
+
+		"VariablePresentationHint": {
+			"type": "object",
+			"description": "Optional properties of a variable that can be used to determine how to render the variable in the UI.",
+			"properties": {
+				"kind": {
+					"description": "The kind of variable. Before introducing additional values, try to use the listed values.",
+					"type": "string",
+					"_enum": [ "property", "method", "class", "data", "event", "baseClass", "innerClass", "interface", "mostDerivedClass" ]
+				},
+				"attributes": {
+					"description": "Set of attributes represented as an array of strings. Before introducing additional values, try to use the listed values.",
+					"type": "array",
+					"items": {
+						"type": "string",
+						"_enum": [ "static", "constant", "readOnly", "rawString", "hasObjectId", "canHaveObjectId", "hasSideEffects" ],
+						"enumDescriptions": [
+							"Indicates that the object is static.",
+							"Indicates that the object is a constant.",
+							"Indicates that the object is read only.",
+							"Indicates that the object is a raw string.",
+							"Indicates that the object can have an Object ID created for it.",
+							"Indicates that the object has an Object ID associated with it.",
+							"Indicates that the evaluation had side effects."
+						]
+					}
+				},
+				"visibility": {
+					"description": "Visibility of variable. Before introducing additional values, try to use the listed values.",
+					"type": "string",
+					"_enum": [ "public", "private", "protected", "internal", "final" ]
+				}
+			}
 		},
 
 		"SourceBreakpoint": {

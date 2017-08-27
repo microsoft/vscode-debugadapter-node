@@ -870,6 +870,8 @@ export module DebugProtocol {
 			result: string;
 			/** The optional type of the evaluate result. */
 			type?: string;
+			/** Properties of a evaluate result that can be used to determine how to render the result in the UI. */
+			presentationHint?: VariablePresentationHint;
 			/** If variablesReference is > 0, the evaluate result is structured and its children can be retrieved by passing variablesReference to the VariablesRequest. */
 			variablesReference: number;
 			/** The number of named child variables.
@@ -1217,8 +1219,8 @@ export module DebugProtocol {
 		value: string;
 		/** The type of the variable's value. Typically shown in the UI when hovering over the value. */
 		type?: string;
-		/** Properties of a variable that can be used to determine how to render the variable in the UI. Format of the string value: TBD. */
-		kind?: string;
+		/** Properties of a variable that can be used to determine how to render the variable in the UI. */
+		presentationHint?: VariablePresentationHint;
 		/** Optional evaluatable name of this variable which can be passed to the 'EvaluateRequest' to fetch the variable's value. */
 		evaluateName?: string;
 		/** If variablesReference is > 0, the variable is structured and its children can be retrieved by passing variablesReference to the VariablesRequest. */
@@ -1231,6 +1233,30 @@ export module DebugProtocol {
 			The client can use this optional information to present the children in a paged UI and fetch them in chunks.
 		*/
 		indexedVariables?: number;
+	}
+
+	/** Optional properties of a variable that can be used to determine how to render the variable in the UI. */
+	export interface VariablePresentationHint {
+		/** The kind of variable. Before introducing additional values, try to use the listed values.
+			Values: 'property', 'method', 'class', 'data', 'event', 'baseClass', 'innerClass', 'interface', 'mostDerivedClass', etc.
+		*/
+		kind?: string;
+		/** Set of attributes represented as an array of strings. Before introducing additional values, try to use the listed values.
+			Values: 
+			'static': Indicates that the object is static.
+			'constant': Indicates that the object is a constant.
+			'readOnly': Indicates that the object is read only.
+			'rawString': Indicates that the object is a raw string.
+			'hasObjectId': Indicates that the object can have an Object ID created for it.
+			'canHaveObjectId': Indicates that the object has an Object ID associated with it.
+			'hasSideEffects': Indicates that the evaluation had side effects.
+			etc.
+		*/
+		attributes?: string[];
+		/** Visibility of variable. Before introducing additional values, try to use the listed values.
+			Values: 'public', 'private', 'protected', 'internal', 'final', etc.
+		*/
+		visibility?: string;
 	}
 
 	/** Properties of a breakpoint passed to the setBreakpoints request. */
