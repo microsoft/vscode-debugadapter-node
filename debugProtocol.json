@@ -367,6 +367,35 @@
 			}]
 		},
 
+		"LoadedSourceEvent": {
+			"allOf": [ { "$ref": "#/definitions/Event" }, {
+				"type": "object",
+				"description": "Event message for 'loadedSource' event type.\nThe event indicates that some source has been added, changed, or removed from the set of all loaded sources.",
+				"properties": {
+					"event": {
+						"type": "string",
+						"enum": [ "loadedSource" ]
+					},
+					"body": {
+						"type": "object",
+						"properties": {
+							"reason": {
+								"type": "string",
+								"description": "The reason for the event.",
+								"enum": [ "new", "changed", "removed" ]
+							},
+							"source": {
+								"$ref": "#/definitions/Source",
+								"description": "The new, changed, or removed source."
+							}
+						},
+						"required": [ "reason", "source" ]
+					}
+				},
+				"required": [ "event", "body" ]
+			}]
+		},
+
 		"ProcessEvent": {
 			"allOf": [
 				{ "$ref": "#/definitions/Event" },
@@ -1614,6 +1643,49 @@
 			}]
 		},
 
+		"LoadedSourcesRequest": {
+			"allOf": [ { "$ref": "#/definitions/Request" }, {
+				"type": "object",
+				"description": "Retrieves the set of all sources currently loaded by the debugged process.",
+				"properties": {
+					"command": {
+						"type": "string",
+						"enum": [ "loadedSources" ]
+					},
+					"arguments": {
+						"$ref": "#/definitions/LoadedSourcesArguments"
+					}
+				},
+				"required": [ "command" ]
+			}]
+		},
+		"LoadedSourcesArguments": {
+			"type": "object",
+			"description": "Arguments for 'loadedSources' request.\nThe 'loadedSources' request has no standardized arguments."
+		},
+		"LoadedSourcesResponse": {
+			"allOf": [ { "$ref": "#/definitions/Response" }, {
+				"type": "object",
+				"description": "Response to 'loadedSources' request.",
+				"properties": {
+					"body": {
+						"type": "object",
+						"properties": {
+							"sources": {
+								"type": "array",
+								"items": {
+									"$ref": "#/definitions/Source"
+								},
+								"description": "Set of loaded sources."
+							}
+						},
+						"required": [ "sources" ]
+					}
+				},
+				"required": [ "body" ]
+			}]
+		},
+
 		"EvaluateRequest": {
 			"allOf": [ { "$ref": "#/definitions/Request" }, {
 				"type": "object",
@@ -2024,6 +2096,10 @@
 				"supportsDelayedStackTraceLoading": {
 					"type": "boolean",
 					"description": "The debug adapter supports the delayed loading of parts of the stack, which requires that both the 'startFrame' and 'levels' arguments and the 'totalFrames' result of the 'StackTrace' request are supported."
+				},
+				"supportsLoadedSourcesRequest": {
+					"type": "boolean",
+					"description": "The debug adapter supports the 'loadedSources' request."
 				}
 			}
 		},
@@ -2219,6 +2295,13 @@
 				"origin": {
 					"type": "string",
 					"description": "The (optional) origin of this source: possible values 'internal module', 'inlined content from source map', etc."
+				},
+				"sources": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Source"
+					},
+					"description": "An optional list of sources that are related to this source. These may be the source that generated this source."
 				},
 				"adapterData": {
 					"type": [ "array", "boolean", "integer", "null", "number", "object", "string" ],

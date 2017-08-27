@@ -201,6 +201,19 @@ export module DebugProtocol {
 		};
 	}
 
+	/** Event message for 'loadedSource' event type.
+		The event indicates that some source has been added, changed, or removed from the set of all loaded sources.
+	*/
+	export interface LoadedSourceEvent extends Event {
+		// event: 'loadedSource';
+		body: {
+			/** The reason for the event. */
+			reason: 'new' | 'changed' | 'removed';
+			/** The new, changed, or removed source. */
+			source: Source;
+		};
+	}
+
 	/** Event message for 'process' event type.
 		The event indicates that the debugger has begun debugging a new process. Either one that it has launched, or one that it has attached to.
 	*/
@@ -836,6 +849,26 @@ export module DebugProtocol {
 		};
 	}
 
+	/** Retrieves the set of all sources currently loaded by the debugged process. */
+	export interface LoadedSourcesRequest extends Request {
+		// command: 'loadedSources';
+		arguments?: LoadedSourcesArguments;
+	}
+
+	/** Arguments for 'loadedSources' request.
+		The 'loadedSources' request has no standardized arguments.
+	*/
+	export interface LoadedSourcesArguments {
+	}
+
+	/** Response to 'loadedSources' request. */
+	export interface LoadedSourcesResponse extends Response {
+		body: {
+			/** Set of loaded sources. */
+			sources: Source[];
+		};
+	}
+
 	/** Evaluate request; value of command field is 'evaluate'.
 		Evaluates the given expression in the context of the top most stack frame.
 		The expression has access to any variables and arguments that are in scope.
@@ -1038,6 +1071,8 @@ export module DebugProtocol {
 		supportTerminateDebuggee?: boolean;
 		/** The debug adapter supports the delayed loading of parts of the stack, which requires that both the 'startFrame' and 'levels' arguments and the 'totalFrames' result of the 'StackTrace' request are supported. */
 		supportsDelayedStackTraceLoading?: boolean;
+		/** The debug adapter supports the 'loadedSources' request. */
+		supportsLoadedSourcesRequest?: boolean;
 	}
 
 	/** An ExceptionBreakpointsFilter is shown in the UI as an option for configuring how exceptions are dealt with. */
@@ -1149,6 +1184,8 @@ export module DebugProtocol {
 		presentationHint?: 'normal' | 'emphasize' | 'deemphasize';
 		/** The (optional) origin of this source: possible values 'internal module', 'inlined content from source map', etc. */
 		origin?: string;
+		/** An optional list of sources that are related to this source. These may be the source that generated this source. */
+		sources?: Source[];
 		/** Optional data that a debug adapter might want to loop through the client. The client should leave the data intact and persist it across sessions. The client should not interpret the data. */
 		adapterData?: any;
 		/** The checksums associated with this file. */
