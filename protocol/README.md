@@ -9,6 +9,8 @@ This npm module contains declarations for the json-based Visual Studio Code debu
 
 * 1.23.x:
   * Adds a `source`, `line`, and `column` attributes to the `Output` event. With this a frontend can show a link to the source where the output was generated.
+  * Adds support for retrieving loaded scripts and receiving loaded script events (`LoadedSourcesRequest`, `LoadedSourceEvent`).
+  * Adds display hints for variables and evaluation results (type `VariablePresentationHint`).
 
 * 1.22.x:
   * Adds a new enum value `normal` for the `presentationHint` attribute of type `Source`.
