@@ -248,6 +248,21 @@ export class ModuleEvent extends Event implements DebugProtocol.ModuleEvent {
 	}
 }
 
+export class LoadedSourceEvent extends Event implements DebugProtocol.LoadedSourceEvent {
+	body: {
+		reason: 'new' | 'changed' | 'removed',
+		source: Source
+	};
+
+	public constructor(reason: 'new' | 'changed' | 'removed', source: Source) {
+		super('loadedSource');
+		this.body = {
+			reason: reason,
+			source: source
+		};
+	}
+}
+
 export enum ErrorDestination {
 	User = 1,
 	Telemetry = 2
@@ -495,6 +510,9 @@ export class DebugSession extends ProtocolServer {
 			} else if (request.command === 'exceptionInfo') {
 				this.exceptionInfoRequest(<DebugProtocol.ExceptionInfoResponse> response, request.arguments);
 
+			} else if (request.command === 'loadedSources') {
+				this.loadedSourcesRequest(<DebugProtocol.LoadedSourcesResponse> response, request.arguments);
+
 			} else {
 				this.customRequest(request.command, <DebugProtocol.Response> response, request.arguments);
 			}
@@ -669,6 +687,10 @@ export class DebugSession extends ProtocolServer {
 	}
 
 	protected exceptionInfoRequest(response: DebugProtocol.ExceptionInfoResponse, args: DebugProtocol.ExceptionInfoArguments): void {
+		this.sendResponse(response);
+	}
+
+	protected loadedSourcesRequest(response: DebugProtocol.LoadedSourcesResponse, args: DebugProtocol.LoadedSourcesArguments): void {
 		this.sendResponse(response);
 	}
 
