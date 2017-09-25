@@ -9,6 +9,7 @@ This npm module contains declarations for the json-based Visual Studio Code debu
 
 * 1.24.x:
   * Adds `removed` to the value set of the `reason` attribute of the `BreakpointEvent`.
+  * Adds a `locale` attribute to the `initialize` request. The adapter can use this information to translate user visible information.
 
 * 1.23.x:
   * Adds a `source`, `line`, and `column` attributes to the `Output` event. With this a frontend can show a link to the source where the output was generated.
