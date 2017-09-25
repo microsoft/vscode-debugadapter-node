@@ -324,7 +324,7 @@
 							"reason": {
 								"type": "string",
 								"description": "The reason for the event.",
-								"_enum": [ "changed", "new" ]
+								"_enum": [ "changed", "new", "removed" ]
 							},
 							"breakpoint": {
 								"$ref": "#/definitions/Breakpoint",

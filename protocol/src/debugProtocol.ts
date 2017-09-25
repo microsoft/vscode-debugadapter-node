@@ -180,7 +180,7 @@ export module DebugProtocol {
 		// event: 'breakpoint';
 		body: {
 			/** The reason for the event.
-				Values: 'changed', 'new', etc.
+				Values: 'changed', 'new', 'removed', etc.
 			*/
 			reason: string;
 			/** The breakpoint. */
