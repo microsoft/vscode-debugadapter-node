@@ -2461,7 +2461,19 @@
 				"kind": {
 					"description": "The kind of variable. Before introducing additional values, try to use the listed values.",
 					"type": "string",
-					"_enum": [ "property", "method", "class", "data", "event", "baseClass", "innerClass", "interface", "mostDerivedClass" ]
+					"_enum": [ "property", "method", "class", "data", "event", "baseClass", "innerClass", "interface", "mostDerivedClass", "virtual" ],
+					"enumDescriptions": [
+						"Indicates that the object is a property.",
+						"Indicates that the object is a method.",
+						"Indicates that the object is a class.",
+						"Indicates that the object is data.",
+						"Indicates that the object is an event.",
+						"Indicates that the object is a base class.",
+						"Indicates that the object is an inner class.",
+						"Indicates that the object is an interface.",
+						"Indicates that the object is the most derived class.",
+						"Indicates that the object is virtual, that means it is a synthetic object introduced by the adapter for rendering purposes, e.g. an index range for large arrays."
+					]
 				},
 				"attributes": {
 					"description": "Set of attributes represented as an array of strings. Before introducing additional values, try to use the listed values.",
