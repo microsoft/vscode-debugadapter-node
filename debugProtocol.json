@@ -483,10 +483,10 @@
 				},
 				"env": {
 					"type": "object",
-					"description": "Environment key-value pairs that are added to the default environment.",
+					"description": "Environment key-value pairs that are added to or removed from the default environment.",
 					"additionalProperties": {
-						"type": "string",
-						"description": "Values must be strings."
+						"type": [ "string", "null" ],
+						"description": "Proper values must be strings. A value of 'null' removes the variable from the environment."
 					}
 				}
 			},

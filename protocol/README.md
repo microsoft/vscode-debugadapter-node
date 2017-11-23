@@ -9,6 +9,7 @@ This npm module contains declarations for the json-based Visual Studio Code debu
 
 * 1.25.x:
   * Adds a new enum value `virtual` for the `presentationHint` attribute of type `Variable`.
+  * To remove env variables from the environment support a 'null' value for `env` attribute in `runInTerminal` request.
 
 * 1.24.x:
   * Adds `removed` to the value set of the `reason` attribute of the `BreakpointEvent`.
