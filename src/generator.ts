@@ -189,9 +189,16 @@ function objectType(prop: any): string {
 		return s;
 	}
 	if (prop.additionalProperties) {
-		return `{ [key: string]: ${prop.additionalProperties.type}; }`;
+		return `{ [key: string]: ${orType(prop.additionalProperties.type)}; }`;
 	}
 	return '{}';
+}
+
+function orType(enm: string | string[]): string {
+	if (typeof enm === 'string') {
+		return enm;
+	}
+	return enm.join(' | ');
 }
 
 function property(name: string, optional: boolean, prop: P.PropertyType): string {
