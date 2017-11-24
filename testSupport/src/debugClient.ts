@@ -32,6 +32,7 @@ export class DebugClient extends ProtocolClient {
 	private _runtime: string;
 	private _executable: string;
 	private _adapterProcess: cp.ChildProcess;
+	private _spawnOptions: cp.SpawnOptions;
 	private _enableStderr: boolean;
 	private _debugType: string;
 	private _socket: net.Socket;
@@ -56,10 +57,11 @@ export class DebugClient extends ProtocolClient {
 	 *     return dc.hitBreakpoint({ program: 'test.js' }, 'test.js', 15);
 	 * });
 	 */
-	constructor(runtime: string, executable: string, debugType: string) {
+	constructor(runtime: string, executable: string, debugType: string, spwanOptions?: cp.SpawnOptions) {
 		super();
 		this._runtime = runtime;
 		this._executable = executable;
+		this._spawnOptions= spwanOptions;
 		this._enableStderr = false;
 		this._debugType = debugType;
 		this._supportsConfigurationDoneRequest = false;
@@ -92,7 +94,7 @@ export class DebugClient extends ProtocolClient {
 					resolve();
 				});
 			} else {
-				this._adapterProcess = cp.spawn(this._runtime, [ this._executable ]);
+				this._adapterProcess = cp.spawn(this._runtime, [ this._executable ], this._spawnOptions);
 				const sanitize = (s: string) => s.toString().replace(/\r?\n$/mg, '');
 				this._adapterProcess.stderr.on('data', (data: string) => {
 					if (this._enableStderr) {
