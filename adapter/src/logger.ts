@@ -65,9 +65,9 @@ export class Logger {
 	 * Set the logger's minimum level to log in the console, and whether to log to the file. Log messages are queued before this is
 	 * called the first time, because minLogLevel defaults to Warn.
 	 */
-	setup(consoleMinLogLevel: LogLevel, logToFile: boolean): void {
+	setup(consoleMinLogLevel: LogLevel, logFilePath?: string): void {
 		if (this._currentLogger) {
-			this._currentLogger.setup(consoleMinLogLevel, logToFile);
+			this._currentLogger.setup(consoleMinLogLevel, logFilePath);
 
 			// Now that we have a minimum logLevel, we can clear out the queue of pending messages
 			if (this._pendingLogQ) {
@@ -78,15 +78,10 @@ export class Logger {
 		}
 	}
 
-	init(logCallback: ILogCallback, logFilePath?: string, logToConsole?: boolean): void {
+	init(logCallback: ILogCallback, logToConsole?: boolean): void {
 		// Re-init, create new global Logger
 		this._pendingLogQ = this._pendingLogQ || [];
-		this._currentLogger = new InternalLogger(logCallback, logFilePath, logToConsole);
-		if (logFilePath) {
-			const d = new Date();
-			const timestamp = d.toLocaleTimeString() + ', ' + d.toLocaleDateString();
-			this.verbose(timestamp);
-		}
+		this._currentLogger = new InternalLogger(logCallback, logToConsole);
 	}
 }
 
@@ -97,9 +92,6 @@ export const logger = new Logger();
  * Encapsulates the state specific to each logging session
  */
 class InternalLogger {
-	/** The path of the log file */
-	private _logFilePath: string;
-
 	private _minLogLevel: LogLevel;
 	private _logToConsole: boolean;
 
@@ -109,25 +101,24 @@ class InternalLogger {
 	/** Write steam for log file */
 	private _logFileStream: fs.WriteStream;
 
-	constructor(logCallback: ILogCallback, logFilePath?: string, isServer?: boolean) {
+	constructor(logCallback: ILogCallback, isServer?: boolean) {
 		this._logCallback = logCallback;
-		this._logFilePath = logFilePath;
 		this._logToConsole = isServer;
 
 		this._minLogLevel = LogLevel.Warn;
 	}
 
-	public setup(consoleMinLogLevel: LogLevel, logToFile: boolean): void {
+	public setup(consoleMinLogLevel: LogLevel, logFilePath?: string): void {
 		this._minLogLevel = consoleMinLogLevel;
 
 		// Open a log file in the specified location. Overwritten on each run.
-		if (logToFile) {
+		if (logFilePath) {
 			this.log(`Verbose logs are written to:\n`, LogLevel.Warn);
-			this.log(this._logFilePath + '\n', LogLevel.Warn);
+			this.log(logFilePath + '\n', LogLevel.Warn);
 
-			this._logFileStream = fs.createWriteStream(this._logFilePath);
+			this._logFileStream = fs.createWriteStream(logFilePath);
 			this._logFileStream.on('error', e => {
-				this.sendLog(`Error involving log file at path: ${this._logFilePath}. Error: ${e.toString()}`, LogLevel.Error);
+				this.sendLog(`Error involving log file at path: ${logFilePath}. Error: ${e.toString()}`, LogLevel.Error);
 			});
 		}
 	}
