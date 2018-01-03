@@ -28,6 +28,8 @@ export interface ILogger {
 }
 
 export class Logger {
+	private _logFilePathFromInit: string;
+
 	private _currentLogger: InternalLogger;
 	private _pendingLogQ: ILogItem[] = [];
 
@@ -65,7 +67,11 @@ export class Logger {
 	 * Set the logger's minimum level to log in the console, and whether to log to the file. Log messages are queued before this is
 	 * called the first time, because minLogLevel defaults to Warn.
 	 */
-	setup(consoleMinLogLevel: LogLevel, logFilePath?: string): void {
+	setup(consoleMinLogLevel: LogLevel, _logFilePath?: string|boolean): void {
+		const logFilePath = typeof _logFilePath === 'string' ?
+			_logFilePath :
+			(_logFilePath && this._logFilePathFromInit);
+
 		if (this._currentLogger) {
 			this._currentLogger.setup(consoleMinLogLevel, logFilePath);
 
@@ -78,10 +84,11 @@ export class Logger {
 		}
 	}
 
-	init(logCallback: ILogCallback, logToConsole?: boolean): void {
+	init(logCallback: ILogCallback, logFilePath?: string, logToConsole?: boolean): void {
 		// Re-init, create new global Logger
 		this._pendingLogQ = this._pendingLogQ || [];
 		this._currentLogger = new InternalLogger(logCallback, logToConsole);
+		this._logFilePathFromInit = logFilePath;
 
 		// Log the date at the top
 		const d = new Date();
