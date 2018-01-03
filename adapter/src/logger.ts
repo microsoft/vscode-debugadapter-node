@@ -82,6 +82,11 @@ export class Logger {
 		// Re-init, create new global Logger
 		this._pendingLogQ = this._pendingLogQ || [];
 		this._currentLogger = new InternalLogger(logCallback, logToConsole);
+
+		// Log the date at the top
+		const d = new Date();
+		const timestamp = d.toLocaleTimeString() + ', ' + d.toLocaleDateString();
+		this.verbose(timestamp);
 	}
 }
 
@@ -124,7 +129,6 @@ class InternalLogger {
 	}
 
 	public log(msg: string, level: LogLevel): void {
-
 		if (this._minLogLevel === LogLevel.Stop) {
 			return;
 		}
