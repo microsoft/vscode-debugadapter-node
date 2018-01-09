@@ -12,6 +12,10 @@ import {DebugSession} from './debugSession';
 export class LoggingDebugSession extends DebugSession {
 	public constructor(private obsolete_logFilePath: string, obsolete_debuggerLinesAndColumnsStartAt1?: boolean, obsolete_isServer?: boolean) {
 		super(obsolete_debuggerLinesAndColumnsStartAt1, obsolete_isServer);
+
+		this.on('error', (event: DebugProtocol.Event) => {
+			logger.error(event.body);
+		});
 	}
 
 	public start(inStream: NodeJS.ReadableStream, outStream: NodeJS.WritableStream): void {

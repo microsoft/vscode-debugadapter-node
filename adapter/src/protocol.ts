@@ -33,11 +33,11 @@ export class ProtocolServer extends ee.EventEmitter {
 			this._emitEvent(new Event('close'));
 		});
 		inStream.on('error', (error) => {
-			this._emitEvent(new Event('error'));
+			this._emitEvent(new Event('error', 'inStream error: ' + (error && error.message)));
 		});
 
 		outStream.on('error', (error) => {
-			this._emitEvent(new Event('error'));
+			this._emitEvent(new Event('error', 'outStream error: ' + (error && error.message)));
 		});
 
 		inStream.resume();
@@ -71,7 +71,7 @@ export class ProtocolServer extends ee.EventEmitter {
 		}
 
 		if (!this._writableStream) {
-			this._emitEvent(new Event('error'));
+			this._emitEvent(new Event('error', 'sendRequest: No writableStream'));
 			return;
 		}
 
@@ -138,7 +138,7 @@ export class ProtocolServer extends ee.EventEmitter {
 							}
 						}
 						catch (e) {
-							this._emitEvent(new Event('error'));
+							this._emitEvent(new Event('error', 'Error handling data: ' + (e && e.message)));
 						}
 					}
 					continue;	// there may be more complete messages to process
