@@ -10,13 +10,13 @@ const logger = Logger.logger;
 import {DebugSession} from './debugSession';
 
 export class LoggingDebugSession extends DebugSession {
-	public constructor(private _logFilePath: string, obsolete_debuggerLinesAndColumnsStartAt1?: boolean, obsolete_isServer?: boolean) {
+	public constructor(private obsolete_logFilePath: string, obsolete_debuggerLinesAndColumnsStartAt1?: boolean, obsolete_isServer?: boolean) {
 		super(obsolete_debuggerLinesAndColumnsStartAt1, obsolete_isServer);
 	}
 
 	public start(inStream: NodeJS.ReadableStream, outStream: NodeJS.WritableStream): void {
 		super.start(inStream, outStream);
-		logger.init(e => this.sendEvent(e), this._logFilePath, this._isServer);
+		logger.init(e => this.sendEvent(e), this.obsolete_logFilePath, this._isServer);
 	}
 
 	/**
