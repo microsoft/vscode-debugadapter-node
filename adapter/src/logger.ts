@@ -148,8 +148,11 @@ class InternalLogger {
 			const logFn =
 				level === LogLevel.Error ? console.error :
 				level === LogLevel.Warn ? console.warn :
-				console.log;
-			logFn(trimLastNewline(msg));
+				null;
+
+			if (logFn) {
+				logFn(trimLastNewline(msg));
+			}
 		}
 
 		// If an error, prepend with '[Error]'
