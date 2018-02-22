@@ -1,15 +1,10 @@
 {
 	"name": "generator",
-	"displayName": "Generator",
 	"version": "0.0.1",
-	"publisher": "andreweinand",
 	"description": "Generator",
 	"author": {
 		"name": "Microsoft Corporation",
 		"email": "aweinand@microsoft.com"
-	},
-	"engines": {
-		"node": "^5.10.0"
 	},
 	"private": true,
 	"repository": {
@@ -19,11 +14,9 @@
 	"bugs": {
 		"url": "https://github.com/Microsoft/vscode-debugadapter-node/issues"
 	},
-	"dependencies": {
-	},
 	"devDependencies": {
-		"@types/node": "^6.0.39",
-		"typescript": "^2.0.2"
+		"@types/node": "8.9.2",
+		"typescript": "2.6.1"
 	},
 	"scripts": {
 		"compile": "tsc -p ./src",
