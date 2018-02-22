@@ -7,6 +7,9 @@ This npm module contains declarations for the json-based Visual Studio Code debu
 
 ## History
 
+* 1.27.x:
+* Adds a new `capabilities` event that hints to the frontend that one or more capabilities got updated.
+
 * 1.26.x:
 no protocol changes
 
