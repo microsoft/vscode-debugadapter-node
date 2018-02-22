@@ -263,6 +263,19 @@ export class LoadedSourceEvent extends Event implements DebugProtocol.LoadedSour
 	}
 }
 
+export class CapabilitiesEvent extends Event implements DebugProtocol.CapabilitiesEvent {
+	body: {
+		capabilities: DebugProtocol.Capabilities
+	};
+
+	public constructor(capabilities: DebugProtocol.Capabilities) {
+		super('capabilities');
+		this.body = {
+			capabilities: capabilities
+		};
+	}
+}
+
 export enum ErrorDestination {
 	User = 1,
 	Telemetry = 2

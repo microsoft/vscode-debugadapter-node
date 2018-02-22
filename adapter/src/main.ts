@@ -6,7 +6,7 @@
 
 import {
 	DebugSession,
-	InitializedEvent, TerminatedEvent, StoppedEvent, ContinuedEvent, OutputEvent, ThreadEvent, BreakpointEvent, ModuleEvent, LoadedSourceEvent,
+	InitializedEvent, TerminatedEvent, StoppedEvent, ContinuedEvent, OutputEvent, ThreadEvent, BreakpointEvent, ModuleEvent, LoadedSourceEvent, CapabilitiesEvent,
 	Thread, StackFrame, Scope, Variable,
 	Breakpoint, Source, Module, CompletionItem,
 	ErrorDestination
@@ -23,7 +23,7 @@ export {
 	LoggingDebugSession,
 	Logger,
 	logger,
-	InitializedEvent, TerminatedEvent, StoppedEvent, ContinuedEvent, OutputEvent, ThreadEvent, BreakpointEvent, ModuleEvent, LoadedSourceEvent,
+	InitializedEvent, TerminatedEvent, StoppedEvent, ContinuedEvent, OutputEvent, ThreadEvent, BreakpointEvent, ModuleEvent, LoadedSourceEvent, CapabilitiesEvent,
 	Thread, StackFrame, Scope, Variable,
 	Breakpoint, Source, Module, CompletionItem,
 	ErrorDestination,
