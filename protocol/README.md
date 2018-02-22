@@ -9,6 +9,7 @@ This npm module contains declarations for the json-based Visual Studio Code debu
 
 * 1.27.x:
 * Adds a new `capabilities` event that hints to the frontend that one or more capabilities got updated.
+* Initial support for logPoints: new attribute `SourceBreakpoint.logMessage` and capability `supportsLogPoint`.
 
 * 1.26.x:
 no protocol changes

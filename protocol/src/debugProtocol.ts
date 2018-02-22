@@ -1088,6 +1088,8 @@ export module DebugProtocol {
 		supportsDelayedStackTraceLoading?: boolean;
 		/** The debug adapter supports the 'loadedSources' request. */
 		supportsLoadedSourcesRequest?: boolean;
+		/** The debug adapter supports logpoints by interpreting the 'logMessage' attribute of the SourceBreakpoint. */
+		supportsLogPoints?: boolean;
 	}
 
 	/** An ExceptionBreakpointsFilter is shown in the UI as an option for configuring how exceptions are dealt with. */
@@ -1322,9 +1324,9 @@ export module DebugProtocol {
 		visibility?: string;
 	}
 
-	/** Properties of a breakpoint passed to the setBreakpoints request. */
+	/** Properties of a breakpoint or logpoint passed to the setBreakpoints request. */
 	export interface SourceBreakpoint {
-		/** The source line of the breakpoint. */
+		/** The source line of the breakpoint or logpoint. */
 		line: number;
 		/** An optional source column of the breakpoint. */
 		column?: number;
@@ -1332,6 +1334,8 @@ export module DebugProtocol {
 		condition?: string;
 		/** An optional expression that controls how many hits of the breakpoint are ignored. The backend is expected to interpret the expression as needed. */
 		hitCondition?: string;
+		/** If this attribute exists and is non-empty, the backend must not 'break' (stop) but log the message instead. Expressions within {} are interpolated. */
+		logMessage?: string;
 	}
 
 	/** Properties of a breakpoint passed to the setFunctionBreakpoints request. */
