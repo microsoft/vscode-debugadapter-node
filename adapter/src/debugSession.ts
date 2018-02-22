@@ -732,7 +732,7 @@ export class DebugSession extends ProtocolServer {
 	}
 
 	protected convertClientPathToDebugger(clientPath: string): string {
-		if (this._clientPathsAreURIs != this._debuggerPathsAreURIs) {
+		if (this._clientPathsAreURIs !== this._debuggerPathsAreURIs) {
 			if (this._clientPathsAreURIs) {
 				return DebugSession.uri2path(clientPath);
 			} else {
@@ -743,7 +743,7 @@ export class DebugSession extends ProtocolServer {
 	}
 
 	protected convertDebuggerPathToClient(debuggerPath: string): string {
-		if (this._debuggerPathsAreURIs != this._clientPathsAreURIs) {
+		if (this._debuggerPathsAreURIs !== this._clientPathsAreURIs) {
 			if (this._debuggerPathsAreURIs) {
 				return DebugSession.uri2path(debuggerPath);
 			} else {
