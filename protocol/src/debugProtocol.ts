@@ -590,7 +590,7 @@ export module DebugProtocol {
 
 	/** Arguments for 'stepBack' request. */
 	export interface StepBackArguments {
-		/** Exceute 'stepBack' for this thread. */
+		/** Execute 'stepBack' for this thread. */
 		threadId: number;
 	}
 
@@ -608,7 +608,7 @@ export module DebugProtocol {
 
 	/** Arguments for 'reverseContinue' request. */
 	export interface ReverseContinueArguments {
-		/** Exceute 'reverseContinue' for this thread. */
+		/** Execute 'reverseContinue' for this thread. */
 		threadId: number;
 	}
 

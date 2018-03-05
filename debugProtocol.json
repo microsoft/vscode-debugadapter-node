@@ -1113,7 +1113,7 @@
 			"properties": {
 				"threadId": {
 					"type": "integer",
-					"description": "Exceute 'stepBack' for this thread."
+					"description": "Execute 'stepBack' for this thread."
 				}
 			},
 			"required": [ "threadId" ]
@@ -1147,7 +1147,7 @@
 			"properties": {
 				"threadId": {
 					"type": "integer",
-					"description": "Exceute 'reverseContinue' for this thread."
+					"description": "Execute 'reverseContinue' for this thread."
 				}
 			},
 			"required": [ "threadId" ]
