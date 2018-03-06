@@ -8,7 +8,7 @@ import {ProtocolServer} from './protocol';
 import {Response, Event} from './messages';
 import * as Net from 'net';
 import * as Path from 'path';
-import * as Url from 'url';
+import Uri from 'vscode-uri'
 
 
 export class Source implements DebugProtocol.Source {
@@ -768,16 +768,12 @@ export class DebugSession extends ProtocolServer {
 
 	//---- private -------------------------------------------------------------------------------
 
-	private static path2uri(str: string): string {
-		var pathName = str.replace(/\\/g, '/');
-		if (pathName[0] !== '/') {
-			pathName = '/' + pathName;
-		}
-		return encodeURI('file://' + pathName);
+	private static path2uri(path: string): string {
+		return Uri.file(path).toString();
 	}
 
-	private static uri2path(url: string): string {
-		return Url.parse(url).pathname;
+	private static uri2path(sourceUri: string): string {
+		return Uri.parse(sourceUri).fsPath;
 	}
 
 	private static _formatPIIRegexp = /{([^}]+)}/g;
