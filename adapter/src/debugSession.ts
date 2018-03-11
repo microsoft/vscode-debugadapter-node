@@ -769,7 +769,11 @@ export class DebugSession extends ProtocolServer {
 	//---- private -------------------------------------------------------------------------------
 
 	private static path2uri(path: string): string {
-		return Uri.file(path).toString();
+		let uri = Uri.file(path).toString();
+		if (process.platform === 'win32' && /^file:\/\/\/[a-z]%3A/.test(uri)) {
+			uri = uri.replace('%3A', ':');
+		}
+		return uri;
 	}
 
 	private static uri2path(sourceUri: string): string {
