@@ -578,6 +578,10 @@
 					"type": "string",
 					"description": "The ID of the (frontend) client using this adapter."
 				},
+				"clientName": {
+					"type": "string",
+					"description": "The human readable name of the (frontend) client using this adapter."
+				},
 				"adapterID": {
 					"type": "string",
 					"description": "The ID of the debug adapter."
