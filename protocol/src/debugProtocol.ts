@@ -843,6 +843,23 @@ export module DebugProtocol {
 		};
 	}
 
+	/** Terminate thread request; value of command field is 'terminateThreads'.
+		The request terminates one or more threads.
+	*/
+	export interface TerminateThreadsRequest extends Request {
+		// command: 'terminateThreads';
+	}
+
+	/** Arguments for 'terminateThreads' request. */
+	export interface TerminateThreadsArguments {
+		/** Ids of threads to be terminated. */
+		threadIds?: number[];
+	}
+
+	/** Response to 'terminateThreads' request. This is just an acknowledgement, so no body field is required. */
+	export interface TerminateThreadsResponse extends Response {
+	}
+
 	/** Modules can be retrieved from the debug adapter with the ModulesRequest which can either return all modules or a range of modules to support paging. */
 	export interface ModulesRequest extends Request {
 		// command: 'modules';
@@ -1093,6 +1110,8 @@ export module DebugProtocol {
 		supportsLoadedSourcesRequest?: boolean;
 		/** The debug adapter supports logpoints by interpreting the 'logMessage' attribute of the SourceBreakpoint. */
 		supportsLogPoints?: boolean;
+		/** The debug adapter supports the 'terminateThreads' request. */
+		supportsTerminateThreadsRequest?: boolean;
 	}
 
 	/** An ExceptionBreakpointsFilter is shown in the UI as an option for configuring how exceptions are dealt with. */
