@@ -1064,7 +1064,7 @@ export module DebugProtocol {
 
 	/** Information about the capabilities of a debug adapter. */
 	export interface Capabilities {
-		/** The debug adapter supports the configurationDoneRequest. */
+		/** The debug adapter supports the 'configurationDone' request. */
 		supportsConfigurationDoneRequest?: boolean;
 		/** The debug adapter supports function breakpoints. */
 		supportsFunctionBreakpoints?: boolean;
@@ -1076,31 +1076,31 @@ export module DebugProtocol {
 		supportsEvaluateForHovers?: boolean;
 		/** Available filters or options for the setExceptionBreakpoints request. */
 		exceptionBreakpointFilters?: ExceptionBreakpointsFilter[];
-		/** The debug adapter supports stepping back via the stepBack and reverseContinue requests. */
+		/** The debug adapter supports stepping back via the 'stepBack' and 'reverseContinue' requests. */
 		supportsStepBack?: boolean;
 		/** The debug adapter supports setting a variable to a value. */
 		supportsSetVariable?: boolean;
 		/** The debug adapter supports restarting a frame. */
 		supportsRestartFrame?: boolean;
-		/** The debug adapter supports the gotoTargetsRequest. */
+		/** The debug adapter supports the 'gotoTargets' request. */
 		supportsGotoTargetsRequest?: boolean;
-		/** The debug adapter supports the stepInTargetsRequest. */
+		/** The debug adapter supports the 'stepInTargets' request. */
 		supportsStepInTargetsRequest?: boolean;
-		/** The debug adapter supports the completionsRequest. */
+		/** The debug adapter supports the 'completions' request. */
 		supportsCompletionsRequest?: boolean;
-		/** The debug adapter supports the modules request. */
+		/** The debug adapter supports the 'modules' request. */
 		supportsModulesRequest?: boolean;
 		/** The set of additional module information exposed by the debug adapter. */
 		additionalModuleColumns?: ColumnDescriptor[];
 		/** Checksum algorithms supported by the debug adapter. */
 		supportedChecksumAlgorithms?: ChecksumAlgorithm[];
-		/** The debug adapter supports the RestartRequest. In this case a client should not implement 'restart' by terminating and relaunching the adapter but by calling the RestartRequest. */
+		/** The debug adapter supports the 'restart' request. In this case a client should not implement 'restart' by terminating and relaunching the adapter but by calling the RestartRequest. */
 		supportsRestartRequest?: boolean;
 		/** The debug adapter supports 'exceptionOptions' on the setExceptionBreakpoints request. */
 		supportsExceptionOptions?: boolean;
 		/** The debug adapter supports a 'format' attribute on the stackTraceRequest, variablesRequest, and evaluateRequest. */
 		supportsValueFormattingOptions?: boolean;
-		/** The debug adapter supports the exceptionInfo request. */
+		/** The debug adapter supports the 'exceptionInfo' request. */
 		supportsExceptionInfoRequest?: boolean;
 		/** The debug adapter supports the 'terminateDebuggee' attribute on the 'disconnect' request. */
 		supportTerminateDebuggee?: boolean;

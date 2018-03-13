@@ -2071,7 +2071,7 @@
 			"properties": {
 				"supportsConfigurationDoneRequest": {
 					"type": "boolean",
-					"description": "The debug adapter supports the configurationDoneRequest."
+					"description": "The debug adapter supports the 'configurationDone' request."
 				},
 				"supportsFunctionBreakpoints": {
 					"type": "boolean",
@@ -2098,7 +2098,7 @@
 				},
 				"supportsStepBack": {
 					"type": "boolean",
-					"description": "The debug adapter supports stepping back via the stepBack and reverseContinue requests."
+					"description": "The debug adapter supports stepping back via the 'stepBack' and 'reverseContinue' requests."
 				},
 				"supportsSetVariable": {
 					"type": "boolean",
@@ -2110,19 +2110,19 @@
 				},
 				"supportsGotoTargetsRequest": {
 					"type": "boolean",
-					"description": "The debug adapter supports the gotoTargetsRequest."
+					"description": "The debug adapter supports the 'gotoTargets' request."
 				},
 				"supportsStepInTargetsRequest": {
 					"type": "boolean",
-					"description": "The debug adapter supports the stepInTargetsRequest."
+					"description": "The debug adapter supports the 'stepInTargets' request."
 				},
 				"supportsCompletionsRequest": {
 					"type": "boolean",
-					"description": "The debug adapter supports the completionsRequest."
+					"description": "The debug adapter supports the 'completions' request."
 				},
 				"supportsModulesRequest": {
 					"type": "boolean",
-					"description": "The debug adapter supports the modules request."
+					"description": "The debug adapter supports the 'modules' request."
 				},
 				"additionalModuleColumns": {
 					"type": "array",
@@ -2140,7 +2140,7 @@
 				},
 				"supportsRestartRequest": {
 					"type": "boolean",
-					"description": "The debug adapter supports the RestartRequest. In this case a client should not implement 'restart' by terminating and relaunching the adapter but by calling the RestartRequest."
+					"description": "The debug adapter supports the 'restart' request. In this case a client should not implement 'restart' by terminating and relaunching the adapter but by calling the RestartRequest."
 				},
 				"supportsExceptionOptions": {
 					"type": "boolean",
@@ -2152,7 +2152,7 @@
 				},
 				"supportsExceptionInfoRequest": {
 					"type": "boolean",
-					"description": "The debug adapter supports the exceptionInfo request."
+					"description": "The debug adapter supports the 'exceptionInfo' request."
 				},
 				"supportTerminateDebuggee": {
 					"type": "boolean",
