@@ -222,7 +222,7 @@
 						"properties": {
 							"restart": {
 								"type": [ "array", "boolean", "integer", "null", "number", "object", "string" ],
-								"description": "A debug adapter may set 'restart' to true (or to an arbitrary object) to request that the front end restarts the session.\nThe value is not interpreted by the client and passed unmodified as an attribute '__restart' to the launchRequest."
+								"description": "A debug adapter may set 'restart' to true (or to an arbitrary object) to request that the front end restarts the session.\nThe value is not interpreted by the client and passed unmodified as an attribute '__restart' to the 'launch' and 'attach' requests."
 							}
 						}
 					}
@@ -676,11 +676,15 @@
 		},
 		"LaunchRequestArguments": {
 			"type": "object",
-			"description": "Arguments for 'launch' request.",
+			"description": "Arguments for 'launch' request. Additional attributes are implementation specific and their schema lives somewhere else.",
 			"properties": {
 				"noDebug": {
 					"type": "boolean",
 					"description": "If noDebug is true the launch request should launch the program without enabling debugging."
+				},
+				"__restart": {
+					"type": [ "array", "boolean", "integer", "null", "number", "object", "string" ],
+					"description": "Optional data from the previous, restarted session.\nThe data is sent as the 'restart' attribute of the 'terminated' event.\nThe client should leave the data intact."
 				}
 			}
 		},
@@ -709,7 +713,13 @@
 		},
 		"AttachRequestArguments": {
 			"type": "object",
-			"description": "Arguments for 'attach' request.\nThe attach request has no standardized attributes."
+			"description": "Arguments for 'attach' request. Additional attributes are implementation specific and their schema lives somewhere else.",
+			"properties": {
+				"__restart": {
+					"type": [ "array", "boolean", "integer", "null", "number", "object", "string" ],
+					"description": "Optional data from the previous, restarted session.\nThe data is sent as the 'restart' attribute of the 'terminated' event.\nThe client should leave the data intact."
+				}
+			}
 		},
 		"AttachResponse": {
 			"allOf": [ { "$ref": "#/definitions/Response" }, {
