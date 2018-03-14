@@ -12,6 +12,7 @@ This npm module contains declarations for the json-based Visual Studio Code debu
   * Adds a `terminateThreads` request and a corresponding `supportsTerminateThreadsRequest` capability.
   * Made the `__restart` attribute official on the `launch` or `attach` requests. It corresponds to the `restart` attribute on the `terminated` event.
   * Adds a `setExpression` request and a corresponding `supportsSetExpression` capability. This request can be used to assign a value to an assignable expression (aka "l-value").
+  * Adds a new optional `preserveFocusHint` to the `stopped` event. A value of true hints to the frontend that this event should not change the focus.
 
 * 1.27.x:
   * Adds a new `capabilities` event that hints to the frontend that one or more capabilities got updated.

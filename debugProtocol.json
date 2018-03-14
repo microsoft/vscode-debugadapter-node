@@ -140,6 +140,10 @@
 								"type": "integer",
 								"description": "The thread which was stopped."
 							},
+							"preserveFocusHint": {
+								"type": "boolean",
+								"description": "A value of true hints to the frontend that this event should not change the focus."
+							},
 							"text": {
 								"type": "string",
 								"description": "Additional information. E.g. if reason is 'exception', text contains the exception name. This string is shown in the UI."
