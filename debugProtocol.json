@@ -1677,7 +1677,7 @@
 						"$ref": "#/definitions/ModulesArguments"
 					}
 				},
-				"required": [ "command", "arguments"  ]
+				"required": [ "command", "arguments" ]
 			}]
 		},
 		"ModulesArguments": {
@@ -1843,6 +1843,85 @@
 							}
 						},
 						"required": [ "result", "variablesReference" ]
+					}
+				},
+				"required": [ "body" ]
+			}]
+		},
+
+		"SetExpressionRequest": {
+			"allOf": [ { "$ref": "#/definitions/Request" }, {
+				"type": "object",
+				"description": "SetExpression request; value of command field is 'setExpression'.\nEvaluates the given 'value' expression and assigns it to the 'expression' which must be a modifiable l-value.\nThe expressions have access to any variables and arguments that are in scope of the specified frame.",
+				"properties": {
+					"command": {
+						"type": "string",
+						"enum": [ "setExpression" ]
+					},
+					"arguments": {
+						"$ref": "#/definitions/SetExpressionArguments"
+					}
+				},
+				"required": [ "command", "arguments"  ]
+			}]
+		},
+		"SetExpressionArguments": {
+			"type": "object",
+			"description": "Arguments for 'setExpression' request.",
+			"properties": {
+				"expression": {
+					"type": "string",
+					"description": "The l-value expression to assign to."
+				},
+				"value": {
+					"type": "string",
+					"description": "The value expression to assign to the l-value expression."
+				},
+				"frameId": {
+					"type": "integer",
+					"description": "Evaluate the expressions in the scope of this stack frame. If not specified, the expressions are evaluated in the global scope."
+				},
+				"format": {
+					"$ref": "#/definitions/ValueFormat",
+					"description": "Specifies how the resulting value should be formatted."
+				}
+			},
+			"required": [ "expression", "value" ]
+		},
+		"SetExpressionResponse": {
+			"allOf": [ { "$ref": "#/definitions/Response" }, {
+				"type": "object",
+				"description": "Response to 'setExpression' request.",
+				"properties": {
+					"body": {
+						"type": "object",
+						"properties": {
+							"value": {
+								"type": "string",
+								"description": "The new value of the expression."
+							},
+							"type": {
+								"type": "string",
+								"description": "The optional type of the value."
+							},
+							"presentationHint": {
+								"$ref": "#/definitions/VariablePresentationHint",
+								"description": "Properties of a value that can be used to determine how to render the result in the UI."
+							},
+							"variablesReference": {
+								"type": "number",
+								"description": "If variablesReference is > 0, the value is structured and its children can be retrieved by passing variablesReference to the VariablesRequest."
+							},
+							"namedVariables": {
+								"type": "number",
+								"description": "The number of named child variables.\nThe client can use this optional information to present the variables in a paged UI and fetch them in chunks."
+							},
+							"indexedVariables": {
+								"type": "number",
+								"description": "The number of indexed child variables.\nThe client can use this optional information to present the variables in a paged UI and fetch them in chunks."
+							}
+						},
+						"required": [ "value" ]
 					}
 				},
 				"required": [ "body" ]
@@ -2186,6 +2265,10 @@
 				"supportsTerminateThreadsRequest": {
 					"type": "boolean",
 					"description": "The debug adapter supports the 'terminateThreads' request."
+				},
+				"supportsSetExpression": {
+					"type": "boolean",
+					"description": "The debug adapter supports the 'setExpression' request."
 				}
 			}
 		},

@@ -929,7 +929,7 @@ export module DebugProtocol {
 		/** Evaluate the expression in the scope of this stack frame. If not specified, the expression is evaluated in the global scope. */
 		frameId?: number;
 		/** The context in which the evaluate request is run.
-			Values:
+			Values: 
 			'watch': evaluate is run in a watch.
 			'repl': evaluate is run from REPL console.
 			'hover': evaluate is run from a data hover.
@@ -951,6 +951,49 @@ export module DebugProtocol {
 			presentationHint?: VariablePresentationHint;
 			/** If variablesReference is > 0, the evaluate result is structured and its children can be retrieved by passing variablesReference to the VariablesRequest. */
 			variablesReference: number;
+			/** The number of named child variables.
+				The client can use this optional information to present the variables in a paged UI and fetch them in chunks.
+			*/
+			namedVariables?: number;
+			/** The number of indexed child variables.
+				The client can use this optional information to present the variables in a paged UI and fetch them in chunks.
+			*/
+			indexedVariables?: number;
+		};
+	}
+
+	/** SetExpression request; value of command field is 'setExpression'.
+		Evaluates the given 'value' expression and assigns it to the 'expression' which must be a modifiable l-value.
+		The expressions have access to any variables and arguments that are in scope of the specified frame.
+	*/
+	export interface SetExpressionRequest extends Request {
+		// command: 'setExpression';
+		arguments: SetExpressionArguments;
+	}
+
+	/** Arguments for 'setExpression' request. */
+	export interface SetExpressionArguments {
+		/** The l-value expression to assign to. */
+		expression: string;
+		/** The value expression to assign to the l-value expression. */
+		value: string;
+		/** Evaluate the expressions in the scope of this stack frame. If not specified, the expressions are evaluated in the global scope. */
+		frameId?: number;
+		/** Specifies how the resulting value should be formatted. */
+		format?: ValueFormat;
+	}
+
+	/** Response to 'setExpression' request. */
+	export interface SetExpressionResponse extends Response {
+		body: {
+			/** The new value of the expression. */
+			value: string;
+			/** The optional type of the value. */
+			type?: string;
+			/** Properties of a value that can be used to determine how to render the result in the UI. */
+			presentationHint?: VariablePresentationHint;
+			/** If variablesReference is > 0, the value is structured and its children can be retrieved by passing variablesReference to the VariablesRequest. */
+			variablesReference?: number;
 			/** The number of named child variables.
 				The client can use this optional information to present the variables in a paged UI and fetch them in chunks.
 			*/
@@ -1121,6 +1164,8 @@ export module DebugProtocol {
 		supportsLogPoints?: boolean;
 		/** The debug adapter supports the 'terminateThreads' request. */
 		supportsTerminateThreadsRequest?: boolean;
+		/** The debug adapter supports the 'setExpression' request. */
+		supportsSetExpression?: boolean;
 	}
 
 	/** An ExceptionBreakpointsFilter is shown in the UI as an option for configuring how exceptions are dealt with. */
@@ -1156,9 +1201,9 @@ export module DebugProtocol {
 	/** A Module object represents a row in the modules view.
 		Two attributes are mandatory: an id identifies a module in the modules view and is used in a ModuleEvent for identifying a module for adding, updating or deleting.
 		The name is used to minimally render the module in the UI.
-
+		
 		Additional attributes can be added to the module. They will show up in the module View if they have a corresponding ColumnDescriptor.
-
+		
 		To avoid an unnecessary proliferation of additional attributes with similar semantics but different names
 		we recommend to re-use attributes from the 'recommended' list below first, and only introduce new attributes if nothing appropriate could be found.
 	*/
@@ -1169,7 +1214,7 @@ export module DebugProtocol {
 		name: string;
 		/** optional but recommended attributes.
 			always try to use these first before introducing additional attributes.
-
+			
 			Logical full path to the module. The exact definition is implementation defined, but usually this would be a full path to the on-disk file for the module.
 		*/
 		path?: string;
@@ -1323,7 +1368,7 @@ export module DebugProtocol {
 	/** Optional properties of a variable that can be used to determine how to render the variable in the UI. */
 	export interface VariablePresentationHint {
 		/** The kind of variable. Before introducing additional values, try to use the listed values.
-			Values:
+			Values: 
 			'property': Indicates that the object is a property.
 			'method': Indicates that the object is a method.
 			'class': Indicates that the object is a class.
@@ -1338,7 +1383,7 @@ export module DebugProtocol {
 		*/
 		kind?: string;
 		/** Set of attributes represented as an array of strings. Before introducing additional values, try to use the listed values.
-			Values:
+			Values: 
 			'static': Indicates that the object is static.
 			'constant': Indicates that the object is a constant.
 			'readOnly': Indicates that the object is read only.
