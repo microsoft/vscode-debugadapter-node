@@ -349,7 +349,7 @@ export module DebugProtocol {
 		arguments: LaunchRequestArguments;
 	}
 
-	/** Arguments for 'launch' request. */
+	/** Arguments for 'launch' request. Additional attributes are implementation specific. */
 	export interface LaunchRequestArguments {
 		/** If noDebug is true the launch request should launch the program without enabling debugging. */
 		noDebug?: boolean;
@@ -370,10 +370,13 @@ export module DebugProtocol {
 		arguments: AttachRequestArguments;
 	}
 
-	/** Arguments for 'attach' request.
-		The attach request has no standardized attributes.
-	*/
+	/** Arguments for 'attach' request. Additional attributes are implementation specific. */
 	export interface AttachRequestArguments {
+		/** Optional data from the previous, restarted session.
+			The data is sent as the 'restart' attribute of the 'terminated' event.
+			The client should leave the data intact.
+		*/
+		__restart?: any;
 	}
 
 	/** Response to 'attach' request. This is just an acknowledgement, so no body field is required. */
