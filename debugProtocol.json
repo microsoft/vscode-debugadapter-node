@@ -1621,14 +1621,17 @@
 		"TerminateThreadsRequest": {
 			"allOf": [ { "$ref": "#/definitions/Request" }, {
 				"type": "object",
-				"description": "Terminate thread request; value of command field is 'terminateThreads'.\nThe request terminates one or more threads.",
+				"description": "Terminate thread request; value of command field is 'terminateThreads'.\nThe request terminates the threads with the given ids.",
 				"properties": {
 					"command": {
 						"type": "string",
 						"enum": [ "terminateThreads" ]
+					},
+					"arguments": {
+						"$ref": "#/definitions/TerminateThreadsArguments"
 					}
 				},
-				"required": [ "command" ]
+				"required": [ "command", "arguments" ]
 			}]
 		},
 		"TerminateThreadsArguments": {

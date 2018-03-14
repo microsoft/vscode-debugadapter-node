@@ -844,10 +844,11 @@ export module DebugProtocol {
 	}
 
 	/** Terminate thread request; value of command field is 'terminateThreads'.
-		The request terminates one or more threads.
+		The request terminates the threads with the given ids.
 	*/
 	export interface TerminateThreadsRequest extends Request {
 		// command: 'terminateThreads';
+		arguments: TerminateThreadsArguments;
 	}
 
 	/** Arguments for 'terminateThreads' request. */
