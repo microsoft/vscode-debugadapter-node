@@ -502,11 +502,17 @@ export class DebugSession extends ProtocolServer {
 			} else if (request.command === 'setVariable') {
 				this.setVariableRequest(<DebugProtocol.SetVariableResponse> response, request.arguments);
 
+			} else if (request.command === 'setExpression') {
+				this.setExpressionRequest(<DebugProtocol.SetExpressionResponse> response, request.arguments);
+
 			} else if (request.command === 'source') {
 				this.sourceRequest(<DebugProtocol.SourceResponse> response, request.arguments);
 
 			} else if (request.command === 'threads') {
 				this.threadsRequest(<DebugProtocol.ThreadsResponse> response);
+
+			} else if (request.command === 'terminateThreads') {
+				this.terminateThreadsRequest(<DebugProtocol.TerminateThreadsResponse> response, request.arguments);
 
 			} else if (request.command === 'evaluate') {
 				this.evaluateRequest(<DebugProtocol.EvaluateResponse> response, request.arguments);
@@ -560,25 +566,25 @@ export class DebugSession extends ProtocolServer {
 		// This default debug adapter does not support the 'restartFrame' request.
 		response.body.supportsRestartFrame = false;
 
-		// This default debug adapter does not support the 'stepInTargetsRequest' request.
+		// This default debug adapter does not support the 'stepInTargets' request.
 		response.body.supportsStepInTargetsRequest = false;
 
-		// This default debug adapter does not support the 'gotoTargetsRequest' request.
+		// This default debug adapter does not support the 'gotoTargets' request.
 		response.body.supportsGotoTargetsRequest = false;
 
-		// This default debug adapter does not support the 'completionsRequest' request.
+		// This default debug adapter does not support the 'completions' request.
 		response.body.supportsCompletionsRequest = false;
 
 		// This default debug adapter does not support the 'restart' request.
 		response.body.supportsRestartRequest = false;
 
-		// This default debug adapter does not support the 'exceptionOptions' attribute on the 'setExceptionBreakpointsRequest'.
+		// This default debug adapter does not support the 'exceptionOptions' attribute on the 'setExceptionBreakpoints' request.
 		response.body.supportsExceptionOptions = false;
 
-		// This default debug adapter does not support the 'format' attribute on the 'variablesRequest', 'evaluateRequest', and 'stackTraceRequest'.
+		// This default debug adapter does not support the 'format' attribute on the 'variables', 'evaluate', and 'stackTrace' request.
 		response.body.supportsValueFormattingOptions = false;
 
-		// This debug adapter does not support the 'exceptionInfoRequest' request.
+		// This debug adapter does not support the 'exceptionInfo' request.
 		response.body.supportsExceptionInfoRequest = false;
 
 		// This debug adapter does not support the 'TerminateDebuggee' attribute on the 'disconnect' request.
@@ -586,6 +592,18 @@ export class DebugSession extends ProtocolServer {
 
 		// This debug adapter does not support delayed loading of stack frames.
 		response.body.supportsDelayedStackTraceLoading = false;
+
+		// This debug adapter does not support the 'loadedSources' request.
+		response.body.supportsLoadedSourcesRequest = false;
+
+		// This debug adapter does not support the 'logMessage' attribute of the SourceBreakpoint.
+		response.body.supportsLogPoints = false;
+
+		// This debug adapter does not support the 'terminateThreads' request.
+		response.body.supportsTerminateThreadsRequest = false;
+
+		// This debug adapter does not support the 'setExpression' request.
+		response.body.supportsSetExpression = false;
 
 		this.sendResponse(response);
 	}
@@ -667,6 +685,10 @@ export class DebugSession extends ProtocolServer {
 		this.sendResponse(response);
 	}
 
+	protected terminateThreadsRequest(response: DebugProtocol.TerminateThreadsResponse, args: DebugProtocol.TerminateThreadsRequest): void {
+		this.sendResponse(response);
+	}
+
 	protected stackTraceRequest(response: DebugProtocol.StackTraceResponse, args: DebugProtocol.StackTraceArguments): void {
 		this.sendResponse(response);
 	}
@@ -680,6 +702,10 @@ export class DebugSession extends ProtocolServer {
 	}
 
 	protected setVariableRequest(response: DebugProtocol.SetVariableResponse, args: DebugProtocol.SetVariableArguments): void {
+		this.sendResponse(response);
+	}
+
+	protected setExpressionRequest(response: DebugProtocol.SetExpressionResponse, args: DebugProtocol.SetExpressionArguments): void {
 		this.sendResponse(response);
 	}
 
