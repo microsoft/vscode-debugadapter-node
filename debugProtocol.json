@@ -676,7 +676,7 @@
 		},
 		"LaunchRequestArguments": {
 			"type": "object",
-			"description": "Arguments for 'launch' request. Additional attributes are implementation specific and their schema lives somewhere else.",
+			"description": "Arguments for 'launch' request. Additional attributes are implementation specific.",
 			"properties": {
 				"noDebug": {
 					"type": "boolean",
@@ -713,7 +713,7 @@
 		},
 		"AttachRequestArguments": {
 			"type": "object",
-			"description": "Arguments for 'attach' request. Additional attributes are implementation specific and their schema lives somewhere else.",
+			"description": "Arguments for 'attach' request. Additional attributes are implementation specific.",
 			"properties": {
 				"__restart": {
 					"type": [ "array", "boolean", "integer", "null", "number", "object", "string" ],
