@@ -3,6 +3,8 @@
  *--------------------------------------------------------*/
 
 import * as fs from 'fs';
+import * as path from 'path';
+import * as mkdirp from 'mkdirp';
 import {OutputEvent} from './debugSession';
 
 export enum LogLevel {
@@ -73,14 +75,15 @@ export class Logger {
 			(_logFilePath && this._logFilePathFromInit);
 
 		if (this._currentLogger) {
-			this._currentLogger.setup(consoleMinLogLevel, logFilePath);
+			this._currentLogger.setup(consoleMinLogLevel, logFilePath).then(() => {
+				// Now that we have a minimum logLevel, we can clear out the queue of pending messages
+				if (this._pendingLogQ) {
+					const logQ = this._pendingLogQ;
+					this._pendingLogQ = null;
+					logQ.forEach(item => this._write(item.msg, item.level));
+				}
+			});
 
-			// Now that we have a minimum logLevel, we can clear out the queue of pending messages
-			if (this._pendingLogQ) {
-				const logQ = this._pendingLogQ;
-				this._pendingLogQ = null;
-				logQ.forEach(item => this._write(item.msg, item.level));
-			}
 		}
 	}
 
@@ -120,18 +123,29 @@ class InternalLogger {
 		this._minLogLevel = LogLevel.Warn;
 	}
 
-	public setup(consoleMinLogLevel: LogLevel, logFilePath?: string): void {
+	public async setup(consoleMinLogLevel: LogLevel, logFilePath?: string): Promise<void> {
 		this._minLogLevel = consoleMinLogLevel;
 
 		// Open a log file in the specified location. Overwritten on each run.
 		if (logFilePath) {
-			this.log(`Verbose logs are written to:\n`, LogLevel.Warn);
-			this.log(logFilePath + '\n', LogLevel.Warn);
+			if (!path.isAbsolute(logFilePath)) {
+				this.log(`logFilePath must be an absolute path: ${logFilePath}`, LogLevel.Error);
+			} else {
+				const handleError = err => this.sendLog(`Error creating log file at path: ${logFilePath}. Error: ${err.toString()}\n`, LogLevel.Error);
 
-			this._logFileStream = fs.createWriteStream(logFilePath);
-			this._logFileStream.on('error', e => {
-				this.sendLog(`Error involving log file at path: ${logFilePath}. Error: ${e.toString()}`, LogLevel.Error);
-			});
+				try {
+					await mkdirpPromise(path.dirname(logFilePath));
+					this.log(`Verbose logs are written to:\n`, LogLevel.Warn);
+					this.log(logFilePath + '\n', LogLevel.Warn);
+
+					this._logFileStream = fs.createWriteStream(logFilePath);
+					this._logFileStream.on('error', err => {
+						handleError(err);
+					});
+				} catch (err) {
+					handleError(err);
+				}
+			}
 		}
 	}
 
@@ -180,6 +194,18 @@ class InternalLogger {
 			this._logCallback(event);
 		}
 	}
+}
+
+function mkdirpPromise(folder: string): Promise<void> {
+	return new Promise((resolve, reject) => {
+		mkdirp(folder, err => {
+			if (err) {
+				reject(err);
+			} else {
+				resolve();
+			}
+		});
+	});
 }
 
 export class LogOutputEvent extends OutputEvent {
