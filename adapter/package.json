@@ -14,10 +14,12 @@
 	"main": "./lib/main.js",
 	"typings": "./lib/main",
 	"dependencies": {
+		"mkdirp": "^0.5.1",
 		"vscode-debugprotocol": "1.29.0",
 		"vscode-uri": "1.0.1"
 	},
 	"devDependencies": {
+		"@types/mkdirp": "^0.5.2",
 		"@types/node": "7.0.43",
 		"typescript": "2.6.1"
 	},
