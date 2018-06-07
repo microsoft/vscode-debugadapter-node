@@ -1,7 +1,7 @@
 {
 	"name": "vscode-debugadapter",
 	"description": "Debug adapter implementation for node",
-	"version": "1.29.0",
+	"version": "1.30.0-pre.0",
 	"author": "Microsoft Corporation",
 	"license": "MIT",
 	"repository": {
@@ -16,12 +16,14 @@
 	"dependencies": {
 		"mkdirp": "^0.5.1",
 		"vscode-debugprotocol": "1.29.0",
-		"vscode-uri": "1.0.1"
+		"vscode-uri": "1.0.5"
 	},
 	"devDependencies": {
 		"@types/mkdirp": "^0.5.2",
-		"@types/node": "7.0.43",
-		"typescript": "2.6.1"
+		"@types/node": "8.9.1",
+		"@types/mocha": "5.2.1",
+		"mocha": "5.2.0",
+		"typescript": "2.9.1"
 	},
 	"scripts": {
 		"prepublish": "tsc -p ./src",

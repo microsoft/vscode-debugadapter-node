@@ -1,0 +1,20 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Tests",
+			"program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+			"args": [
+				"-u", "tdd",
+				"--timeout", "999999",
+				"--colors",
+				"./lib/tests"
+			],
+			"outFiles": [ "${workspaceFolder}/lib/**/*.js" ],
+			"internalConsoleOptions": "openOnSessionStart",
+			"runtimeExecutable": "/Users/weinand/.nvm/versions/node/v10.3.0/bin/node"
+		}
+	]
+}
