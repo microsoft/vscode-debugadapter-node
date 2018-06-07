@@ -7,7 +7,6 @@ import {DebugProtocol} from 'vscode-debugprotocol';
 import {ProtocolServer} from './protocol';
 import {Response, Event} from './messages';
 import * as Net from 'net';
-import Uri from 'vscode-uri';
 import {URL} from 'url';
 
 
@@ -796,27 +795,30 @@ export class DebugSession extends ProtocolServer {
 
 	private static path2uri(path: string): string {
 
+		if (process.platform === 'win32') {
+			if (/^[A-Z]:/.test(path)) {
+				path = path[0].toLowerCase() + path.substr(1);
+			}
+			path = path.replace(/\\/g, '/');
+		}
 		path = encodeURI(path);
 
 		let uri = new URL(`file:`);	// ignore 'path' for now
 		uri.pathname = path;	// now use 'path' to get the correct percent encoding (see https://url.spec.whatwg.org)
 		return uri.toString();
-
-		/*
-		let uri = Uri.file(path).toString();
-		if (process.platform === 'win32' && /^file:\/\/\/[a-z]%3A/.test(uri)) {
-			uri = uri.replace('%3A', ':');
-		}
-		return uri;
-		*/
 	}
 
 	private static uri2path(sourceUri: string): string {
 
 		let uri = new URL(sourceUri);
-		return decodeURIComponent(uri.pathname);
-
-		//return Uri.parse(sourceUri).fsPath;
+		let s = decodeURIComponent(uri.pathname);
+		if (process.platform === 'win32') {
+			if (/^\/[a-zA-Z]:/.test(s)) {
+				s = s[1].toLowerCase() + s.substr(2);
+			}
+			s = s.replace(/\//g, '\\');
+		}
+		return s;
 	}
 
 	private static _formatPIIRegexp = /{([^}]+)}/g;

@@ -13,8 +13,7 @@
 				"./lib/tests"
 			],
 			"outFiles": [ "${workspaceFolder}/lib/**/*.js" ],
-			"internalConsoleOptions": "openOnSessionStart",
-			"runtimeExecutable": "/Users/weinand/.nvm/versions/node/v10.3.0/bin/node"
+			"internalConsoleOptions": "openOnSessionStart"
 		}
 	]
 }
