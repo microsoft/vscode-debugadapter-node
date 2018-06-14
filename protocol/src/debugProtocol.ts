@@ -77,7 +77,7 @@ export module DebugProtocol {
 		body: {
 			/** The reason for the event.
 				For backward compatibility this string is shown in the UI if the 'description' attribute is missing (but it must not be translated).
-				Values: 'step', 'breakpoint', 'exception', 'pause', 'entry', etc.
+				Values: 'step', 'breakpoint', 'exception', 'pause', 'entry', 'goto', etc.
 			*/
 			reason: string;
 			/** The full reason for the event, e.g. 'Paused on exception'. This string is shown in the UI as is. */
@@ -651,7 +651,7 @@ export module DebugProtocol {
 		The request sets the location where the debuggee will continue to run.
 		This makes it possible to skip the execution of code or to executed code again.
 		The code between the current location and the goto target is not executed but skipped.
-		The debug adapter first sends the GotoResponse and then a StoppedEvent (event type 'goto').
+		The debug adapter first sends the GotoResponse and then a StoppedEvent with reason 'goto'.
 	*/
 	export interface GotoRequest extends Request {
 		// command: 'goto';

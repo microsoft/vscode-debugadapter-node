@@ -130,7 +130,7 @@
 							"reason": {
 								"type": "string",
 								"description": "The reason for the event.\nFor backward compatibility this string is shown in the UI if the 'description' attribute is missing (but it must not be translated).",
-								"_enum": [ "step", "breakpoint", "exception", "pause", "entry" ]
+								"_enum": [ "step", "breakpoint", "exception", "pause", "entry", "goto" ]
 							},
 							"description": {
 								"type": "string",
@@ -1214,7 +1214,7 @@
 		"GotoRequest": {
 			"allOf": [ { "$ref": "#/definitions/Request" }, {
 				"type": "object",
-				"description": "Goto request; value of command field is 'goto'.\nThe request sets the location where the debuggee will continue to run.\nThis makes it possible to skip the execution of code or to executed code again.\nThe code between the current location and the goto target is not executed but skipped.\nThe debug adapter first sends the GotoResponse and then a StoppedEvent (event type 'goto').",
+				"description": "Goto request; value of command field is 'goto'.\nThe request sets the location where the debuggee will continue to run.\nThis makes it possible to skip the execution of code or to executed code again.\nThe code between the current location and the goto target is not executed but skipped.\nThe debug adapter first sends the GotoResponse and then a StoppedEvent with reason 'goto'.",
 				"properties": {
 					"command": {
 						"type": "string",

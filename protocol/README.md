@@ -7,6 +7,9 @@ This npm module contains declarations for the json-based Visual Studio Code debu
 
 ## History
 
+* 1.29.x:
+  * Adds a new value for the 'reason' attribute of the 'stopped' event. This is used when an adapter implements the 'goto' request.
+
 * 1.28.x:
   * Adds an optional attribute `clientName` to the `Initialize` request. This makes it possible to surface the human readable name of the client in error messages coming from the adapter.
   * Adds a `terminateThreads` request and a corresponding `supportsTerminateThreadsRequest` capability.
