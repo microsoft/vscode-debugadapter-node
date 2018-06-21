@@ -35,6 +35,12 @@ export class Logger {
 	private _currentLogger: InternalLogger;
 	private _pendingLogQ: ILogItem[] = [];
 
+	constructor() {
+		process.on('beforeExit', () => this.dispose());
+		process.on('SIGTERM', () => this.dispose());
+		process.on('SIGINT', () => this.dispose());
+	}
+
 	log(msg: string, level = LogLevel.Log): void {
 		msg = msg + '\n';
 		this._write(msg, level);
@@ -52,6 +58,16 @@ export class Logger {
 		this.log(msg, LogLevel.Error);
 	}
 
+	dispose(): Promise<void> {
+		if (this._currentLogger) {
+			const disposeP = this._currentLogger.dispose();
+			this._currentLogger = null;
+			return disposeP;
+		} else {
+			return Promise.resolve();
+		}
+	}
+
 	/**
 	 * `log` adds a newline, `write` doesn't
 	 */
@@ -60,7 +76,7 @@ export class Logger {
 		msg = msg + '';
 		if (this._pendingLogQ) {
 			this._pendingLogQ.push({ msg, level });
-		} else {
+		} else if (this._currentLogger) {
 			this._currentLogger.log(msg, level);
 		}
 	}
@@ -147,6 +163,17 @@ class InternalLogger {
 				}
 			}
 		}
+	}
+
+	public dispose(): Promise<void> {
+		return new Promise(resolve => {
+			if (this._logFileStream) {
+				this._logFileStream.end(resolve);
+				this._logFileStream = null;
+			} else {
+				resolve();
+			}
+		});
 	}
 
 	public log(msg: string, level: LogLevel): void {
