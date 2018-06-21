@@ -36,7 +36,9 @@ export class Logger {
 	private _pendingLogQ: ILogItem[] = [];
 
 	constructor() {
-		process.on('exit', () => this.dispose());
+		process.on('beforeExit', () => this.dispose());
+		process.on('SIGTERM', () => this.dispose());
+		process.on('SIGINT', () => this.dispose());
 	}
 
 	log(msg: string, level = LogLevel.Log): void {
