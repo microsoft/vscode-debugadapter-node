@@ -12,15 +12,15 @@ export module DebugProtocol {
 
 	/** Base class of requests, responses, and events. */
 	export interface ProtocolMessage {
-		/** Sequence number. */
-		seq: number;
 		/** Message type.
 			Values: 'request', 'response', 'event', etc.
 		*/
 		type: string;
+		/** Sequence number. */
+		seq: number;
 	}
 
-	/** A client or server-initiated request. */
+	/** A client or debug adapter initiated request. */
 	export interface Request extends ProtocolMessage {
 		// type: 'request';
 		/** The command to execute. */
@@ -29,7 +29,7 @@ export module DebugProtocol {
 		arguments?: any;
 	}
 
-	/** Server-initiated event. */
+	/** A debug adapter initiated event. */
 	export interface Event extends ProtocolMessage {
 		// type: 'event';
 		/** Type of event. */
@@ -38,7 +38,7 @@ export module DebugProtocol {
 		body?: any;
 	}
 
-	/** Response to a request. */
+	/** Response for a request. */
 	export interface Response extends ProtocolMessage {
 		// type: 'response';
 		/** Sequence number of the corresponding request. */
@@ -53,16 +53,24 @@ export module DebugProtocol {
 		body?: any;
 	}
 
+	/** On error (whenever 'success' is false), the body can provide more details. */
+	export interface ErrorResponse extends Response {
+		body: {
+			/** An optional, structured error message. */
+			error?: Message;
+		};
+	}
+
 	/** Event message for 'initialized' event type.
 		This event indicates that the debug adapter is ready to accept configuration requests (e.g. SetBreakpointsRequest, SetExceptionBreakpointsRequest).
-		A debug adapter is expected to send this event when it is ready to accept configuration requests (but not before the InitializeRequest has finished).
+		A debug adapter is expected to send this event when it is ready to accept configuration requests (but not before the 'initialize' request has finished).
 		The sequence of events/requests is as follows:
-		- adapters sends InitializedEvent (after the InitializeRequest has returned)
-		- frontend sends zero or more SetBreakpointsRequest
-		- frontend sends one SetFunctionBreakpointsRequest
-		- frontend sends a SetExceptionBreakpointsRequest if one or more exceptionBreakpointFilters have been defined (or if supportsConfigurationDoneRequest is not defined or false)
+		- adapters sends 'initialized' event (after the 'initialize' request has returned)
+		- frontend sends zero or more 'setBreakpoints' requests
+		- frontend sends one 'setFunctionBreakpoints' request
+		- frontend sends a 'setExceptionBreakpoints' request if one or more 'exceptionBreakpointFilters' have been defined (or if 'supportsConfigurationDoneRequest' is not defined or false)
 		- frontend sends other future configuration requests
-		- frontend sends one ConfigurationDoneRequest to indicate the end of the configuration
+		- frontend sends one 'configurationDone' request to indicate the end of the configuration.
 	*/
 	export interface InitializedEvent extends Event {
 		// event: 'initialized';
@@ -80,7 +88,7 @@ export module DebugProtocol {
 				Values: 'step', 'breakpoint', 'exception', 'pause', 'entry', 'goto', etc.
 			*/
 			reason: string;
-			/** The full reason for the event, e.g. 'Paused on exception'. This string is shown in the UI as is. */
+			/** The full reason for the event, e.g. 'Paused on exception'. This string is shown in the UI as is and must be translated. */
 			description?: string;
 			/** The thread which was stopped. */
 			threadId?: number;
@@ -88,9 +96,9 @@ export module DebugProtocol {
 			preserveFocusHint?: boolean;
 			/** Additional information. E.g. if reason is 'exception', text contains the exception name. This string is shown in the UI. */
 			text?: string;
-			/** If allThreadsStopped is true, a debug adapter can announce that all threads have stopped.
-				*  The client should use this information to enable that all threads can be expanded to access their stacktraces.
-				*  If the attribute is missing or false, only the thread with the given threadId can be expanded.
+			/** If 'allThreadsStopped' is true, a debug adapter can announce that all threads have stopped.
+				- The client should use this information to enable that all threads can be expanded to access their stacktraces.
+				- If the attribute is missing or false, only the thread with the given threadId can be expanded.
 			*/
 			allThreadsStopped?: boolean;
 		};
@@ -99,20 +107,20 @@ export module DebugProtocol {
 	/** Event message for 'continued' event type.
 		The event indicates that the execution of the debuggee has continued.
 		Please note: a debug adapter is not expected to send this event in response to a request that implies that execution continues, e.g. 'launch' or 'continue'.
-		It is only necessary to send a ContinuedEvent if there was no previous request that implied this.
+		It is only necessary to send a 'continued' event if there was no previous request that implied this.
 	*/
 	export interface ContinuedEvent extends Event {
 		// event: 'continued';
 		body: {
 			/** The thread which was continued. */
 			threadId: number;
-			/** If allThreadsContinued is true, a debug adapter can announce that all threads have continued. */
+			/** If 'allThreadsContinued' is true, a debug adapter can announce that all threads have continued. */
 			allThreadsContinued?: boolean;
 		};
 	}
 
 	/** Event message for 'exited' event type.
-		The event indicates that the debuggee has exited.
+		The event indicates that the debuggee has exited and returns its exit code.
 	*/
 	export interface ExitedEvent extends Event {
 		// event: 'exited';
@@ -122,8 +130,8 @@ export module DebugProtocol {
 		};
 	}
 
-	/** Event message for 'terminated' event types.
-		The event indicates that debugging of the debuggee has terminated.
+	/** Event message for 'terminated' event type.
+		The event indicates that debugging of the debuggee has terminated. This does **not** mean that the debuggee itself has exited.
 	*/
 	export interface TerminatedEvent extends Event {
 		// event: 'terminated';
@@ -141,12 +149,12 @@ export module DebugProtocol {
 	export interface ThreadEvent extends Event {
 		// event: 'thread';
 		body: {
+			/** The identifier of the thread. */
+			threadId: number;
 			/** The reason for the event.
 				Values: 'started', 'exited', etc.
 			*/
 			reason: string;
-			/** The identifier of the thread. */
-			threadId: number;
 		};
 	}
 
@@ -162,7 +170,7 @@ export module DebugProtocol {
 			category?: string;
 			/** The output to report. */
 			output: string;
-			/** If an attribute 'variablesReference' exists and its value is > 0, the output contains objects which can be retrieved by passing variablesReference to the VariablesRequest. */
+			/** If an attribute 'variablesReference' exists and its value is > 0, the output contains objects which can be retrieved by passing 'variablesReference' to the 'variables' request. */
 			variablesReference?: number;
 			/** An optional source location where the output was produced. */
 			source?: Source;
@@ -251,8 +259,8 @@ export module DebugProtocol {
 		};
 	}
 
-	/** runInTerminal request; value of command field is 'runInTerminal'.
-		With this request a debug adapter can run a command in a terminal.
+	/** RunInTerminal request; value of command field is 'runInTerminal'.
+		This request is sent from the debug adapter to the client to run a command in a terminal. This is typically used to launch the debuggee in a terminal provided by the client.
 	*/
 	export interface RunInTerminalRequest extends Request {
 		// command: 'runInTerminal';
@@ -273,7 +281,7 @@ export module DebugProtocol {
 		env?: { [key: string]: string | null; };
 	}
 
-	/** Response to Initialize request. */
+	/** Response to 'runInTerminal' request. */
 	export interface RunInTerminalResponse extends Response {
 		body: {
 			/** The process ID. */
@@ -281,15 +289,11 @@ export module DebugProtocol {
 		};
 	}
 
-	/** On error that is whenever 'success' is false, the body can provide more details. */
-	export interface ErrorResponse extends Response {
-		body: {
-			/** An optional, structured error message. */
-			error?: Message;
-		};
-	}
-
-	/** Initialize request; value of command field is 'initialize'. */
+	/** Initialize request; value of command field is 'initialize'.
+		The 'initialize' request is sent as the first request from the client to the debug adapter in order to configure it with client capabilities and to retrieve capabilities from the debug adapter.
+		Until the debug adapter has responded to with an 'initialize' response, the client must not send any additional requests or events to the debug adapter. In addition the debug adapter is not allowed to send any requests or events to the client until it has responded with an 'initialize' response.
+		The 'initialize' request may only be sent once.
+	*/
 	export interface InitializeRequest extends Request {
 		// command: 'initialize';
 		arguments: InitializeRequestArguments;
@@ -328,16 +332,14 @@ export module DebugProtocol {
 	}
 
 	/** ConfigurationDone request; value of command field is 'configurationDone'.
-		The client of the debug protocol must send this request at the end of the sequence of configuration requests (which was started by the InitializedEvent).
+		The client of the debug protocol must send this request at the end of the sequence of configuration requests (which was started by the 'initialized' event).
 	*/
 	export interface ConfigurationDoneRequest extends Request {
 		// command: 'configurationDone';
 		arguments?: ConfigurationDoneArguments;
 	}
 
-	/** Arguments for 'configurationDone' request.
-		The configurationDone request has no standardized attributes.
-	*/
+	/** Arguments for 'configurationDone' request. */
 	export interface ConfigurationDoneArguments {
 	}
 
@@ -345,7 +347,9 @@ export module DebugProtocol {
 	export interface ConfigurationDoneResponse extends Response {
 	}
 
-	/** Launch request; value of command field is 'launch'. */
+	/** Launch request; value of command field is 'launch'.
+		The launch request is sent from the client to the debug adapter to start the debuggee with or without debugging (if 'noDebug' is true). Since launching is debugger/runtime specific, the arguments for this request are not part of this specification.
+	*/
 	export interface LaunchRequest extends Request {
 		// command: 'launch';
 		arguments: LaunchRequestArguments;
@@ -366,7 +370,9 @@ export module DebugProtocol {
 	export interface LaunchResponse extends Response {
 	}
 
-	/** Attach request; value of command field is 'attach'. */
+	/** Attach request; value of command field is 'attach'.
+		The attach request is sent from the client to the debug adapter to attach to a debuggee that is already running. Since attaching is debugger/runtime specific, the arguments for this request are not part of this specification.
+	*/
 	export interface AttachRequest extends Request {
 		// command: 'attach';
 		arguments: AttachRequestArguments;
@@ -396,9 +402,7 @@ export module DebugProtocol {
 		arguments?: RestartArguments;
 	}
 
-	/** Arguments for 'restart' request.
-		The restart request has no standardized attributes.
-	*/
+	/** Arguments for 'restart' request. */
 	export interface RestartArguments {
 	}
 
@@ -406,7 +410,9 @@ export module DebugProtocol {
 	export interface RestartResponse extends Response {
 	}
 
-	/** Disconnect request; value of command field is 'disconnect'. */
+	/** Disconnect request; value of command field is 'disconnect'.
+		The 'disconnect' request is sent from the client to the debug adapter in order to stop debugging. It asks the debug adapter to disconnect from the debuggee and to terminate the debug adapter. If the debuggee has been started with the 'launch' request, the 'disconnect' request terminates the debuggee. If the 'attach' request was used to connect to the debuggee, 'disconnect' does not terminate the debuggee. This behavior can be controlled with the 'terminateDebuggee' (if supported by the debug adapter).
+	*/
 	export interface DisconnectRequest extends Request {
 		// command: 'disconnect';
 		arguments?: DisconnectArguments;
@@ -428,7 +434,7 @@ export module DebugProtocol {
 	/** SetBreakpoints request; value of command field is 'setBreakpoints'.
 		Sets multiple breakpoints for a single source and clears all previous breakpoints in that source.
 		To clear all breakpoint for a source, specify an empty array.
-		When a breakpoint is hit, a StoppedEvent (event type 'breakpoint') is generated.
+		When a breakpoint is hit, a 'stopped' event (with reason 'breakpoint') is generated.
 	*/
 	export interface SetBreakpointsRequest extends Request {
 		// command: 'setBreakpoints';
@@ -437,7 +443,7 @@ export module DebugProtocol {
 
 	/** Arguments for 'setBreakpoints' request. */
 	export interface SetBreakpointsArguments {
-		/** The source location of the breakpoints; either source.path or source.reference must be specified. */
+		/** The source location of the breakpoints; either 'source.path' or 'source.reference' must be specified. */
 		source: Source;
 		/** The code locations of the breakpoints. */
 		breakpoints?: SourceBreakpoint[];
@@ -451,11 +457,11 @@ export module DebugProtocol {
 		Returned is information about each breakpoint created by this request.
 		This includes the actual code location and whether the breakpoint could be verified.
 		The breakpoints returned are in the same order as the elements of the 'breakpoints'
-		(or the deprecated 'lines') in the SetBreakpointsArguments.
+		(or the deprecated 'lines') array in the arguments.
 	*/
 	export interface SetBreakpointsResponse extends Response {
 		body: {
-			/** Information about the breakpoints. The array elements are in the same order as the elements of the 'breakpoints' (or the deprecated 'lines') in the SetBreakpointsArguments. */
+			/** Information about the breakpoints. The array elements are in the same order as the elements of the 'breakpoints' (or the deprecated 'lines') array in the arguments. */
 			breakpoints: Breakpoint[];
 		};
 	}
@@ -463,7 +469,7 @@ export module DebugProtocol {
 	/** SetFunctionBreakpoints request; value of command field is 'setFunctionBreakpoints'.
 		Sets multiple function breakpoints and clears all previous function breakpoints.
 		To clear all function breakpoint, specify an empty array.
-		When a function breakpoint is hit, a StoppedEvent (event type 'function breakpoint') is generated.
+		When a function breakpoint is hit, a 'stopped' event (event type 'function breakpoint') is generated.
 	*/
 	export interface SetFunctionBreakpointsRequest extends Request {
 		// command: 'setFunctionBreakpoints';
@@ -487,7 +493,7 @@ export module DebugProtocol {
 	}
 
 	/** SetExceptionBreakpoints request; value of command field is 'setExceptionBreakpoints'.
-		The request configures the debuggers response to thrown exceptions. If an exception is configured to break, a StoppedEvent is fired (event type 'exception').
+		The request configures the debuggers response to thrown exceptions. If an exception is configured to break, a 'stopped' event is fired (with reason 'exception').
 	*/
 	export interface SetExceptionBreakpointsRequest extends Request {
 		// command: 'setExceptionBreakpoints';
@@ -516,21 +522,21 @@ export module DebugProtocol {
 
 	/** Arguments for 'continue' request. */
 	export interface ContinueArguments {
-		/** Continue execution for the specified thread (if possible). If the backend cannot continue on a single thread but will continue on all threads, it should set the allThreadsContinued attribute in the response to true. */
+		/** Continue execution for the specified thread (if possible). If the backend cannot continue on a single thread but will continue on all threads, it should set the 'allThreadsContinued' attribute in the response to true. */
 		threadId: number;
 	}
 
 	/** Response to 'continue' request. */
 	export interface ContinueResponse extends Response {
 		body: {
-			/** If true, the continue request has ignored the specified thread and continued all threads instead. If this attribute is missing a value of 'true' is assumed for backward compatibility. */
+			/** If true, the 'continue' request has ignored the specified thread and continued all threads instead. If this attribute is missing a value of 'true' is assumed for backward compatibility. */
 			allThreadsContinued?: boolean;
 		};
 	}
 
 	/** Next request; value of command field is 'next'.
 		The request starts the debuggee to run again for one step.
-		The debug adapter first sends the NextResponse and then a StoppedEvent (event type 'step') after the step has completed.
+		The debug adapter first sends the response and then a 'stopped' event (with reason 'step') after the step has completed.
 	*/
 	export interface NextRequest extends Request {
 		// command: 'next';
@@ -550,7 +556,7 @@ export module DebugProtocol {
 	/** StepIn request; value of command field is 'stepIn'.
 		The request starts the debuggee to step into a function/method if possible.
 		If it cannot step into a target, 'stepIn' behaves like 'next'.
-		The debug adapter first sends the StepInResponse and then a StoppedEvent (event type 'step') after the step has completed.
+		The debug adapter first sends the response and then a 'stopped' event (with reason 'step') after the step has completed.
 		If there are multiple function/method calls (or other targets) on the source line,
 		the optional argument 'targetId' can be used to control into which target the 'stepIn' should occur.
 		The list of possible targets for a given source line can be retrieved via the 'stepInTargets' request.
@@ -574,7 +580,7 @@ export module DebugProtocol {
 
 	/** StepOut request; value of command field is 'stepOut'.
 		The request starts the debuggee to run again for one step.
-		The debug adapter first sends the StepOutResponse and then a StoppedEvent (event type 'step') after the step has completed.
+		The debug adapter first sends the response and then a 'stopped' event (with reason 'step') after the step has completed.
 	*/
 	export interface StepOutRequest extends Request {
 		// command: 'stepOut';
@@ -593,7 +599,7 @@ export module DebugProtocol {
 
 	/** StepBack request; value of command field is 'stepBack'.
 		The request starts the debuggee to run one step backwards.
-		The debug adapter first sends the StepBackResponse and then a StoppedEvent (event type 'step') after the step has completed. Clients should only call this request if the capability supportsStepBack is true.
+		The debug adapter first sends the response and then a 'stopped' event (with reason 'step') after the step has completed. Clients should only call this request if the capability 'supportsStepBack' is true.
 	*/
 	export interface StepBackRequest extends Request {
 		// command: 'stepBack';
@@ -611,7 +617,7 @@ export module DebugProtocol {
 	}
 
 	/** ReverseContinue request; value of command field is 'reverseContinue'.
-		The request starts the debuggee to run backward. Clients should only call this request if the capability supportsStepBack is true.
+		The request starts the debuggee to run backward. Clients should only call this request if the capability 'supportsStepBack' is true.
 	*/
 	export interface ReverseContinueRequest extends Request {
 		// command: 'reverseContinue';
@@ -630,7 +636,7 @@ export module DebugProtocol {
 
 	/** RestartFrame request; value of command field is 'restartFrame'.
 		The request restarts execution of the specified stackframe.
-		The debug adapter first sends the RestartFrameResponse and then a StoppedEvent (event type 'restart') after the restart has completed.
+		The debug adapter first sends the response and then a 'stopped' event (with reason 'restart') after the restart has completed.
 	*/
 	export interface RestartFrameRequest extends Request {
 		// command: 'restartFrame';
@@ -651,7 +657,7 @@ export module DebugProtocol {
 		The request sets the location where the debuggee will continue to run.
 		This makes it possible to skip the execution of code or to executed code again.
 		The code between the current location and the goto target is not executed but skipped.
-		The debug adapter first sends the GotoResponse and then a StoppedEvent with reason 'goto'.
+		The debug adapter first sends the response and then a 'stopped' event with reason 'goto'.
 	*/
 	export interface GotoRequest extends Request {
 		// command: 'goto';
@@ -672,7 +678,7 @@ export module DebugProtocol {
 
 	/** Pause request; value of command field is 'pause'.
 		The request suspenses the debuggee.
-		The debug adapter first sends the PauseResponse and then a StoppedEvent (event type 'pause') after the thread has been paused successfully.
+		The debug adapter first sends the response and then a 'stopped' event (with reason 'pause') after the thread has been paused successfully.
 	*/
 	export interface PauseRequest extends Request {
 		// command: 'pause';
@@ -689,7 +695,9 @@ export module DebugProtocol {
 	export interface PauseResponse extends Response {
 	}
 
-	/** StackTrace request; value of command field is 'stackTrace'. The request returns a stacktrace from the current execution state. */
+	/** StackTrace request; value of command field is 'stackTrace'.
+		The request returns a stacktrace from the current execution state.
+	*/
 	export interface StackTraceRequest extends Request {
 		// command: 'stackTrace';
 		arguments: StackTraceArguments;
@@ -772,7 +780,7 @@ export module DebugProtocol {
 		};
 	}
 
-	/** setVariable request; value of command field is 'setVariable'.
+	/** SetVariable request; value of command field is 'setVariable'.
 		Set the variable with the given name in the variable container to a new value.
 	*/
 	export interface SetVariableRequest extends Request {
@@ -838,7 +846,7 @@ export module DebugProtocol {
 		};
 	}
 
-	/** Thread request; value of command field is 'threads'.
+	/** Threads request; value of command field is 'threads'.
 		The request retrieves a list of all threads.
 	*/
 	export interface ThreadsRequest extends Request {
@@ -853,7 +861,7 @@ export module DebugProtocol {
 		};
 	}
 
-	/** Terminate thread request; value of command field is 'terminateThreads'.
+	/** TerminateThreads request; value of command field is 'terminateThreads'.
 		The request terminates the threads with the given ids.
 	*/
 	export interface TerminateThreadsRequest extends Request {
@@ -871,7 +879,9 @@ export module DebugProtocol {
 	export interface TerminateThreadsResponse extends Response {
 	}
 
-	/** Modules can be retrieved from the debug adapter with the ModulesRequest which can either return all modules or a range of modules to support paging. */
+	/** Modules request; value of command field is 'modules'.
+		Modules can be retrieved from the debug adapter with the ModulesRequest which can either return all modules or a range of modules to support paging.
+	*/
 	export interface ModulesRequest extends Request {
 		// command: 'modules';
 		arguments: ModulesArguments;
@@ -895,15 +905,15 @@ export module DebugProtocol {
 		};
 	}
 
-	/** Retrieves the set of all sources currently loaded by the debugged process. */
+	/** LoadedSources request; value of command field is 'loadedSources'.
+		Retrieves the set of all sources currently loaded by the debugged process.
+	*/
 	export interface LoadedSourcesRequest extends Request {
 		// command: 'loadedSources';
 		arguments?: LoadedSourcesArguments;
 	}
 
-	/** Arguments for 'loadedSources' request.
-		The 'loadedSources' request has no standardized arguments.
-	*/
+	/** Arguments for 'loadedSources' request. */
 	export interface LoadedSourcesArguments {
 	}
 
@@ -1059,7 +1069,7 @@ export module DebugProtocol {
 		};
 	}
 
-	/** CompletionsRequest request; value of command field is 'completions'.
+	/** Completions request; value of command field is 'completions'.
 		Returns a list of possible completions for a given caret position and text.
 		The CompletionsRequest may only be called if the 'supportsCompletionsRequest' capability exists and is true.
 	*/
@@ -1088,8 +1098,8 @@ export module DebugProtocol {
 		};
 	}
 
-	/** ExceptionInfoRequest request; value of command field is 'exceptionInfo'.
-		Retrieves the details of the exception that caused the StoppedEvent to be raised.
+	/** ExceptionInfo request; value of command field is 'exceptionInfo'.
+		Retrieves the details of the exception that caused this event to be raised.
 	*/
 	export interface ExceptionInfoRequest extends Request {
 		// command: 'exceptionInfo';

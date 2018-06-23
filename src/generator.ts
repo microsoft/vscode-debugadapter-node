@@ -56,9 +56,24 @@ function Module(moduleName: string, schema: IProtocol): string {
 
 function Interface(interfaceName: string, definition: P.Definition, superType?: string): string {
 
+	let desc = definition.description;
+
+	if (definition.properties && definition.properties.event && definition.properties.event['enum']) {
+		const eventName = `${definition.properties.event['enum'][0]}`;
+		if (eventName) {
+			desc = `Event message for '${eventName}' event type.\n${desc}`;
+		}
+	} else if (definition.properties && definition.properties.command && definition.properties.command['enum']) {
+		const requestName = `${definition.properties.command['enum'][0]}`;
+		if (requestName) {
+			const RequestName = requestName[0].toUpperCase() + requestName.substr(1);
+			desc = `${RequestName} request; value of command field is '${requestName}'.\n${desc}`;
+		}
+	}
+
 	let s = line();
 
-	s += comment({ description : definition.description });
+	s += comment({ description : desc });
 
 	let x = `export interface ${interfaceName}`;
 	if (superType) {
