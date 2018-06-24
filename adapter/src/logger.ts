@@ -35,12 +35,6 @@ export class Logger {
 	private _currentLogger: InternalLogger;
 	private _pendingLogQ: ILogItem[] = [];
 
-	constructor() {
-		process.on('beforeExit', () => this.dispose());
-		process.on('SIGTERM', () => this.dispose());
-		process.on('SIGINT', () => this.dispose());
-	}
-
 	log(msg: string, level = LogLevel.Log): void {
 		msg = msg + '\n';
 		this._write(msg, level);
@@ -132,6 +126,8 @@ class InternalLogger {
 	/** Write steam for log file */
 	private _logFileStream: fs.WriteStream;
 
+	private disposeCallback = () => this.dispose();
+
 	constructor(logCallback: ILogCallback, isServer?: boolean) {
 		this._logCallback = logCallback;
 		this._logToConsole = isServer;
@@ -155,6 +151,7 @@ class InternalLogger {
 					this.log(logFilePath + '\n', LogLevel.Warn);
 
 					this._logFileStream = fs.createWriteStream(logFilePath);
+					this.setupShutdownListeners();
 					this._logFileStream.on('error', err => {
 						handleError(err);
 					});
@@ -165,8 +162,21 @@ class InternalLogger {
 		}
 	}
 
+	private setupShutdownListeners(): void {
+		process.addListener('beforeExit', this.disposeCallback);
+		process.addListener('SIGTERM', this.disposeCallback);
+		process.addListener('SIGINT', this.disposeCallback);
+	}
+
+	private removeShutdownListeners(): void {
+		process.removeListener('beforeExit', this.disposeCallback);
+		process.removeListener('SIGTERM', this.disposeCallback);
+		process.removeListener('SIGINT', this.disposeCallback);
+	}
+
 	public dispose(): Promise<void> {
 		return new Promise(resolve => {
+			this.removeShutdownListeners();
 			if (this._logFileStream) {
 				this._logFileStream.end(resolve);
 				this._logFileStream = null;
