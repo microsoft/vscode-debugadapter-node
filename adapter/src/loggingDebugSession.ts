@@ -10,7 +10,7 @@ const logger = Logger.logger;
 import {DebugSession} from './debugSession';
 
 export class LoggingDebugSession extends DebugSession {
-	public constructor(private obsolete_logFilePath: string, obsolete_debuggerLinesAndColumnsStartAt1?: boolean, obsolete_isServer?: boolean) {
+	public constructor(private obsolete_logFilePath?: string, obsolete_debuggerLinesAndColumnsStartAt1?: boolean, obsolete_isServer?: boolean) {
 		super(obsolete_debuggerLinesAndColumnsStartAt1, obsolete_isServer);
 
 		this.on('error', (event: DebugProtocol.Event) => {
