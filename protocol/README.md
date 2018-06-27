@@ -7,6 +7,9 @@ This npm module contains declarations for the json-based Visual Studio Code debu
 
 ## History
 
+* 1.30.x:
+  * Comment cosmetics.
+
 * 1.29.x:
   * Adds a new value for the 'reason' attribute of the 'stopped' event. This is used when an adapter implements the 'goto' request.
 
