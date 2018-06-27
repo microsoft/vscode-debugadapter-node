@@ -12,12 +12,12 @@ export module DebugProtocol {
 
 	/** Base class of requests, responses, and events. */
 	export interface ProtocolMessage {
+		/** Sequence number. */
+		seq: number;
 		/** Message type.
 			Values: 'request', 'response', 'event', etc.
 		*/
 		type: string;
-		/** Sequence number. */
-		seq: number;
 	}
 
 	/** A client or debug adapter initiated request. */
@@ -149,12 +149,12 @@ export module DebugProtocol {
 	export interface ThreadEvent extends Event {
 		// event: 'thread';
 		body: {
-			/** The identifier of the thread. */
-			threadId: number;
 			/** The reason for the event.
 				Values: 'started', 'exited', etc.
 			*/
 			reason: string;
+			/** The identifier of the thread. */
+			threadId: number;
 		};
 	}
 
