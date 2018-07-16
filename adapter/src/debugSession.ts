@@ -447,6 +447,9 @@ export class DebugSession extends ProtocolServer {
 			} else if (request.command === 'disconnect') {
 				this.disconnectRequest(<DebugProtocol.DisconnectResponse> response, request.arguments);
 
+			} else if (request.command === 'terminate') {
+				this.terminateRequest(<DebugProtocol.TerminateResponse> response, request.arguments);
+
 			} else if (request.command === 'restart') {
 				this.restartRequest(<DebugProtocol.RestartResponse> response, request.arguments);
 
@@ -604,6 +607,9 @@ export class DebugSession extends ProtocolServer {
 		// This debug adapter does not support the 'setExpression' request.
 		response.body.supportsSetExpression = false;
 
+		// This debug adapter does not support the 'terminate' request.
+		response.body.supportsTerminateRequest = false;
+
 		this.sendResponse(response);
 	}
 
@@ -617,6 +623,10 @@ export class DebugSession extends ProtocolServer {
 	}
 
 	protected attachRequest(response: DebugProtocol.AttachResponse, args: DebugProtocol.AttachRequestArguments): void {
+		this.sendResponse(response);
+	}
+
+	protected terminateRequest(response: DebugProtocol.TerminateResponse, args: DebugProtocol.TerminateArguments): void {
 		this.sendResponse(response);
 	}
 
