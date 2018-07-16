@@ -7,6 +7,9 @@ This npm module contains declarations for the json-based Visual Studio Code debu
 
 ## History
 
+* 1.31.x:
+  * Adds a new optional `terminate` request which can be used to give a debuggee the chance to shutdown gracefully. A corresponding `supportsTerminateRequest` capability announces that an adapter implements the request.
+
 * 1.30.x:
   * Comment cosmetics.
 
