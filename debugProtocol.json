@@ -800,7 +800,7 @@
 		"TerminateRequest": {
 			"allOf": [ { "$ref": "#/definitions/Request" }, {
 				"type": "object",
-				"description": "The 'terminate' request is sent from the client to the debug adapter in order to give the debuggee a chance to terminate itself.",
+				"description": "The 'terminate' request is sent from the client to the debug adapter in order to give the debuggee a chance for terminating itself.",
 				"properties": {
 					"command": {
 						"type": "string",
