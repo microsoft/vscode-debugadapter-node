@@ -126,13 +126,28 @@ class InternalLogger {
 	/** Write steam for log file */
 	private _logFileStream: fs.WriteStream;
 
-	private disposeCallback = () => this.dispose();
+	/** Dispose and allow exit to continue normally */
+	private beforeExitCallback = () => this.dispose();
+
+	/** Dispose and exit */
+	private disposeCallback;
 
 	constructor(logCallback: ILogCallback, isServer?: boolean) {
 		this._logCallback = logCallback;
 		this._logToConsole = isServer;
 
 		this._minLogLevel = LogLevel.Warn;
+
+		this.disposeCallback = (signal: string, code: number) => {
+			this.dispose();
+
+			// Exit with 128 + value of the signal code.
+			// https://nodejs.org/api/process.html#process_exit_codes
+			code = code || 2; // SIGINT
+			code += 128;
+
+			process.exit(code);
+		};
 	}
 
 	public async setup(consoleMinLogLevel: LogLevel, logFilePath?: string): Promise<void> {
@@ -163,13 +178,13 @@ class InternalLogger {
 	}
 
 	private setupShutdownListeners(): void {
-		process.addListener('beforeExit', this.disposeCallback);
+		process.addListener('beforeExit', this.beforeExitCallback);
 		process.addListener('SIGTERM', this.disposeCallback);
 		process.addListener('SIGINT', this.disposeCallback);
 	}
 
 	private removeShutdownListeners(): void {
-		process.removeListener('beforeExit', this.disposeCallback);
+		process.removeListener('beforeExit', this.beforeExitCallback);
 		process.removeListener('SIGTERM', this.disposeCallback);
 		process.removeListener('SIGINT', this.disposeCallback);
 	}
