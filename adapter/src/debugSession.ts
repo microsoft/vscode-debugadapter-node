@@ -134,16 +134,16 @@ export class StoppedEvent extends Event implements DebugProtocol.StoppedEvent {
 		threadId: number;
 	};
 
-	public constructor(reason: string, threadId: number, exception_text: string = null) {
+	public constructor(reason: string, threadId: number, exceptionText: string = null) {
 		super('stopped');
 		this.body = {
 			reason: reason,
 			threadId: threadId
 		};
 
-		if (exception_text) {
+		if (exceptionText) {
 			const e: DebugProtocol.StoppedEvent = this;
-			e.body.text = exception_text;
+			e.body.text = exceptionText;
 		}
 	}
 }
