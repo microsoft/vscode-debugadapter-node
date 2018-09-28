@@ -35,7 +35,12 @@ export class Logger {
 	private _currentLogger: InternalLogger;
 	private _pendingLogQ: ILogItem[] = [];
 
+	private _prependTimestamp: boolean;
+
 	log(msg: string, level = LogLevel.Log): void {
+		if (this._prependTimestamp) {
+			msg = this._formatTimestamp() + "::" + msg;
+		}
 		msg = msg + '\n';
 		this._write(msg, level);
 	}
@@ -75,14 +80,27 @@ export class Logger {
 		}
 	}
 
+	private _formatTimestamp(): string {
+		let d = new Date();
+		let millisecondString = String("000" + d.getMilliseconds()).slice(-3);
+		return d.toLocaleDateString() + ' ' + d.toLocaleTimeString() + '.' + millisecondString;
+	}
+
 	/**
 	 * Set the logger's minimum level to log in the console, and whether to log to the file. Log messages are queued before this is
 	 * called the first time, because minLogLevel defaults to Warn.
 	 */
-	setup(consoleMinLogLevel: LogLevel, _logFilePath?: string|boolean): void {
+	setup(consoleMinLogLevel: LogLevel, _logFilePath?: string|boolean, prependTimestamp?: boolean): void {
 		const logFilePath = typeof _logFilePath === 'string' ?
 			_logFilePath :
 			(_logFilePath && this._logFilePathFromInit);
+
+		if (typeof prependTimestamp === 'boolean') {
+			this._prependTimestamp = prependTimestamp;
+		} else {
+			// prepend timestamps by default
+			this._prependTimestamp = true;
+		}
 
 		if (this._currentLogger) {
 			this._currentLogger.setup(consoleMinLogLevel, logFilePath).then(() => {
@@ -103,9 +121,11 @@ export class Logger {
 		this._currentLogger = new InternalLogger(logCallback, logToConsole);
 		this._logFilePathFromInit = logFilePath;
 
+		// Set timestamps to false for initialization logging
+		this._prependTimestamp = false;
+
 		// Log the date at the top
-		const d = new Date();
-		const timestamp = d.toLocaleTimeString() + ', ' + d.toLocaleDateString();
+		const timestamp = this._formatTimestamp();
 		this.verbose(timestamp);
 	}
 }
