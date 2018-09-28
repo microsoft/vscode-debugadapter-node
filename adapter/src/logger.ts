@@ -39,7 +39,7 @@ export class Logger {
 
 	log(msg: string, level = LogLevel.Log): void {
 		if (this._prependTimestamp) {
-			msg = this._formatTimestamp() + "::" + msg;
+			msg = this._formatTimeString() + ":: " + msg;
 		}
 		msg = msg + '\n';
 		this._write(msg, level);
@@ -80,27 +80,22 @@ export class Logger {
 		}
 	}
 
-	private _formatTimestamp(): string {
+	private _formatTimeString(): string {
 		let d = new Date();
 		let millisecondString = String("000" + d.getMilliseconds()).slice(-3);
-		return d.toLocaleDateString() + ' ' + d.toLocaleTimeString() + '.' + millisecondString;
+		return d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + '.' + millisecondString;
 	}
 
 	/**
 	 * Set the logger's minimum level to log in the console, and whether to log to the file. Log messages are queued before this is
 	 * called the first time, because minLogLevel defaults to Warn.
 	 */
-	setup(consoleMinLogLevel: LogLevel, _logFilePath?: string|boolean, prependTimestamp?: boolean): void {
+	setup(consoleMinLogLevel: LogLevel, _logFilePath?: string|boolean, prependTimestamp: boolean = true): void {
 		const logFilePath = typeof _logFilePath === 'string' ?
 			_logFilePath :
 			(_logFilePath && this._logFilePathFromInit);
 
-		if (typeof prependTimestamp === 'boolean') {
-			this._prependTimestamp = prependTimestamp;
-		} else {
-			// prepend timestamps by default
-			this._prependTimestamp = true;
-		}
+		this._prependTimestamp = prependTimestamp;
 
 		if (this._currentLogger) {
 			this._currentLogger.setup(consoleMinLogLevel, logFilePath).then(() => {
@@ -124,8 +119,8 @@ export class Logger {
 		// Set timestamps to false for initialization logging
 		this._prependTimestamp = false;
 
-		// Log the date at the top
-		const timestamp = this._formatTimestamp();
+		// Log the date and start time at the top
+		const timestamp = new Date().toLocaleDateString() + " " + this._formatTimeString();
 		this.verbose(timestamp);
 	}
 }
