@@ -80,10 +80,24 @@ export class Logger {
 		}
 	}
 
+	/*
+	* Private method to pad zeroes for numbers
+	*/
+	private _padZeroes(minDesiredLength: number, numberToPad: string): string {
+		if (numberToPad.length >= minDesiredLength) {
+			return numberToPad;
+		} else {
+			return String("0".repeat(minDesiredLength) + numberToPad).slice(-minDesiredLength);
+		}
+	}
+
 	private _formatTimeString(): string {
 		let d = new Date();
-		let millisecondString = String("000" + d.getMilliseconds()).slice(-3);
-		return d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + '.' + millisecondString;
+		let hourString = this._padZeroes(2, String(d.getHours()));
+		let minuteString = this._padZeroes(2, String(d.getMinutes()));
+		let secondString = this._padZeroes(2, String(d.getSeconds()));
+		let millisecondString = this._padZeroes(3, String(d.getMilliseconds()));
+		return hourString + ":" + minuteString + ":" + secondString + '.' + millisecondString;
 	}
 
 	/**
@@ -120,7 +134,7 @@ export class Logger {
 		this._prependTimestamp = false;
 
 		// Log the date and start time at the top
-		const timestamp = new Date().toLocaleDateString() + " " + this._formatTimeString();
+		const timestamp = new Date().toLocaleDateString() + ", " + this._formatTimeString();
 		this.verbose(timestamp);
 	}
 }
