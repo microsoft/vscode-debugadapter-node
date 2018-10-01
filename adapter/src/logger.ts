@@ -35,7 +35,12 @@ export class Logger {
 	private _currentLogger: InternalLogger;
 	private _pendingLogQ: ILogItem[] = [];
 
+	private _prependTimestamp: boolean;
+
 	log(msg: string, level = LogLevel.Log): void {
+		if (this._prependTimestamp) {
+			msg = this._formatTimeString() + ":: " + msg;
+		}
 		msg = msg + '\n';
 		this._write(msg, level);
 	}
@@ -75,14 +80,36 @@ export class Logger {
 		}
 	}
 
+	/*
+	* Private method to pad zeroes for numbers
+	*/
+	private _padZeroes(minDesiredLength: number, numberToPad: string): string {
+		if (numberToPad.length >= minDesiredLength) {
+			return numberToPad;
+		} else {
+			return String("0".repeat(minDesiredLength) + numberToPad).slice(-minDesiredLength);
+		}
+	}
+
+	private _formatTimeString(): string {
+		let d = new Date();
+		let hourString = this._padZeroes(2, String(d.getHours()));
+		let minuteString = this._padZeroes(2, String(d.getMinutes()));
+		let secondString = this._padZeroes(2, String(d.getSeconds()));
+		let millisecondString = this._padZeroes(3, String(d.getMilliseconds()));
+		return hourString + ":" + minuteString + ":" + secondString + '.' + millisecondString;
+	}
+
 	/**
 	 * Set the logger's minimum level to log in the console, and whether to log to the file. Log messages are queued before this is
 	 * called the first time, because minLogLevel defaults to Warn.
 	 */
-	setup(consoleMinLogLevel: LogLevel, _logFilePath?: string|boolean): void {
+	setup(consoleMinLogLevel: LogLevel, _logFilePath?: string|boolean, prependTimestamp: boolean = true): void {
 		const logFilePath = typeof _logFilePath === 'string' ?
 			_logFilePath :
 			(_logFilePath && this._logFilePathFromInit);
+
+		this._prependTimestamp = prependTimestamp;
 
 		if (this._currentLogger) {
 			this._currentLogger.setup(consoleMinLogLevel, logFilePath).then(() => {
@@ -103,9 +130,11 @@ export class Logger {
 		this._currentLogger = new InternalLogger(logCallback, logToConsole);
 		this._logFilePathFromInit = logFilePath;
 
-		// Log the date at the top
-		const d = new Date();
-		const timestamp = d.toLocaleTimeString() + ', ' + d.toLocaleDateString();
+		// Set timestamps to false for initialization logging
+		this._prependTimestamp = false;
+
+		// Log the date and start time at the top
+		const timestamp = new Date().toLocaleDateString() + ", " + this._formatTimeString();
 		this.verbose(timestamp);
 	}
 }
