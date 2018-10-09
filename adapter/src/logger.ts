@@ -39,7 +39,7 @@ export class Logger {
 
 	log(msg: string, level = LogLevel.Log): void {
 		if (this._prependTimestamp) {
-			msg = this._formatTimeString() + ":: " + msg;
+			msg = "[" + this._formatTimeString() + "] " + msg;
 		}
 		msg = msg + '\n';
 		this._write(msg, level);
@@ -93,11 +93,11 @@ export class Logger {
 
 	private _formatTimeString(): string {
 		let d = new Date();
-		let hourString = this._padZeroes(2, String(d.getHours()));
-		let minuteString = this._padZeroes(2, String(d.getMinutes()));
-		let secondString = this._padZeroes(2, String(d.getSeconds()));
-		let millisecondString = this._padZeroes(3, String(d.getMilliseconds()));
-		return hourString + ":" + minuteString + ":" + secondString + '.' + millisecondString;
+		let hourString = this._padZeroes(2, String(d.getUTCHours()));
+		let minuteString = this._padZeroes(2, String(d.getUTCMinutes()));
+		let secondString = this._padZeroes(2, String(d.getUTCSeconds()));
+		let millisecondString = this._padZeroes(3, String(d.getUTCMilliseconds()));
+		return hourString + ":" + minuteString + ":" + secondString + '.' + millisecondString + " UTC";
 	}
 
 	/**
@@ -134,8 +134,10 @@ export class Logger {
 		this._prependTimestamp = false;
 
 		// Log the date and start time at the top
-		const timestamp = new Date().toLocaleDateString() + ", " + this._formatTimeString();
-		this.verbose(timestamp);
+		let d = new Date();
+		let dateString = d.getUTCFullYear() + "-" + `${d.getUTCMonth() + 1}` + "-" + d.getUTCDate();
+		const timeAndDateStamp = dateString + ", " + this._formatTimeString();
+		this.verbose(timeAndDateStamp);
 	}
 }
 
