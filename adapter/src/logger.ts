@@ -190,8 +190,8 @@ class InternalLogger {
 
 	private logDateTime(): void {
 		let d = new Date();
-		let dateString = d.getUTCFullYear() + "-" + `${d.getUTCMonth() + 1}` + "-" + d.getUTCDate();
-		const timeAndDateStamp = dateString + ", " + getFormattedTimeString();
+		let dateString = d.getUTCFullYear() + '-' + `${d.getUTCMonth() + 1}` + '-' + d.getUTCDate();
+		const timeAndDateStamp = dateString + ', ' + getFormattedTimeString();
 		this.log(timeAndDateStamp + '\n', LogLevel.Verbose, false);
 	}
 
@@ -245,7 +245,7 @@ class InternalLogger {
 		}
 
 		if (this._prependTimestamp && prependTimestamp) {
-			msg = "[" + getFormattedTimeString() + "] " + msg;
+			msg = '[' + getFormattedTimeString() + '] ' + msg;
 		}
 
 		if (this._logFileStream) {
@@ -302,13 +302,13 @@ function getFormattedTimeString(): string {
 	let minuteString = _padZeroes(2, String(d.getUTCMinutes()));
 	let secondString = _padZeroes(2, String(d.getUTCSeconds()));
 	let millisecondString = _padZeroes(3, String(d.getUTCMilliseconds()));
-	return hourString + ":" + minuteString + ":" + secondString + '.' + millisecondString + " UTC";
+	return hourString + ':' + minuteString + ':' + secondString + '.' + millisecondString + ' UTC';
 }
 
 function _padZeroes(minDesiredLength: number, numberToPad: string): string {
 	if (numberToPad.length >= minDesiredLength) {
 		return numberToPad;
 	} else {
-		return String("0".repeat(minDesiredLength) + numberToPad).slice(-minDesiredLength);
+		return String('0'.repeat(minDesiredLength) + numberToPad).slice(-minDesiredLength);
 	}
 }
