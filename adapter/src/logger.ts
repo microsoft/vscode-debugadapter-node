@@ -35,12 +35,7 @@ export class Logger {
 	private _currentLogger: InternalLogger;
 	private _pendingLogQ: ILogItem[] = [];
 
-	private _prependTimestamp: boolean;
-
 	log(msg: string, level = LogLevel.Log): void {
-		if (this._prependTimestamp) {
-			msg = "[" + this._formatTimeString() + "] " + msg;
-		}
 		msg = msg + '\n';
 		this._write(msg, level);
 	}
@@ -80,26 +75,6 @@ export class Logger {
 		}
 	}
 
-	/*
-	* Private method to pad zeroes for numbers
-	*/
-	private _padZeroes(minDesiredLength: number, numberToPad: string): string {
-		if (numberToPad.length >= minDesiredLength) {
-			return numberToPad;
-		} else {
-			return String("0".repeat(minDesiredLength) + numberToPad).slice(-minDesiredLength);
-		}
-	}
-
-	private _formatTimeString(): string {
-		let d = new Date();
-		let hourString = this._padZeroes(2, String(d.getUTCHours()));
-		let minuteString = this._padZeroes(2, String(d.getUTCMinutes()));
-		let secondString = this._padZeroes(2, String(d.getUTCSeconds()));
-		let millisecondString = this._padZeroes(3, String(d.getUTCMilliseconds()));
-		return hourString + ":" + minuteString + ":" + secondString + '.' + millisecondString + " UTC";
-	}
-
 	/**
 	 * Set the logger's minimum level to log in the console, and whether to log to the file. Log messages are queued before this is
 	 * called the first time, because minLogLevel defaults to Warn.
@@ -109,10 +84,13 @@ export class Logger {
 			_logFilePath :
 			(_logFilePath && this._logFilePathFromInit);
 
-		this._prependTimestamp = prependTimestamp;
-
 		if (this._currentLogger) {
-			this._currentLogger.setup(consoleMinLogLevel, logFilePath).then(() => {
+			const options = {
+				consoleMinLogLevel,
+				logFilePath,
+				prependTimestamp
+			};
+			this._currentLogger.setup(options).then(() => {
 				// Now that we have a minimum logLevel, we can clear out the queue of pending messages
 				if (this._pendingLogQ) {
 					const logQ = this._pendingLogQ;
@@ -129,19 +107,16 @@ export class Logger {
 		this._pendingLogQ = this._pendingLogQ || [];
 		this._currentLogger = new InternalLogger(logCallback, logToConsole);
 		this._logFilePathFromInit = logFilePath;
-
-		// Set timestamps to false for initialization logging
-		this._prependTimestamp = false;
-
-		// Log the date and start time at the top
-		let d = new Date();
-		let dateString = d.getUTCFullYear() + "-" + `${d.getUTCMonth() + 1}` + "-" + d.getUTCDate();
-		const timeAndDateStamp = dateString + ", " + this._formatTimeString();
-		this.verbose(timeAndDateStamp);
 	}
 }
 
 export const logger = new Logger();
+
+interface IInternalLoggerOptions {
+	consoleMinLogLevel: LogLevel;
+	logFilePath?: string;
+	prependTimestamp?: boolean;
+}
 
 /**
  * Manages logging, whether to console.log, file, or VS Code console.
@@ -163,6 +138,9 @@ class InternalLogger {
 	/** Dispose and exit */
 	private disposeCallback;
 
+	/** Whether to add a timestamp to messages in the logfile */
+	private _prependTimestamp: boolean;
+
 	constructor(logCallback: ILogCallback, isServer?: boolean) {
 		this._logCallback = logCallback;
 		this._logToConsole = isServer;
@@ -181,22 +159,24 @@ class InternalLogger {
 		};
 	}
 
-	public async setup(consoleMinLogLevel: LogLevel, logFilePath?: string): Promise<void> {
-		this._minLogLevel = consoleMinLogLevel;
+	public async setup(options: IInternalLoggerOptions): Promise<void> {
+		this._minLogLevel = options.consoleMinLogLevel;
+		this._prependTimestamp = options.prependTimestamp;
 
 		// Open a log file in the specified location. Overwritten on each run.
-		if (logFilePath) {
-			if (!path.isAbsolute(logFilePath)) {
-				this.log(`logFilePath must be an absolute path: ${logFilePath}`, LogLevel.Error);
+		if (options.logFilePath) {
+			if (!path.isAbsolute(options.logFilePath)) {
+				this.log(`logFilePath must be an absolute path: ${options.logFilePath}`, LogLevel.Error);
 			} else {
-				const handleError = err => this.sendLog(`Error creating log file at path: ${logFilePath}. Error: ${err.toString()}\n`, LogLevel.Error);
+				const handleError = err => this.sendLog(`Error creating log file at path: ${options.logFilePath}. Error: ${err.toString()}\n`, LogLevel.Error);
 
 				try {
-					await mkdirpPromise(path.dirname(logFilePath));
+					await mkdirpPromise(path.dirname(options.logFilePath));
 					this.log(`Verbose logs are written to:\n`, LogLevel.Warn);
-					this.log(logFilePath + '\n', LogLevel.Warn);
+					this.log(options.logFilePath + '\n', LogLevel.Warn);
 
-					this._logFileStream = fs.createWriteStream(logFilePath);
+					this._logFileStream = fs.createWriteStream(options.logFilePath);
+					this.logDateTime();
 					this.setupShutdownListeners();
 					this._logFileStream.on('error', err => {
 						handleError(err);
@@ -206,6 +186,13 @@ class InternalLogger {
 				}
 			}
 		}
+	}
+
+	private logDateTime(): void {
+		let d = new Date();
+		let dateString = d.getUTCFullYear() + "-" + `${d.getUTCMonth() + 1}` + "-" + d.getUTCDate();
+		const timeAndDateStamp = dateString + ", " + getFormattedTimeString();
+		this.log(timeAndDateStamp + '\n', LogLevel.Verbose, false);
 	}
 
 	private setupShutdownListeners(): void {
@@ -232,7 +219,7 @@ class InternalLogger {
 		});
 	}
 
-	public log(msg: string, level: LogLevel): void {
+	public log(msg: string, level: LogLevel, prependTimestamp = true): void {
 		if (this._minLogLevel === LogLevel.Stop) {
 			return;
 		}
@@ -255,6 +242,10 @@ class InternalLogger {
 		// If an error, prepend with '[Error]'
 		if (level === LogLevel.Error) {
 			msg = `[${LogLevel[level]}] ${msg}`;
+		}
+
+		if (this._prependTimestamp && prependTimestamp) {
+			msg = "[" + getFormattedTimeString() + "] " + msg;
 		}
 
 		if (this._logFileStream) {
@@ -303,4 +294,21 @@ export class LogOutputEvent extends OutputEvent {
 
 export function trimLastNewline(str: string): string {
 	return str.replace(/(\n|\r\n)$/, '');
+}
+
+function getFormattedTimeString(): string {
+	let d = new Date();
+	let hourString = _padZeroes(2, String(d.getUTCHours()));
+	let minuteString = _padZeroes(2, String(d.getUTCMinutes()));
+	let secondString = _padZeroes(2, String(d.getUTCSeconds()));
+	let millisecondString = _padZeroes(3, String(d.getUTCMilliseconds()));
+	return hourString + ":" + minuteString + ":" + secondString + '.' + millisecondString + " UTC";
+}
+
+function _padZeroes(minDesiredLength: number, numberToPad: string): string {
+	if (numberToPad.length >= minDesiredLength) {
+		return numberToPad;
+	} else {
+		return String("0".repeat(minDesiredLength) + numberToPad).slice(-minDesiredLength);
+	}
 }
