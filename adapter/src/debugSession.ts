@@ -131,19 +131,18 @@ export class CompletionItem implements DebugProtocol.CompletionItem {
 export class StoppedEvent extends Event implements DebugProtocol.StoppedEvent {
 	body: {
 		reason: string;
-		threadId: number;
 	};
 
-	public constructor(reason: string, threadId: number, exceptionText: string = null) {
+	public constructor(reason: string, threadId?: number, exceptionText?: string) {
 		super('stopped');
 		this.body = {
-			reason: reason,
-			threadId: threadId
+			reason: reason
 		};
-
-		if (exceptionText) {
-			const e: DebugProtocol.StoppedEvent = this;
-			e.body.text = exceptionText;
+		if (typeof threadId === 'number') {
+			(this as DebugProtocol.StoppedEvent).body.threadId = threadId;
+		}
+		if (typeof exceptionText === 'string') {
+			(this as DebugProtocol.StoppedEvent).body.text = exceptionText;
 		}
 	}
 }
