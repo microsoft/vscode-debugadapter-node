@@ -1,7 +1,7 @@
 {
 	"name": "vscode-debugprotocol",
 	"description": "Npm module with declarations for the Visual Studio Code debug protocol",
-	"version": "1.32.0",
+	"version": "1.33.0",
 	"author": "Microsoft Corporation",
 	"license": "MIT",
 	"repository": {
@@ -14,7 +14,7 @@
 	"main": "./lib/debugProtocol.js",
 	"typings": "./lib/debugProtocol",
 	"devDependencies": {
-		"typescript": "2.6.1"
+		"typescript": "3.1.4"
 	},
 	"scripts": {
 		"prepublish": "tsc -p ./src",

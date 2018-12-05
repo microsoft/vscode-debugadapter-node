@@ -193,7 +193,7 @@ export module DebugProtocol {
 				Values: 'changed', 'new', 'removed', etc.
 			*/
 			reason: string;
-			/** The breakpoint. */
+			/** The 'id' attribute is used to find the target breakpoint and the other attributes are used as the new values. */
 			breakpoint: Breakpoint;
 		};
 	}
@@ -286,6 +286,8 @@ export module DebugProtocol {
 		body: {
 			/** The process ID. */
 			processId?: number;
+			/** The process ID of the terminal shell. */
+			shellProcessId?: number;
 		};
 	}
 
@@ -411,7 +413,7 @@ export module DebugProtocol {
 	}
 
 	/** Disconnect request; value of command field is 'disconnect'.
-		The 'disconnect' request is sent from the client to the debug adapter in order to stop debugging. It asks the debug adapter to disconnect from the debuggee and to terminate the debug adapter. If the debuggee has been started with the 'launch' request, the 'disconnect' request terminates the debuggee. If the 'attach' request was used to connect to the debuggee, 'disconnect' does not terminate the debuggee. This behavior can be controlled with the 'terminateDebuggee' (if supported by the debug adapter).
+		The 'disconnect' request is sent from the client to the debug adapter in order to stop debugging. It asks the debug adapter to disconnect from the debuggee and to terminate the debug adapter. If the debuggee has been started with the 'launch' request, the 'disconnect' request terminates the debuggee. If the 'attach' request was used to connect to the debuggee, 'disconnect' does not terminate the debuggee. This behavior can be controlled with the 'terminateDebuggee' argument (if supported by the debug adapter).
 	*/
 	export interface DisconnectRequest extends Request {
 		// command: 'disconnect';
@@ -1460,7 +1462,7 @@ export module DebugProtocol {
 
 	/** Information about a Breakpoint created in setBreakpoints or setFunctionBreakpoints. */
 	export interface Breakpoint {
-		/** An optional unique identifier for the breakpoint. */
+		/** An optional identifier for the breakpoint. It is needed if breakpoint events are used to update or remove breakpoints. */
 		id?: number;
 		/** If true breakpoint could be set (but not necessarily at the desired location). */
 		verified: boolean;
