@@ -533,6 +533,12 @@ export class DebugSession extends ProtocolServer {
 			} else if (request.command === 'loadedSources') {
 				this.loadedSourcesRequest(<DebugProtocol.LoadedSourcesResponse> response, request.arguments);
 
+			} else if (request.command === 'dataBreakpointInfo') {
+				this.dataBreakpointInfoRequest(<DebugProtocol.DataBreakpointInfoResponse> response, request.arguments);
+
+			} else if (request.command === 'setDataBreakpoints') {
+				this.setDataBreakpointsRequest(<DebugProtocol.SetDataBreakpointsResponse> response, request.arguments);
+
 			} else {
 				this.customRequest(request.command, <DebugProtocol.Response> response, request.arguments);
 			}
@@ -608,6 +614,9 @@ export class DebugSession extends ProtocolServer {
 
 		// This debug adapter does not support the 'terminate' request.
 		response.body.supportsTerminateRequest = false;
+
+		// This debug adapter does not support data breakpoints.
+		response.body.supportsDataBreakpoints = false;
 
 		this.sendResponse(response);
 	}
@@ -738,6 +747,14 @@ export class DebugSession extends ProtocolServer {
 	}
 
 	protected loadedSourcesRequest(response: DebugProtocol.LoadedSourcesResponse, args: DebugProtocol.LoadedSourcesArguments): void {
+		this.sendResponse(response);
+	}
+
+	protected dataBreakpointInfoRequest(response: DebugProtocol.DataBreakpointInfoResponse, args: DebugProtocol.DataBreakpointInfoArguments): void {
+		this.sendResponse(response);
+	}
+
+	protected setDataBreakpointsRequest(response: DebugProtocol.SetDataBreakpointsResponse, args: DebugProtocol.SetDataBreakpointsArguments): void {
 		this.sendResponse(response);
 	}
 
