@@ -85,7 +85,7 @@ export module DebugProtocol {
 		body: {
 			/** The reason for the event.
 				For backward compatibility this string is shown in the UI if the 'description' attribute is missing (but it must not be translated).
-				Values: 'step', 'breakpoint', 'exception', 'pause', 'entry', 'goto', etc.
+				Values: 'step', 'breakpoint', 'exception', 'pause', 'entry', 'goto', 'function breakpoint', etc.
 			*/
 			reason: string;
 			/** The full reason for the event, e.g. 'Paused on exception'. This string is shown in the UI as is and must be translated. */
@@ -489,9 +489,9 @@ export module DebugProtocol {
 	}
 
 	/** SetFunctionBreakpoints request; value of command field is 'setFunctionBreakpoints'.
-		Sets multiple function breakpoints and clears all previous function breakpoints.
-		To clear all function breakpoint, specify an empty array.
-		When a function breakpoint is hit, a 'stopped' event (event type 'function breakpoint') is generated.
+		Replaces all existing function breakpoints with new function breakpoints.
+		To clear all function breakpoints, specify an empty array.
+		When a function breakpoint is hit, a 'stopped' event (with reason 'function breakpoint') is generated.
 	*/
 	export interface SetFunctionBreakpointsRequest extends Request {
 		// command: 'setFunctionBreakpoints';
@@ -814,7 +814,7 @@ export module DebugProtocol {
 	export interface SetVariableArguments {
 		/** The reference of the variable container. */
 		variablesReference: number;
-		/** The name of the variable. */
+		/** The name of the variable in the container. */
 		name: string;
 		/** The value of the variable. */
 		value: string;
