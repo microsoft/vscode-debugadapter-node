@@ -459,8 +459,8 @@
 									]
 								},
 								"pointerLength": {
-									"type": "number",
-									"description": "The size of a pointer or address for this process, in bits."
+									"type": "integer",
+									"description": "The size of a pointer or address for this process, in bits.  This value may be used by clients when formatting addresses for display."
 								}
 							},
 							"required": [ "name" ]
@@ -2363,11 +2363,11 @@
 					"description": "Memory reference to the base location from which data should be read."
 				},
 				"offset": {
-					"type": "number",
+					"type": "integer",
 					"description": "Optional offset (in bytes) to be applied to the reference location before reading data.  Can be negative."
 				},
 				"count": {
-					"type": "number",
+					"type": "integer",
 					"description": "Number of bytes to read at the specified location and offset."
 				}
 			},
@@ -2386,7 +2386,7 @@
 								"description": "The address of the first byte of data returned.  Treated as a hex value if prefixed with '0x', or as a decimal value otherwise."
 							},
 							"unreadableBytes": {
-								"type": "number",
+								"type": "integer",
 								"description": "The number of unreadable bytes encountered after the last successfully read byte.  This can be used to determine the number of bytes that must be skipped before a subsequent 'readMemory' request will succeed."
 							},
 							"data": {
@@ -2425,15 +2425,15 @@
 					"description": "Memory reference to the base location containing the instructions to disassemble."
 				},
 				"offset": {
-					"type": "number",
+					"type": "integer",
 					"description": "Optional offset (in bytes) to be applied to the reference location before disassembling.  Can be negative."
 				},
 				"instructionOffset": {
-					"type": "number",
+					"type": "integer",
 					"description": "Optional offset (in instructions) to be applied after the byte offset (if any) before disassembling.  Can be negative."
 				},
 				"instructionCount": {
-					"type": "number",
+					"type": "integer",
 					"description": "Number of instructions to disassemble starting at the specified location and offset.  An adapter must return exactly this number of instructions - any unavailable instructions should be replaced with an implementation-defined 'invalid instruction' value."
 				},
 				"resolveSymbols": {
@@ -3386,19 +3386,19 @@
 					"description": "Source location that coresponds to this instruction, if any.  Should always be set (if available) on the first instruction returned, but can be omitted afterwards if this instruction maps to the same source file as the previous instruction."
 				},
 				"line": {
-					"type": "number",
+					"type": "integer",
 					"description": "The line within the source location that corresponds to this instruction, if any."
 				},
 				"column": {
-					"type": "number",
+					"type": "integer",
 					"description": "The column within the line that corresponds to this instruction, if any."
 				},
 				"endLine": {
-					"type": "number",
+					"type": "integer",
 					"description": "The end line of the range that corresponds to this instruction, if any."
 				},
 				"endColumn": {
-					"type": "number",
+					"type": "integer",
 					"description": "The end column of the range that corresponds to this instruction, if any."
 				}
 			},
