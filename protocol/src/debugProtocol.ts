@@ -242,6 +242,8 @@ export module DebugProtocol {
 				'attachForSuspendedLaunch': A project launcher component has launched a new process in a suspended state and then asked the debugger to attach.
 			*/
 			startMethod?: 'launch' | 'attach' | 'attachForSuspendedLaunch';
+			/** The size of a pointer or address for this process, in bits. */
+			pointerLength?: number;
 		};
 	}
 
@@ -325,6 +327,8 @@ export module DebugProtocol {
 		supportsVariablePaging?: boolean;
 		/** Client supports the runInTerminal request. */
 		supportsRunInTerminalRequest?: boolean;
+		/** Client supports memory references. */
+		supportsMemoryReferences?: boolean;
 	}
 
 	/** Response to 'initialize' request. */
@@ -1049,6 +1053,8 @@ export module DebugProtocol {
 				The client can use this optional information to present the variables in a paged UI and fetch them in chunks.
 			*/
 			indexedVariables?: number;
+			/** Memory reference to an adapter-determined location appropriate for this result.  For pointer types, this is generally a reference to the memory address contained in the pointer. */
+			memoryReference?: string;
 		};
 	}
 
@@ -1204,6 +1210,66 @@ export module DebugProtocol {
 		};
 	}
 
+	/** ReadMemory request; value of command field is 'readMemory'.
+		Reads bytes from memory at the provided location.
+	*/
+	export interface ReadMemoryRequest extends Request {
+		// command: 'readMemory';
+		arguments: ReadMemoryArguments;
+	}
+
+	/** Arguments for 'readMemory' request. */
+	export interface ReadMemoryArguments {
+		/** Memory reference to the base location from which data should be read. */
+		memoryReference: string;
+		/** Optional offset (in bytes) to be applied to the reference location before reading data.  Can be negative. */
+		offset?: number;
+		/** Number of bytes to read at the specified location and offset. */
+		count: number;
+	}
+
+	/** Response to 'readMemory' request. */
+	export interface ReadMemoryResponse extends Response {
+		body?: {
+			/** The address of the first byte of data returned.  Treated as a hex value if prefixed with '0x', or as a decimal value otherwise. */
+			address: string;
+			/** The number of unreadable bytes encountered after the last successfully read byte.  This can be used to determine the number of bytes that must be skipped before a subsequent 'readMemory' request will succeed. */
+			unreadableBytes?: number;
+			/** The bytes read from memory, encoded using base64. */
+			data?: string;
+		};
+	}
+
+	/** Disassemble request; value of command field is 'disassemble'.
+		Disassembles code stored at the provided location.
+	*/
+	export interface DisassembleRequest extends Request {
+		// command: 'disassemble';
+		arguments: DisassembleArguments;
+	}
+
+	/** Arguments for 'disassemble' request. */
+	export interface DisassembleArguments {
+		/** Memory reference to the base location containing the instructions to disassemble. */
+		memoryReference: string;
+		/** Optional offset (in bytes) to be applied to the reference location before disassembling.  Can be negative. */
+		offset?: number;
+		/** Optional offset (in instructions) to be applied after the byte offset (if any) before disassembling.  Can be negative. */
+		instructionOffset?: number;
+		/** Number of instructions to disassemble starting at the specified location and offset.  An adapter must return exactly this number of instructions - any unavailable instructions should be replaced with an implementation-defined 'invalid instruction' value. */
+		instructionCount: number;
+		/** If true, the adapter should attempt to resolve memory addresses and other values to symbolic names. */
+		resolveSymbols?: boolean;
+	}
+
+	/** Response to 'disassemble' request. */
+	export interface DisassembleResponse extends Response {
+		body?: {
+			/** The list of disassembled instructions. */
+			instructions: DisassembledInstruction[];
+		};
+	}
+
 	/** Information about the capabilities of a debug adapter. */
 	export interface Capabilities {
 		/** The debug adapter supports the 'configurationDone' request. */
@@ -1260,6 +1326,10 @@ export module DebugProtocol {
 		supportsTerminateRequest?: boolean;
 		/** The debug adapter supports data breakpoints. */
 		supportsDataBreakpoints?: boolean;
+		/** The debug adapter supports the 'readMemory' request. */
+		supportsReadMemoryRequest?: boolean;
+		/** The debug adapter supports the 'disassemble' request. */
+		supportsDisassembleRequest?: boolean;
 	}
 
 	/** An ExceptionBreakpointsFilter is shown in the UI as an option for configuring how exceptions are dealt with. */
@@ -1399,6 +1469,8 @@ export module DebugProtocol {
 		moduleId?: number | string;
 		/** An optional hint for how to present this frame in the UI. A value of 'label' can be used to indicate that the frame is an artificial frame that is used as a visual label or separator. A value of 'subtle' can be used to change the appearance of a frame in a 'subtle' way. */
 		presentationHint?: 'normal' | 'label' | 'subtle';
+		/** Memory reference for the current instruction pointer in this frame. */
+		instructionPointerReference?: string;
 	}
 
 	/** A Scope is a named container for variables. Optionally a scope can map to a source or a range within a source. */
@@ -1427,6 +1499,14 @@ export module DebugProtocol {
 		endLine?: number;
 		/** Optional end column of the range covered by this scope. */
 		endColumn?: number;
+		/** Optional hint describing the contents of this scope.
+			Values: 
+			'arguments': Scope contains method arguments.
+			'locals': Scope contains local variables.
+			'registers': Scope contains registers.
+			etc.
+		*/
+		kind?: string;
 	}
 
 	/** A Variable is a name/value pair.
@@ -1457,6 +1537,8 @@ export module DebugProtocol {
 			The client can use this optional information to present the children in a paged UI and fetch them in chunks.
 		*/
 		indexedVariables?: number;
+		/** Memory reference for the variable if the variable represents executable code, such as a function pointer. */
+		memoryReference?: string;
 	}
 
 	/** Optional properties of a variable that can be used to determine how to render the variable in the UI. */
@@ -1578,6 +1660,8 @@ export module DebugProtocol {
 		endLine?: number;
 		/** An optional end column of the range covered by the goto target. */
 		endColumn?: number;
+		/** Memory reference for the instruction pointer value represented by this target. */
+		instructionPointerReference?: string;
 	}
 
 	/** CompletionItems are the suggestions returned from the CompletionsRequest. */
@@ -1674,6 +1758,28 @@ export module DebugProtocol {
 		stackTrace?: string;
 		/** Details of the exception contained by this exception, if any. */
 		innerException?: ExceptionDetails[];
+	}
+
+	/** Represents a single disassembled instruction. */
+	export interface DisassembledInstruction {
+		/** The address of the instruction.  Treated as a hex value if prefixed with '0x', or as a decimal value otherwise. */
+		address: string;
+		/** Raw bytes representing the instruction and its operands, in an implementation-defined format. */
+		instructionBytes?: string;
+		/** Text representing the instruction and its operands, in an implementation-defined format. */
+		instruction: string;
+		/** Name of the symbol that correponds with the location of this instruction, if any. */
+		symbol?: string;
+		/** Source location that coresponds to this instruction, if any.  Should always be set (if available) on the first instruction returned, but can be omitted afterwards if this instruction maps to the same source file as the previous instruction. */
+		location?: Source;
+		/** The line within the source location that corresponds to this instruction, if any. */
+		line?: number;
+		/** The column within the line that corresponds to this instruction, if any. */
+		column?: number;
+		/** The end line of the range that corresponds to this instruction, if any. */
+		endLine?: number;
+		/** The end column of the range that corresponds to this instruction, if any. */
+		endColumn?: number;
 	}
 }
 
