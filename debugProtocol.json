@@ -2911,7 +2911,7 @@
 					"enumDescriptions": [
 						"Scope contains method arguments.",
 						"Scope contains local variables.",
-						"Scope contains registers."
+						"Scope contains registers.  Only a single scope of this kind should be returned."
 					]
 				}
 			},
