@@ -539,6 +539,12 @@ export class DebugSession extends ProtocolServer {
 			} else if (request.command === 'setDataBreakpoints') {
 				this.setDataBreakpointsRequest(<DebugProtocol.SetDataBreakpointsResponse> response, request.arguments);
 
+			} else if (request.command === 'readMemory') {
+				this.readMemoryRequest(<DebugProtocol.ReadMemoryResponse> response, request.arguments);
+
+			} else if (request.command === 'disassemble') {
+				this.disassembleRequest(<DebugProtocol.DisassembleResponse> response, request.arguments);
+
 			} else {
 				this.customRequest(request.command, <DebugProtocol.Response> response, request.arguments);
 			}
@@ -617,6 +623,12 @@ export class DebugSession extends ProtocolServer {
 
 		// This debug adapter does not support data breakpoints.
 		response.body.supportsDataBreakpoints = false;
+
+		/** This debug adapter does not support the 'readMemory' request. */
+		response.body.supportsReadMemoryRequest = false;
+
+		/** The debug adapter does not support the 'disassemble' request. */
+		response.body.supportsDisassembleRequest = false;
 
 		this.sendResponse(response);
 	}
@@ -755,6 +767,14 @@ export class DebugSession extends ProtocolServer {
 	}
 
 	protected setDataBreakpointsRequest(response: DebugProtocol.SetDataBreakpointsResponse, args: DebugProtocol.SetDataBreakpointsArguments): void {
+		this.sendResponse(response);
+	}
+
+	protected readMemoryRequest(response: DebugProtocol.ReadMemoryResponse, args: DebugProtocol.ReadMemoryArguments): void {
+		this.sendResponse(response);
+	}
+
+	protected disassembleRequest(response: DebugProtocol.DisassembleResponse, args: DebugProtocol.DisassembleArguments): void {
 		this.sendResponse(response);
 	}
 
