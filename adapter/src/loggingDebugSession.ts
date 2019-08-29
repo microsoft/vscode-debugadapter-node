@@ -7,7 +7,7 @@ import {DebugProtocol} from 'vscode-debugprotocol';
 
 import * as Logger from './logger';
 const logger = Logger.logger;
-import {DebugSession} from './debugSession';
+import {DebugSession, OutputEvent} from './debugSession';
 
 export class LoggingDebugSession extends DebugSession {
 	public constructor(private obsolete_logFilePath?: string, obsolete_debuggerLinesAndColumnsStartAt1?: boolean, obsolete_isServer?: boolean) {
@@ -29,7 +29,15 @@ export class LoggingDebugSession extends DebugSession {
 	public sendEvent(event: DebugProtocol.Event): void {
 		if (!(event instanceof Logger.LogOutputEvent)) {
 			// Don't create an infinite loop...
-			logger.verbose(`To client: ${JSON.stringify(event)}`);
+
+			let objectToLog = event;
+			if (event instanceof OutputEvent && event.body && event.body.data && event.body.data.doNotLogOutput) {
+				delete event.body.data.doNotLogOutput;
+				objectToLog = { ...event };
+				objectToLog.body = { ...event.body, output: '<output not logged>' }
+			}
+
+			logger.verbose(`To client: ${JSON.stringify(objectToLog)}`);
 		}
 
 		super.sendEvent(event);
