@@ -32,6 +32,7 @@ export class LoggingDebugSession extends DebugSession {
 
 			let objectToLog = event;
 			if (event instanceof OutputEvent && event.body && event.body.data && event.body.data.doNotLogOutput) {
+				delete event.body.data.doNotLogOutput;
 				objectToLog = { ...event };
 				objectToLog.body = { ...event.body, output: '<output not logged>' }
 			}
