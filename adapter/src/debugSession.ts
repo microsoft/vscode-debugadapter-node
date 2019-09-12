@@ -548,6 +548,9 @@ export class DebugSession extends ProtocolServer {
 			} else if (request.command === 'cancel') {
 				this.cancelRequest(<DebugProtocol.CancelResponse> response, request.arguments, request);
 
+			} else if (request.command === 'breakpointLocations') {
+				this.breakpointLocationsRequest(<DebugProtocol.BreakpointLocationsResponse> response, request.arguments, request);
+
 			} else {
 				this.customRequest(request.command, <DebugProtocol.Response> response, request.arguments, request);
 			}
@@ -635,6 +638,9 @@ export class DebugSession extends ProtocolServer {
 
 		/** The debug adapter does not support the 'cancel' request. */
 		response.body.supportsCancelRequest = false;
+
+		/** The debug adapter does not support the 'breakpointLocations' request. */
+		response.body.supportsBreakpointLocationsRequest = false;
 
 		this.sendResponse(response);
 	}
@@ -785,6 +791,10 @@ export class DebugSession extends ProtocolServer {
 	}
 
 	protected cancelRequest(response: DebugProtocol.CancelResponse, args: DebugProtocol.CancelArguments, request?: DebugProtocol.Request): void {
+		this.sendResponse(response);
+	}
+
+	protected breakpointLocationsRequest(response: DebugProtocol.BreakpointLocationsResponse, args: DebugProtocol.BreakpointLocationsArguments, request?: DebugProtocol.Request): void {
 		this.sendResponse(response);
 	}
 
