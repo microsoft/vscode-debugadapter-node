@@ -178,7 +178,7 @@ export class DebugClient extends ProtocolClient {
 	public disconnectRequest(args?: DebugProtocol.DisconnectArguments): Promise<DebugProtocol.DisconnectResponse> {
 		return this.send('disconnect', args);
 	}
-	
+
 	public setBreakpointsRequest(args: DebugProtocol.SetBreakpointsArguments): Promise<DebugProtocol.SetBreakpointsResponse> {
 		return this.send('setBreakpoints', args);
 	}
@@ -189,6 +189,14 @@ export class DebugClient extends ProtocolClient {
 
 	public setExceptionBreakpointsRequest(args: DebugProtocol.SetExceptionBreakpointsArguments): Promise<DebugProtocol.SetExceptionBreakpointsResponse> {
 		return this.send('setExceptionBreakpoints', args);
+	}
+
+	public dataBreakpointInfoRequest(args: DebugProtocol.DataBreakpointInfoArguments): Promise<DebugProtocol.DataBreakpointInfoResponse> {
+		return this.send('dataBreakpointInfo', args);
+	}
+
+	public setDataBreakpointsRequest(args: DebugProtocol.SetDataBreakpointsArguments): Promise<DebugProtocol.SetDataBreakpointsResponse> {
+		return this.send('setDataBreakpoints', args);
 	}
 
 	public continueRequest(args: DebugProtocol.ContinueArguments): Promise<DebugProtocol.ContinueResponse> {
