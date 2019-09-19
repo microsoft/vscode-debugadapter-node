@@ -41,6 +41,8 @@ export class ProtocolClient extends ee.EventEmitter {
 	public send(command: 'setBreakpoints', args: DebugProtocol.SetBreakpointsArguments) : Promise<DebugProtocol.SetBreakpointsResponse>;
 	public send(command: 'setFunctionBreakpoints', args: DebugProtocol.SetFunctionBreakpointsArguments) : Promise<DebugProtocol.SetFunctionBreakpointsResponse>;
 	public send(command: 'setExceptionBreakpoints', args: DebugProtocol.SetExceptionBreakpointsArguments) : Promise<DebugProtocol.SetExceptionBreakpointsResponse>;
+	public send(command: 'dataBreakpointInfo', args: DebugProtocol.DataBreakpointInfoArguments) : Promise<DebugProtocol.DataBreakpointInfoResponse>;
+	public send(command: 'setDataBreakpoints', args: DebugProtocol.SetDataBreakpointsArguments) : Promise<DebugProtocol.SetDataBreakpointsResponse>;
 	public send(command: 'continue', args: DebugProtocol.ContinueArguments) : Promise<DebugProtocol.ContinueResponse>;
 	public send(command: 'next', args: DebugProtocol.NextArguments) : Promise<DebugProtocol.NextResponse>;
 	public send(command: 'stepIn', args: DebugProtocol.StepInArguments) : Promise<DebugProtocol.StepInResponse>;
