@@ -726,7 +726,7 @@ export class DebugSession extends ProtocolServer {
 		this.sendResponse(response);
 	}
 
-	protected terminateThreadsRequest(response: DebugProtocol.TerminateThreadsResponse, args: DebugProtocol.TerminateThreadsRequest, request?: DebugProtocol.Request): void {
+	protected terminateThreadsRequest(response: DebugProtocol.TerminateThreadsResponse, args: DebugProtocol.TerminateThreadsArguments, request?: DebugProtocol.Request): void {
 		this.sendResponse(response);
 	}
 
