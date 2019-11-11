@@ -296,13 +296,15 @@ export class DebugClient extends ProtocolClient {
 	public waitForEvent(eventType: string, timeout?: number): Promise<DebugProtocol.Event> {
 
 		timeout = timeout || this.defaultTimeout;
+		let timeoutHandler: any;
 
 		return new Promise((resolve, reject) => {
 			this.once(eventType, event => {
+				clearTimeout(timeoutHandler);
 				resolve(event);
 			});
 			if (!this._socket) {	// no timeouts if debugging the tests
-				setTimeout(() => {
+				timeoutHandler = setTimeout(() => {
 					reject(new Error(`no event '${eventType}' received after ${timeout} ms`));
 				}, timeout);
 			}
@@ -393,11 +395,13 @@ export class DebugClient extends ProtocolClient {
 
 		return new Promise((resolve, reject) => {
 			let output = '';
+			let timeoutHandler: any;
 			this.on('output', event => {
 				const e = <DebugProtocol.OutputEvent> event;
 				if (e.body.category === category) {
 					output += e.body.output;
 					if (output.indexOf(expected) === 0) {
+						clearTimeout(timeoutHandler);
 						resolve(event);
 					} else if (expected.indexOf(output) !== 0) {
 						const sanitize = (s: string) => s.toString().replace(/\r/mg, '\\r').replace(/\n/mg, '\\n');
@@ -406,7 +410,7 @@ export class DebugClient extends ProtocolClient {
 				}
 			});
 			if (!this._socket) {	// no timeouts if debugging the tests
-				setTimeout(() => {
+				timeoutHandler = setTimeout(() => {
 					reject(new Error(`not enough output data received after ${timeout} ms`));
 				}, timeout);
 			}
