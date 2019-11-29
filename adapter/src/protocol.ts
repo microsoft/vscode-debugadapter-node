@@ -7,8 +7,75 @@ import * as ee from 'events';
 import { DebugProtocol } from 'vscode-debugprotocol';
 import { Response, Event } from './messages';
 
+interface DebugProtocolMessage {
+}
 
-export class ProtocolServer extends ee.EventEmitter {
+interface IDisposable {
+	dispose(): void;
+}
+
+class Disposable0 implements IDisposable {
+	dispose(): any {
+	}
+}
+
+interface Event0<T> {
+	(listener: (e: T) => any, thisArg?: any): Disposable0;
+}
+
+class Emitter<T> {
+
+	private _event?: Event0<T>;
+	private _listener?: (e: T) => void;
+	private _this?: any;
+
+	get event(): Event0<T> {
+		if (!this._event) {
+			this._event = (listener: (e: T) => any, thisArg?: any) => {
+
+				this._listener = listener;
+				this._this = thisArg;
+
+				let result: IDisposable;
+				result = {
+					dispose: () => {
+						this._listener = undefined;
+						this._this = undefined;
+					}
+				};
+				return result;
+			};
+		}
+		return this._event;
+	}
+
+	fire(event: T): void {
+		if (this._listener) {
+			try {
+				this._listener.call(this._this, event);
+			} catch (e) {
+			}
+		}
+	}
+
+	dispose() {
+		this._listener = undefined;
+		this._this = undefined;
+	}
+}
+
+/**
+ * A structurally equivalent copy of vscode.DebugAdapter
+ */
+interface VSCodeDebugAdapter {
+
+	readonly onSendMessage: Event0<DebugProtocolMessage>;
+	readonly onError: Event0<Error>;
+
+	handleMessage(message: DebugProtocol.ProtocolMessage): void;
+}
+
+export class ProtocolServer extends ee.EventEmitter implements VSCodeDebugAdapter {
 
 	private static TWO_CRLF = '\r\n\r\n';
 
@@ -21,6 +88,30 @@ export class ProtocolServer extends ee.EventEmitter {
 	constructor() {
 		super();
 	}
+
+	private sendMessage = new Emitter<DebugProtocolMessage>();
+	private error = new Emitter<Error>();
+
+	// ---- implements vscode.Debugadapter interface ---------------------------
+
+	public onSendMessage: Event0<DebugProtocolMessage> = this.sendMessage.event;
+
+	public onError: Event0<Error> = this.error.event;
+
+	public handleMessage(msg: DebugProtocol.ProtocolMessage): void {
+		if (msg.type === 'request') {
+			this.dispatchRequest(<DebugProtocol.Request>msg);
+		} else if (msg.type === 'response') {
+			const response = <DebugProtocol.Response>msg;
+			const clb = this._pendingRequests.get(response.request_seq);
+			if (clb) {
+				this._pendingRequests.delete(response.request_seq);
+				clb(response);
+			}
+		}
+	}
+
+	//--------------------------------------------------------------------------
 
 	public start(inStream: NodeJS.ReadableStream, outStream: NodeJS.WritableStream): void {
 		this._sequence = 1;
@@ -111,6 +202,7 @@ export class ProtocolServer extends ee.EventEmitter {
 			const json = JSON.stringify(message);
 			this._writableStream.write(`Content-Length: ${Buffer.byteLength(json, 'utf8')}\r\n\r\n${json}`, 'utf8');
 		}
+		this.sendMessage.fire(message);
 	}
 
 	private _handleData(data: Buffer): void {
@@ -126,16 +218,7 @@ export class ProtocolServer extends ee.EventEmitter {
 					if (message.length > 0) {
 						try {
 							let msg: DebugProtocol.ProtocolMessage = JSON.parse(message);
-							if (msg.type === 'request') {
-								this.dispatchRequest(<DebugProtocol.Request> msg);
-							} else if (msg.type === 'response') {
-								const response = <DebugProtocol.Response> msg;
-								const clb = this._pendingRequests.get(response.request_seq);
-								if (clb) {
-									this._pendingRequests.delete(response.request_seq);
-									clb(response);
-								}
-							}
+							this.handleMessage(msg);
 						}
 						catch (e) {
 							this._emitEvent(new Event('error', 'Error handling data: ' + (e && e.message)));
