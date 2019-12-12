@@ -58,6 +58,10 @@ class Emitter<T> {
 		}
 	}
 
+	hasListener() : boolean {
+		return !!this._listener;
+	}
+
 	dispose() {
 		this._listener = undefined;
 		this._this = undefined;
@@ -78,7 +82,7 @@ export class ProtocolServer extends ee.EventEmitter implements VSCodeDebugAdapte
 
 	private static TWO_CRLF = '\r\n\r\n';
 
-	private sendMessage = new Emitter<DebugProtocolMessage>();
+	private _sendMessage = new Emitter<DebugProtocolMessage>();
 
 	private _rawData: Buffer;
 	private _contentLength: number;
@@ -95,7 +99,7 @@ export class ProtocolServer extends ee.EventEmitter implements VSCodeDebugAdapte
 	public dispose(): any {
 	}
 
-	public onDidSendMessage: Event0<DebugProtocolMessage> = this.sendMessage.event;
+	public onDidSendMessage: Event0<DebugProtocolMessage> = this._sendMessage.event;
 
 	public handleMessage(msg: DebugProtocol.ProtocolMessage): void {
 		if (msg.type === 'request') {
@@ -108,6 +112,10 @@ export class ProtocolServer extends ee.EventEmitter implements VSCodeDebugAdapte
 				clb(response);
 			}
 		}
+	}
+
+	protected _isRunningInline() {
+		return this._sendMessage && this._sendMessage.hasListener();
 	}
 
 	//--------------------------------------------------------------------------
@@ -201,7 +209,7 @@ export class ProtocolServer extends ee.EventEmitter implements VSCodeDebugAdapte
 			const json = JSON.stringify(message);
 			this._writableStream.write(`Content-Length: ${Buffer.byteLength(json, 'utf8')}\r\n\r\n${json}`, 'utf8');
 		}
-		this.sendMessage.fire(message);
+		this._sendMessage.fire(message);
 	}
 
 	private _handleData(data: Buffer): void {
