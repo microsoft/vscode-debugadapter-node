@@ -67,10 +67,9 @@ class Emitter<T> {
 /**
  * A structurally equivalent copy of vscode.DebugAdapter
  */
-interface VSCodeDebugAdapter {
+interface VSCodeDebugAdapter extends Disposable0 {
 
-	readonly onSendMessage: Event0<DebugProtocolMessage>;
-	readonly onError: Event0<Error>;
+	readonly onDidSendMessage: Event0<DebugProtocolMessage>;
 
 	handleMessage(message: DebugProtocol.ProtocolMessage): void;
 }
@@ -78,6 +77,8 @@ interface VSCodeDebugAdapter {
 export class ProtocolServer extends ee.EventEmitter implements VSCodeDebugAdapter {
 
 	private static TWO_CRLF = '\r\n\r\n';
+
+	private sendMessage = new Emitter<DebugProtocolMessage>();
 
 	private _rawData: Buffer;
 	private _contentLength: number;
@@ -89,14 +90,12 @@ export class ProtocolServer extends ee.EventEmitter implements VSCodeDebugAdapte
 		super();
 	}
 
-	private sendMessage = new Emitter<DebugProtocolMessage>();
-	private error = new Emitter<Error>();
-
 	// ---- implements vscode.Debugadapter interface ---------------------------
 
-	public onSendMessage: Event0<DebugProtocolMessage> = this.sendMessage.event;
+	public dispose(): any {
+	}
 
-	public onError: Event0<Error> = this.error.event;
+	public onDidSendMessage: Event0<DebugProtocolMessage> = this.sendMessage.event;
 
 	public handleMessage(msg: DebugProtocol.ProtocolMessage): void {
 		if (msg.type === 'request') {
