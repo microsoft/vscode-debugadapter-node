@@ -97,22 +97,26 @@ export class DebugClient extends ProtocolClient {
 				this._adapterProcess = cp.spawn(this._runtime, [ this._executable ], this._spawnOptions);
 				const sanitize = (s: string) => s.toString().replace(/\r?\n$/mg, '');
 				this._adapterProcess.stderr.on('data', (data: string) => {
+					this.log(`adapter - incoming data on stderr`);
 					if (this._enableStderr) {
-						console.log(sanitize(data));
+						console.log(`adapter stderr: ${sanitize(data)}`);
 					}
 				});
 
 				this._adapterProcess.on('error', (err) => {
-					console.log(err);
+					this.log(`adapter - error: ${err}`);
 					reject(err);
 				});
+
 				this._adapterProcess.on('exit', (code: number, signal: string) => {
+					this.log(`adapter - exit (code ${code}, signal ${signal})`);
 					if (code) {
 						// done(new Error('debug adapter exit code: ' + code));
 					}
 				});
 
 				this.connect(this._adapterProcess.stdout, this._adapterProcess.stdin);
+				this.log(`spawned debug adapter process successfully - runtime:${this._runtime}, executable:${this._executable}`);
 				resolve();
 			}
 		});

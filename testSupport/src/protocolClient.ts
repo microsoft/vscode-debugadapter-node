@@ -16,6 +16,7 @@ export class ProtocolClient extends ee.EventEmitter {
 	private pendingRequests = new Map<number, (e: DebugProtocol.Response) => void>();
 	private rawData = new Buffer(0);
 	private contentLength: number;
+	protected verboseOutput = false;
 
 	constructor() {
 		super();
@@ -30,6 +31,16 @@ export class ProtocolClient extends ee.EventEmitter {
 		readable.on('data', (data: Buffer) => {
 			this.handleData(data);
 		});
+	}
+
+	protected log(msg: string) {
+		if (this.verboseOutput) {
+			console.log(msg);
+		}
+	}
+
+	public setVerboseLog(value: boolean) {
+		this.verboseOutput = value;
 	}
 
 	public send(command: 'initialize', args: DebugProtocol.InitializeRequestArguments) : Promise<DebugProtocol.InitializeResponse>;
@@ -69,10 +80,13 @@ export class ProtocolClient extends ee.EventEmitter {
 	public send(command: string, args?: any): Promise<DebugProtocol.Response> {
 
 		return new Promise((completeDispatch, errorDispatch) => {
+			this.log(`send call on '${command}' command`)
 			this.doSend(command, args, (result: DebugProtocol.Response) => {
 				if (result.success) {
+					this.log(`send '${command}' call success`);
 					completeDispatch(result);
 				} else {
+					this.log(`send '${command}' call error: ${result.message}`)
 					errorDispatch(new Error(result.message));
 				}
 			});
@@ -94,6 +108,7 @@ export class ProtocolClient extends ee.EventEmitter {
 		this.pendingRequests.set(request.seq, clb);
 
 		const json = JSON.stringify(request);
+		this.log(`doSend: begin write on stream - events:${JSON.stringify(this.outputStream.eventNames())}, listeners:${JSON.stringify(this.outputStream.listeners)}'`);
 		this.outputStream.write(`Content-Length: ${Buffer.byteLength(json, 'utf8')}\r\n\r\n${json}`, 'utf8');
 	}
 
