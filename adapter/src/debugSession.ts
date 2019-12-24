@@ -369,7 +369,7 @@ export class DebugSession extends ProtocolServer {
 	}
 
 	public shutdown(): void {
-		if (this._isServer) {
+		if (this._isServer || this._isRunningInline()) {
 			// shutdown ignored in server mode
 		} else {
 			// wait a bit before shutting down
