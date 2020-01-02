@@ -14,11 +14,9 @@
 	"main": "./lib/main.js",
 	"typings": "./lib/main",
 	"dependencies": {
-		"mkdirp": "^0.5.1",
 		"vscode-debugprotocol": "1.37.0"
 	},
 	"devDependencies": {
-		"@types/mkdirp": "^0.5.2",
 		"@types/node": "8.9.3",
 		"@types/mocha": "5.2.5",
 		"mocha": "5.2.0",
