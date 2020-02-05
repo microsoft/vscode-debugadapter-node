@@ -100,7 +100,7 @@ export module DebugProtocol {
 		The sequence of events/requests is as follows:
 		- adapters sends 'initialized' event (after the 'initialize' request has returned)
 		- frontend sends zero or more 'setBreakpoints' requests
-		- frontend sends one 'setFunctionBreakpoints' request
+		- frontend sends one 'setFunctionBreakpoints' request (if capability 'supportsFunctionBreakpoints' is true)
 		- frontend sends a 'setExceptionBreakpoints' request if one or more 'exceptionBreakpointFilters' have been defined (or if 'supportsConfigurationDoneRequest' is not defined or false)
 		- frontend sends other future configuration requests
 		- frontend sends one 'configurationDone' request to indicate the end of the configuration.
