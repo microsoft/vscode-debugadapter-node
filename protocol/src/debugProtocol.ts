@@ -203,6 +203,15 @@ export module DebugProtocol {
 			category?: string;
 			/** The output to report. */
 			output: string;
+			/** Support for keeping an output log organized by grouping related messages.
+				'start': Start a new group in expanded mode. Subsequent output events are members of the group and should be shown indented.
+				The 'output' attribute becomes the name of the group and is not indented.
+				'startCollapsed': Start a new group in collapsed mode. Subsequent output events are members of the group and should be shown indented (as soon as the group is expanded).
+				The 'output' attribute becomes the name of the group and is not indented.
+				'end': End the current group and decreases the indentation of subsequent output events.
+				A non empty 'output' attribute is shown as the unindented end of the group.
+			*/
+			group?: 'start' | 'startCollapsed' | 'end';
 			/** If an attribute 'variablesReference' exists and its value is > 0, the output contains objects which can be retrieved by passing 'variablesReference' to the 'variables' request. The value should be less than or equal to 2147483647 (2^31 - 1). */
 			variablesReference?: number;
 			/** An optional source location where the output was produced. */
@@ -1765,6 +1774,16 @@ export module DebugProtocol {
 			If missing the value 0 is assumed which results in the completion text being inserted.
 		*/
 		length?: number;
+		/** Determines the start of the new selection after the text has been inserted (or replaced).
+			The start position must in the range 0 and length of the completion text.
+			If omitted the selection starts at the end of the completion text.
+		*/
+		selectionStart?: number;
+		/** Determines the length of the new selection after the text has been inserted (or replaced).
+			The selection can not extend beyond the bounds of the completion text.
+			If omitted the length is assumed to be 0.
+		*/
+		selectionLength?: number;
 	}
 
 	/** Some predefined types for the CompletionItem. Please note that not all clients have specific icons for all of them. */
