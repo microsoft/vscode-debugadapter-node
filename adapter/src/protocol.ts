@@ -168,11 +168,6 @@ export class ProtocolServer extends ee.EventEmitter implements VSCodeDebugAdapte
 			request.arguments = args;
 		}
 
-		if (!this._writableStream) {
-			this._emitEvent(new Event('error', 'sendRequest: No writableStream'));
-			return;
-		}
-
 		this._send('request', request);
 
 		if (cb) {
