@@ -274,6 +274,56 @@ export class CapabilitiesEvent extends Event implements DebugProtocol.Capabiliti
 	}
 }
 
+export class ProgressStartEvent extends Event implements DebugProtocol.ProgressStartEvent {
+	body: {
+		progressId: string,
+		title: string
+	};
+
+	public constructor(progressId: string, title: string, message?: string) {
+		super('progressStart');
+		this.body = {
+			progressId: progressId,
+			title: title
+		};
+		if (typeof message === 'string') {
+			(this as DebugProtocol.ProgressStartEvent).body.message = message;
+		}
+	}
+}
+
+export class ProgressUpdateEvent extends Event implements DebugProtocol.ProgressUpdateEvent {
+	body: {
+		progressId: string
+	};
+
+	public constructor(progressId: string, message?: string) {
+		super('progressUpdate');
+		this.body = {
+			progressId: progressId
+		};
+		if (typeof message === 'string') {
+			(this as DebugProtocol.ProgressUpdateEvent).body.message = message;
+		}
+	}
+}
+
+export class ProgressEndEvent extends Event implements DebugProtocol.ProgressEndEvent {
+	body: {
+		progressId: string
+	};
+
+	public constructor(progressId: string, message?: string) {
+		super('progressEnd');
+		this.body = {
+			progressId: progressId
+		};
+		if (typeof message === 'string') {
+			(this as DebugProtocol.ProgressEndEvent).body.message = message;
+		}
+	}
+}
+
 export enum ErrorDestination {
 	User = 1,
 	Telemetry = 2
@@ -641,6 +691,9 @@ export class DebugSession extends ProtocolServer {
 
 		/** The debug adapter does not support the 'breakpointLocations' request. */
 		response.body.supportsBreakpointLocationsRequest = false;
+
+		/** The debug adapter does not support the 'clipboard' context value in the 'evaluate' request. */
+		response.body.supportsClipboardContext = false;
 
 		this.sendResponse(response);
 	}
