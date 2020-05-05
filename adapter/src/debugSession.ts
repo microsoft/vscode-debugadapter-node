@@ -5,7 +5,7 @@
 
 import {DebugProtocol} from 'vscode-debugprotocol';
 import {ProtocolServer} from './protocol';
-import {Response, Event} from './messages';
+import {ContinueResponse, Response, Event, SetBreakpointsResponse, SetFunctionBreakpointsResponse, StackTraceResponse, ScopesResponse, VariablesResponse, SetVariableResponse, SetExpressionResponse, ThreadsResponse, SourceResponse, EvaluateResponse, StepInTargetsResponse, GotoTargetsResponse, CompletionsResponse, ExceptionInfoResponse, LoadedSourcesResponse, DataBreakpointInfoResponse, SetDataBreakpointsResponse, BreakpointLocationsResponse} from './messages';
 import * as Net from 'net';
 import {URL} from 'url';
 
@@ -466,8 +466,6 @@ export class DebugSession extends ProtocolServer {
 
 	protected dispatchRequest(request: DebugProtocol.Request): void {
 
-		const response = new Response(request);
-
 		try {
 			if (request.command === 'initialize') {
 				var args = <DebugProtocol.InitializeRequestArguments> request.arguments;
@@ -479,132 +477,173 @@ export class DebugSession extends ProtocolServer {
 					this._clientColumnsStartAt1 = args.columnsStartAt1;
 				}
 
+				const response = new Response(request);
 				if (args.pathFormat !== 'path') {
 					this.sendErrorResponse(response, 2018, 'debug adapter only supports native paths', null, ErrorDestination.Telemetry);
 				} else {
-					const initializeResponse = <DebugProtocol.InitializeResponse> response;
+					const initializeResponse: DebugProtocol.InitializeResponse = response;
 					initializeResponse.body = {};
 					this.initializeRequest(initializeResponse, args);
 				}
 
 			} else if (request.command === 'launch') {
-				this.launchRequest(<DebugProtocol.LaunchResponse> response, request.arguments, request);
+				const response = new Response(request);
+				this.launchRequest(response, request.arguments, request);
 
 			} else if (request.command === 'attach') {
-				this.attachRequest(<DebugProtocol.AttachResponse> response, request.arguments, request);
+				const response = new Response(request);
+				this.attachRequest(response, request.arguments, request);
 
 			} else if (request.command === 'disconnect') {
-				this.disconnectRequest(<DebugProtocol.DisconnectResponse> response, request.arguments, request);
+				const response = new Response(request);
+				this.disconnectRequest(response, request.arguments, request);
 
 			} else if (request.command === 'terminate') {
-				this.terminateRequest(<DebugProtocol.TerminateResponse> response, request.arguments, request);
+				const response = new Response(request);
+				this.terminateRequest(response, request.arguments, request);
 
 			} else if (request.command === 'restart') {
-				this.restartRequest(<DebugProtocol.RestartResponse> response, request.arguments, request);
+				const response = new Response(request);
+				this.restartRequest(response, request.arguments, request);
 
 			} else if (request.command === 'setBreakpoints') {
-				this.setBreakPointsRequest(<DebugProtocol.SetBreakpointsResponse> response, request.arguments, request);
+				const response = new SetBreakpointsResponse(request);
+				this.setBreakPointsRequest(response, request.arguments, request);
 
 			} else if (request.command === 'setFunctionBreakpoints') {
-				this.setFunctionBreakPointsRequest(<DebugProtocol.SetFunctionBreakpointsResponse> response, request.arguments, request);
+				const response = new SetFunctionBreakpointsResponse(request);
+				this.setFunctionBreakPointsRequest(response, request.arguments, request);
 
 			} else if (request.command === 'setExceptionBreakpoints') {
-				this.setExceptionBreakPointsRequest(<DebugProtocol.SetExceptionBreakpointsResponse> response, request.arguments, request);
+				const response = new Response(request);
+				this.setExceptionBreakPointsRequest(response, request.arguments, request);
 
 			} else if (request.command === 'configurationDone') {
-				this.configurationDoneRequest(<DebugProtocol.ConfigurationDoneResponse> response, request.arguments, request);
+				const response = new Response(request);
+				this.configurationDoneRequest(response, request.arguments, request);
 
 			} else if (request.command === 'continue') {
-				this.continueRequest(<DebugProtocol.ContinueResponse> response, request.arguments, request);
+				const response = new ContinueResponse(request);
+				this.continueRequest(response, request.arguments, request);
 
 			} else if (request.command === 'next') {
-				this.nextRequest(<DebugProtocol.NextResponse> response, request.arguments, request);
+				const response = new Response(request);
+				this.nextRequest(response, request.arguments, request);
 
 			} else if (request.command === 'stepIn') {
-				this.stepInRequest(<DebugProtocol.StepInResponse> response, request.arguments, request);
+				const response = new Response(request);
+				this.stepInRequest(response, request.arguments, request);
 
 			} else if (request.command === 'stepOut') {
-				this.stepOutRequest(<DebugProtocol.StepOutResponse> response, request.arguments, request);
+				const response = new Response(request);
+				this.stepOutRequest(response, request.arguments, request);
 
 			} else if (request.command === 'stepBack') {
-				this.stepBackRequest(<DebugProtocol.StepBackResponse> response, request.arguments, request);
+				const response = new Response(request);
+				this.stepBackRequest(response, request.arguments, request);
 
 			} else if (request.command === 'reverseContinue') {
-				this.reverseContinueRequest(<DebugProtocol.ReverseContinueResponse> response, request.arguments, request);
+				const response = new Response(request);
+				this.reverseContinueRequest(response, request.arguments, request);
 
 			} else if (request.command === 'restartFrame') {
-				this.restartFrameRequest(<DebugProtocol.RestartFrameResponse> response, request.arguments, request);
+				const response = new Response(request);
+				this.restartFrameRequest(response, request.arguments, request);
 
 			} else if (request.command === 'goto') {
-				this.gotoRequest(<DebugProtocol.GotoResponse> response, request.arguments, request);
+				const response = new Response(request);
+				this.gotoRequest(response, request.arguments, request);
 
 			} else if (request.command === 'pause') {
-				this.pauseRequest(<DebugProtocol.PauseResponse> response, request.arguments, request);
+				const response = new Response(request);
+				this.pauseRequest(response, request.arguments, request);
 
 			} else if (request.command === 'stackTrace') {
-				this.stackTraceRequest(<DebugProtocol.StackTraceResponse> response, request.arguments, request);
+				const response = new StackTraceResponse(request);
+				this.stackTraceRequest(response, request.arguments, request);
 
 			} else if (request.command === 'scopes') {
-				this.scopesRequest(<DebugProtocol.ScopesResponse> response, request.arguments, request);
+				const response = new ScopesResponse(request);
+				this.scopesRequest(response, request.arguments, request);
 
 			} else if (request.command === 'variables') {
-				this.variablesRequest(<DebugProtocol.VariablesResponse> response, request.arguments, request);
+				const response = new VariablesResponse(request);
+				this.variablesRequest(response, request.arguments, request);
 
 			} else if (request.command === 'setVariable') {
-				this.setVariableRequest(<DebugProtocol.SetVariableResponse> response, request.arguments, request);
+				const response = new SetVariableResponse(request);
+				this.setVariableRequest(response, request.arguments, request);
 
 			} else if (request.command === 'setExpression') {
-				this.setExpressionRequest(<DebugProtocol.SetExpressionResponse> response, request.arguments, request);
+				const response = new SetExpressionResponse(request);
+				this.setExpressionRequest(response, request.arguments, request);
 
 			} else if (request.command === 'source') {
-				this.sourceRequest(<DebugProtocol.SourceResponse> response, request.arguments, request);
+				const response = new SourceResponse(request);
+				this.sourceRequest(response, request.arguments, request);
 
 			} else if (request.command === 'threads') {
-				this.threadsRequest(<DebugProtocol.ThreadsResponse> response, request);
+				const response = new ThreadsResponse(request);
+				this.threadsRequest(response, request);
 
 			} else if (request.command === 'terminateThreads') {
-				this.terminateThreadsRequest(<DebugProtocol.TerminateThreadsResponse> response, request.arguments, request);
+				const response = new Response(request);
+				this.terminateThreadsRequest(response, request.arguments, request);
 
 			} else if (request.command === 'evaluate') {
-				this.evaluateRequest(<DebugProtocol.EvaluateResponse> response, request.arguments, request);
+				const response = new EvaluateResponse(request);
+				this.evaluateRequest(response, request.arguments, request);
 
 			} else if (request.command === 'stepInTargets') {
-				this.stepInTargetsRequest(<DebugProtocol.StepInTargetsResponse> response, request.arguments, request);
+				const response = new StepInTargetsResponse(request);
+				this.stepInTargetsRequest(response, request.arguments, request);
 
 			} else if (request.command === 'gotoTargets') {
-				this.gotoTargetsRequest(<DebugProtocol.GotoTargetsResponse> response, request.arguments, request);
+				const response = new GotoTargetsResponse(request);
+				this.gotoTargetsRequest(response, request.arguments, request);
 
 			} else if (request.command === 'completions') {
-				this.completionsRequest(<DebugProtocol.CompletionsResponse> response, request.arguments, request);
+				const response = new CompletionsResponse(request);
+				this.completionsRequest(response, request.arguments, request);
 
 			} else if (request.command === 'exceptionInfo') {
-				this.exceptionInfoRequest(<DebugProtocol.ExceptionInfoResponse> response, request.arguments, request);
+				const response = new ExceptionInfoResponse(request);
+				this.exceptionInfoRequest(response, request.arguments, request);
 
 			} else if (request.command === 'loadedSources') {
-				this.loadedSourcesRequest(<DebugProtocol.LoadedSourcesResponse> response, request.arguments, request);
+				const response = new LoadedSourcesResponse(request);
+				this.loadedSourcesRequest(response, request.arguments, request);
 
 			} else if (request.command === 'dataBreakpointInfo') {
-				this.dataBreakpointInfoRequest(<DebugProtocol.DataBreakpointInfoResponse> response, request.arguments, request);
+				const response = new DataBreakpointInfoResponse(request);
+				this.dataBreakpointInfoRequest(response, request.arguments, request);
 
 			} else if (request.command === 'setDataBreakpoints') {
-				this.setDataBreakpointsRequest(<DebugProtocol.SetDataBreakpointsResponse> response, request.arguments, request);
+				const response = new SetDataBreakpointsResponse(request);
+				this.setDataBreakpointsRequest(response, request.arguments, request);
 
 			} else if (request.command === 'readMemory') {
-				this.readMemoryRequest(<DebugProtocol.ReadMemoryResponse> response, request.arguments, request);
+				const response = new Response(request);
+				this.readMemoryRequest(response, request.arguments, request);
 
 			} else if (request.command === 'disassemble') {
-				this.disassembleRequest(<DebugProtocol.DisassembleResponse> response, request.arguments, request);
+				const response = new Response(request);
+				this.disassembleRequest(response, request.arguments, request);
 
 			} else if (request.command === 'cancel') {
-				this.cancelRequest(<DebugProtocol.CancelResponse> response, request.arguments, request);
+				const response = new Response(request);
+				this.cancelRequest(response, request.arguments, request);
 
 			} else if (request.command === 'breakpointLocations') {
-				this.breakpointLocationsRequest(<DebugProtocol.BreakpointLocationsResponse> response, request.arguments, request);
+				const response = new BreakpointLocationsResponse(request);
+				this.breakpointLocationsRequest(response, request.arguments, request);
 
 			} else {
-				this.customRequest(request.command, <DebugProtocol.Response> response, request.arguments, request);
+				const response = new Response(request);
+				this.customRequest(request.command, response, request.arguments, request);
 			}
 		} catch (e) {
+			const response = new Response(request);
 			this.sendErrorResponse(response, 1104, '{_stack}', { _exception: e.message, _stack: e.stack }, ErrorDestination.Telemetry);
 		}
 	}
