@@ -601,6 +601,9 @@ export class DebugSession extends ProtocolServer {
 			} else if (request.command === 'breakpointLocations') {
 				this.breakpointLocationsRequest(<DebugProtocol.BreakpointLocationsResponse> response, request.arguments, request);
 
+			} else if (request.command === 'setInstructionBreakpoints') {
+				this.setInstructionBreakpointsRequest(<DebugProtocol.SetInstructionBreakpointsResponse> response, request.arguments, request);
+
 			} else {
 				this.customRequest(request.command, <DebugProtocol.Response> response, request.arguments, request);
 			}
@@ -694,6 +697,12 @@ export class DebugSession extends ProtocolServer {
 
 		/** The debug adapter does not support the 'clipboard' context value in the 'evaluate' request. */
 		response.body.supportsClipboardContext = false;
+
+		/** The debug adapter does not support stepping granularities for the stepping requests. */
+		response.body.supportsSteppingGranularity = false;
+
+		/** The debug adapter does not support the 'setInstructionBreakpoints' request. */
+		response.body.supportsInstructionBreakpoints = false;
 
 		this.sendResponse(response);
 	}
@@ -848,6 +857,10 @@ export class DebugSession extends ProtocolServer {
 	}
 
 	protected breakpointLocationsRequest(response: DebugProtocol.BreakpointLocationsResponse, args: DebugProtocol.BreakpointLocationsArguments, request?: DebugProtocol.Request): void {
+		this.sendResponse(response);
+	}
+
+	protected setInstructionBreakpointsRequest(response: DebugProtocol.SetInstructionBreakpointsResponse, args: DebugProtocol.SetInstructionBreakpointsArguments, request?: DebugProtocol.Request): void {
 		this.sendResponse(response);
 	}
 
