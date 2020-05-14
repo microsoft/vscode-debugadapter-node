@@ -128,7 +128,7 @@ export module DebugProtocol {
 		body: {
 			/** The reason for the event.
 				For backward compatibility this string is shown in the UI if the 'description' attribute is missing (but it must not be translated).
-				Values: 'step', 'breakpoint', 'exception', 'pause', 'entry', 'goto', 'function breakpoint', 'data breakpoint', etc.
+				Values: 'step', 'breakpoint', 'exception', 'pause', 'entry', 'goto', 'function breakpoint', 'data breakpoint', 'instruction breakpoint', etc.
 			*/
 			reason: string;
 			/** The full reason for the event, e.g. 'Paused on exception'. This string is shown in the UI as is and must be translated. */
@@ -762,6 +762,31 @@ export module DebugProtocol {
 	export interface SetDataBreakpointsResponse extends Response {
 		body: {
 			/** Information about the data breakpoints. The array elements correspond to the elements of the input argument 'breakpoints' array. */
+			breakpoints: Breakpoint[];
+		};
+	}
+
+	/** SetInstructionBreakpoints request; value of command field is 'setInstructionBreakpoints'.
+		Replaces all existing instruction breakpoints. Typically, instruction breakpoints would be set from a diassembly window. 
+		To clear all instruction breakpoints, specify an empty array.
+		When an instruction breakpoint is hit, a 'stopped' event (with reason 'instruction breakpoint') is generated.
+		Clients should only call this request if the capability 'supportsInstructionBreakpoints' is true.
+	*/
+	export interface SetInstructionBreakpointsRequest extends Request {
+		// command: 'setInstructionBreakpoints';
+		arguments: SetInstructionBreakpointsArguments;
+	}
+
+	/** Arguments for 'setInstructionBreakpoints' request */
+	export interface SetInstructionBreakpointsArguments {
+		/** The instruction references of the breakpoints */
+		breakpoints: InstructionBreakpoint[];
+	}
+
+	/** Response to 'setInstructionBreakpoints' request */
+	export interface SetInstructionBreakpointsResponse extends Response {
+		body: {
+			/** Information about the breakpoints. The array elements correspond to the elements of the 'breakpoints' array. */
 			breakpoints: Breakpoint[];
 		};
 	}
@@ -1571,6 +1596,8 @@ export module DebugProtocol {
 		supportsClipboardContext?: boolean;
 		/** The debug adapter supports stepping granularities (argument 'granularity') for the stepping requests. */
 		supportsSteppingGranularity?: boolean;
+		/** The debug adapter supports adding breakpoints based on instruction references. */
+		supportsInstructionBreakpoints?: boolean;
 	}
 
 	/** An ExceptionBreakpointsFilter is shown in the UI as an option for configuring how exceptions are dealt with. */
@@ -1907,7 +1934,28 @@ export module DebugProtocol {
 		hitCondition?: string;
 	}
 
-	/** Information about a Breakpoint created in setBreakpoints or setFunctionBreakpoints. */
+	/** Properties of a breakpoint passed to the setInstructionBreakpoints request */
+	export interface InstructionBreakpoint {
+		/** The instruction reference of the breakpoint.
+			This should be a memory or instruction pointer reference from an EvaluateResponse, Variable, StackFrame, GotoTarget, or Breakpoint.
+		*/
+		instructionReference: string;
+		/** An optional offset from the instruction reference.
+			This can be negative.
+		*/
+		offset?: number;
+		/** An optional expression for conditional breakpoints.
+			It is only honored by a debug adapter if the capability 'supportsConditionalBreakpoints' is true.
+		*/
+		condition?: string;
+		/** An optional expression that controls how many hits of the breakpoint are ignored.
+			The backend is expected to interpret the expression as needed.
+			The attribute is only honored by a debug adapter if the capability 'supportsHitConditionalBreakpoints' is true.
+		*/
+		hitCondition?: string;
+	}
+
+	/** Information about a Breakpoint created in setBreakpoints, setFunctionBreakpoints, setInstructionBreakpoints, or setDataBreakpoints. */
 	export interface Breakpoint {
 		/** An optional identifier for the breakpoint. It is needed if breakpoint events are used to update or remove breakpoints. */
 		id?: number;
@@ -1929,6 +1977,12 @@ export module DebugProtocol {
 			If no end line is given, then the end column is assumed to be in the start line.
 		*/
 		endColumn?: number;
+		/** An optional memory reference to where the breakpoint is set. */
+		instructionReference?: string;
+		/** An optional offset from the instruction reference.
+			This can be negative.
+		*/
+		offset?: number;
 	}
 
 	/** The granularity of one 'step' in the stepping requests 'next', 'stepIn', 'stepOut', and 'stepBack'.
