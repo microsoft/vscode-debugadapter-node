@@ -121,7 +121,7 @@ export module DebugProtocol {
 
 	/** Event message for 'stopped' event type.
 		The event indicates that the execution of the debuggee has stopped due to some condition.
-		This can be caused by a break point previously set, a stepping action has completed, by executing a debugger statement etc.
+		This can be caused by a break point previously set, a stepping request has completed, by executing a debugger statement etc.
 	*/
 	export interface StoppedEvent extends Event {
 		// event: 'stopped';
@@ -805,6 +805,8 @@ export module DebugProtocol {
 	export interface NextArguments {
 		/** Execute 'next' for this thread. */
 		threadId: number;
+		/** Optional granularity to step. If no granularity is specified, a granularity of 'statement' is assumed. */
+		granularity?: SteppingGranularity;
 	}
 
 	/** Response to 'next' request. This is just an acknowledgement, so no body field is required. */
@@ -830,6 +832,8 @@ export module DebugProtocol {
 		threadId: number;
 		/** Optional id of the target to step into. */
 		targetId?: number;
+		/** Optional granularity to step. If no granularity is specified, a granularity of 'statement' is assumed. */
+		granularity?: SteppingGranularity;
 	}
 
 	/** Response to 'stepIn' request. This is just an acknowledgement, so no body field is required. */
@@ -849,6 +853,8 @@ export module DebugProtocol {
 	export interface StepOutArguments {
 		/** Execute 'stepOut' for this thread. */
 		threadId: number;
+		/** Optional granularity to step. If no granularity is specified, a granularity of 'statement' is assumed. */
+		granularity?: SteppingGranularity;
 	}
 
 	/** Response to 'stepOut' request. This is just an acknowledgement, so no body field is required. */
@@ -869,6 +875,8 @@ export module DebugProtocol {
 	export interface StepBackArguments {
 		/** Execute 'stepBack' for this thread. */
 		threadId: number;
+		/** Optional granularity to step. If no granularity is specified, a granularity of 'statement' is assumed. */
+		granularity?: SteppingGranularity;
 	}
 
 	/** Response to 'stepBack' request. This is just an acknowledgement, so no body field is required. */
@@ -1561,6 +1569,8 @@ export module DebugProtocol {
 		supportsBreakpointLocationsRequest?: boolean;
 		/** The debug adapter supports the 'clipboard' context value in the 'evaluate' request. */
 		supportsClipboardContext?: boolean;
+		/** The debug adapter supports stepping granularities (argument 'granularity') for the stepping requests. */
+		supportsSteppingGranularity?: boolean;
 	}
 
 	/** An ExceptionBreakpointsFilter is shown in the UI as an option for configuring how exceptions are dealt with. */
@@ -1920,6 +1930,15 @@ export module DebugProtocol {
 		*/
 		endColumn?: number;
 	}
+
+	/** The granularity of one 'step' in the stepping requests 'next', 'stepIn', 'stepOut', and 'stepBack'.
+		'statement': The step should allow the program to run until the current statement has finished executing.
+		The meaning of a statement is determined by the adapter and it may be considered equivalent to a line.
+		For example 'for(int i = 0; i < 10; i++) could be considered to have 3 statements 'int i = 0', 'i < 10', and 'i++'.
+		'line': The step should allow the program to run until the current source line has executed.
+		'instruction': The step should allow one instruction to execute (e.g. one x86 instruction).
+	*/
+	export type SteppingGranularity = 'statement' | 'line' | 'instruction';
 
 	/** A StepInTarget can be used in the 'stepIn' request and determines into which single target the stepIn request should step. */
 	export interface StepInTarget {
