@@ -171,7 +171,7 @@ class InternalLogger {
 				const handleError = err => this.sendLog(`Error creating log file at path: ${options.logFilePath}. Error: ${err.toString()}\n`, LogLevel.Error);
 
 				try {
-					await mkdirpPromise(path.dirname(options.logFilePath));
+					await mkdirp(path.dirname(options.logFilePath));
 					this.log(`Verbose logs are written to:\n`, LogLevel.Warn);
 					this.log(options.logFilePath + '\n', LogLevel.Warn);
 
@@ -268,18 +268,6 @@ class InternalLogger {
 			this._logCallback(event);
 		}
 	}
-}
-
-function mkdirpPromise(folder: string): Promise<void> {
-	return new Promise((resolve, reject) => {
-		mkdirp(folder, err => {
-			if (err) {
-				reject(err);
-			} else {
-				resolve();
-			}
-		});
-	});
 }
 
 export class LogOutputEvent extends OutputEvent {
