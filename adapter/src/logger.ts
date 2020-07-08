@@ -224,7 +224,8 @@ class InternalLogger {
 			return;
 		}
 
-		if (level >= this._minLogLevel) {
+		const shouldBeLogged: boolean = level >= this._minLogLevel;
+		if (shouldBeLogged) {
 			this.sendLog(msg, level);
 		}
 
@@ -248,7 +249,7 @@ class InternalLogger {
 			msg = '[' + getFormattedTimeString() + '] ' + msg;
 		}
 
-		if (this._logFileStream) {
+		if (this._logFileStream && shouldBeLogged) {
 			this._logFileStream.write(msg);
 		}
 	}
