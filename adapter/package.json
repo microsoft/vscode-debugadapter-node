@@ -1,7 +1,7 @@
 {
 	"name": "vscode-debugadapter",
 	"description": "Debug adapter implementation for node",
-	"version": "1.42.0-pre.2",
+	"version": "1.42.0-pre.4",
 	"author": "Microsoft Corporation",
 	"license": "MIT",
 	"repository": {
@@ -13,7 +13,7 @@
 	},
 	"main": "./lib/main.js",
 	"browser": {
-		"./lib/nodeDependencies.js": "./lib/web/nodeStubs.js",
+		"./lib/runDebugAdapter.js": "./lib/web/runDebugAdapterStub.js",
 		"./lib/internalLogger.js": "./lib/web/internalLoggerStub.js"
 	},
 	"typings": "./lib/main",
