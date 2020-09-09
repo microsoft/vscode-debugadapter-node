@@ -1,7 +1,7 @@
 {
 	"name": "vscode-debugadapter",
 	"description": "Debug adapter implementation for node",
-	"version": "1.41.1",
+	"version": "1.42.0-pre.0",
 	"author": "Microsoft Corporation",
 	"license": "MIT",
 	"repository": {
@@ -12,6 +12,9 @@
 		"url": "https://github.com/Microsoft/vscode-debugadapter-node/issues"
 	},
 	"main": "./lib/main.js",
+	"browser": {
+		"./lib/nodeDependencies.js": "./lib/web/nodeStubs.js"
+	},
 	"typings": "./lib/main",
 	"dependencies": {
 		"mkdirp": "^1.0.4",
