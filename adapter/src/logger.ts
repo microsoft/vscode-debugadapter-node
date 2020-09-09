@@ -2,7 +2,7 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 
-import { InternalLogger } from './nodeDependencies';
+import { InternalLogger } from './internalLogger';
 import { OutputEvent } from './debugSession';
 
 export enum LogLevel {
@@ -121,7 +121,6 @@ export class Logger {
 }
 
 export const logger = new Logger();
-
 
 export class LogOutputEvent extends OutputEvent {
 	constructor(msg: string, level: LogLevel) {

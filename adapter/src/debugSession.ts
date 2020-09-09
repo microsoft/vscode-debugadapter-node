@@ -6,7 +6,7 @@
 import { DebugProtocol } from 'vscode-debugprotocol';
 import { ProtocolServer } from './protocol';
 import { Response, Event } from './messages';
-import { runDebugAdapter } from './nodeDependencies';
+import { runDebugAdapter } from './runDebugAdapter';
 import { URL } from 'url';
 
 
