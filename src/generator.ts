@@ -42,6 +42,8 @@ function Module(moduleName: string, schema: IProtocol): string {
 		} else {
 			if ((<P.StringType>d2).enum) {
 				s += Enum(typeName, <P.StringType> d2);
+			} else if ((<P.StringType>d2)._enum) {
+				s += _Enum(typeName, <P.StringType> d2);
 			} else {
 				s += Interface(typeName, <P.Definition> d2);
 			}
@@ -94,13 +96,25 @@ function Interface(interfaceName: string, definition: P.Definition, superType?: 
 function Enum(typeName: string, definition: P.StringType): string {
 	let s = line();
 	s += comment(definition);
-	const x = enumAsOrType(definition.enum);
+	const x = enumAsOrType(definition.enum, false);
 	s += line(`export type ${typeName} = ${x};`);
 	return s;
 }
 
-function enumAsOrType(enm: string[]) {
-	return enm.map(v => `'${v}'`).join(' | ');
+function _Enum(typeName: string, definition: P.StringType): string {
+	let s = line();
+	s += comment(definition);
+	const x = enumAsOrType(definition._enum, true);
+	s += line(`export type ${typeName} = ${x};`);
+	return s;
+}
+
+function enumAsOrType(enm: string[], open = false) {
+	let r = enm.map(v => `'${v}'`).join(' | ');
+	if (open) {
+		r += ' | string';
+	}
+	return r;
 }
 
 function comment(c: P.Commentable): string {
@@ -176,6 +190,8 @@ function propertyType(prop: any): string {
 		case 'string':
 			if (prop.enum) {
 				return enumAsOrType(prop.enum);
+			} else if (prop._enum) {
+				return enumAsOrType(prop._enum, true);
 			}
 			return `string`;
 		case 'integer':
