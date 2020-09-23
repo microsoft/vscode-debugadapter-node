@@ -7,6 +7,18 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as mkdirp from 'mkdirp';
 
+function mkdirpPromise(folder: string): Promise<string> {
+	return new Promise((resolve, reject) => {
+		mkdirp(folder, (err, made) => {
+			if (err) {
+				reject(err);
+			} else {
+				resolve(made);
+			}
+		});
+	});
+}
+
 import { LogLevel, ILogCallback, trimLastNewline, LogOutputEvent, IInternalLoggerOptions, IInternalLogger } from './logger';
 
 /**
@@ -62,7 +74,7 @@ export class InternalLogger implements IInternalLogger {
 				const handleError = err => this.sendLog(`Error creating log file at path: ${options.logFilePath}. Error: ${err.toString()}\n`, LogLevel.Error);
 
 				try {
-					await mkdirp(path.dirname(options.logFilePath));
+					await mkdirpPromise(path.dirname(options.logFilePath));
 					this.log(`Verbose logs are written to:\n`, LogLevel.Warn);
 					this.log(options.logFilePath + '\n', LogLevel.Warn);
 
