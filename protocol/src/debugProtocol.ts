@@ -17,7 +17,7 @@ export module DebugProtocol {
 		/** Message type.
 			Values: 'request', 'response', 'event', etc.
 		*/
-		type: string;
+		type: 'request' | 'response' | 'event' | string;
 	}
 
 	/** A client or debug adapter initiated request. */
@@ -57,7 +57,7 @@ export module DebugProtocol {
 			'cancelled': request was cancelled.
 			etc.
 		*/
-		message?: string;
+		message?: 'cancelled' | string;
 		/** Contains request result if success is true and optional error details if success is false. */
 		body?: any;
 	}
@@ -130,7 +130,7 @@ export module DebugProtocol {
 				For backward compatibility this string is shown in the UI if the 'description' attribute is missing (but it must not be translated).
 				Values: 'step', 'breakpoint', 'exception', 'pause', 'entry', 'goto', 'function breakpoint', 'data breakpoint', 'instruction breakpoint', etc.
 			*/
-			reason: string;
+			reason: 'step' | 'breakpoint' | 'exception' | 'pause' | 'entry' | 'goto' | 'function breakpoint' | 'data breakpoint' | 'instruction breakpoint' | string;
 			/** The full reason for the event, e.g. 'Paused on exception'. This string is shown in the UI as is and must be translated. */
 			description?: string;
 			/** The thread which was stopped. */
@@ -195,7 +195,7 @@ export module DebugProtocol {
 			/** The reason for the event.
 				Values: 'started', 'exited', etc.
 			*/
-			reason: string;
+			reason: 'started' | 'exited' | string;
 			/** The identifier of the thread. */
 			threadId: number;
 		};
@@ -210,7 +210,7 @@ export module DebugProtocol {
 			/** The output category. If not specified, 'console' is assumed.
 				Values: 'console', 'stdout', 'stderr', 'telemetry', etc.
 			*/
-			category?: string;
+			category?: 'console' | 'stdout' | 'stderr' | 'telemetry' | string;
 			/** The output to report. */
 			output: string;
 			/** Support for keeping an output log organized by grouping related messages.
@@ -244,7 +244,7 @@ export module DebugProtocol {
 			/** The reason for the event.
 				Values: 'changed', 'new', 'removed', etc.
 			*/
-			reason: string;
+			reason: 'changed' | 'new' | 'removed' | string;
 			/** The 'id' attribute is used to find the target breakpoint and the other attributes are used as the new values. */
 			breakpoint: Breakpoint;
 		};
@@ -376,6 +376,23 @@ export module DebugProtocol {
 		};
 	}
 
+	/** Event message for 'invalidated' event type.
+		This event signals that some state in the debug adapter has changed and requires that the client needs to re-render the data snapshot previously requested.
+		Debug adapters do not have to emit this event for runtime changes like stopped or thread events because in that case the client refetches the new state anyway. But the event can be used for example to refresh the UI after rendering formatting has changed in the debug adapter.
+		This event should only be sent if the debug adapter has received a value true for the 'supportsInvalidatedEvent' capability of the 'initialize' request.
+	*/
+	export interface InvalidatedEvent extends Event {
+		// event: 'invalidated';
+		body: {
+			/** Optional set of logical areas that got invalidated. This property has a hint characteristic: a client can only be expected to make a 'best effort' in honouring the areas but there are no guarantees. If this property is missing, empty, or if values are not understand the client should assume a single value 'all'. */
+			areas?: InvalidatedAreas[];
+			/** If specified, the client only needs to refetch data related to this thread. */
+			threadId?: number;
+			/** If specified, the client only needs to refetch data related to this stack frame (and the 'threadId' is ignored). */
+			stackFrameId?: number;
+		};
+	}
+
 	/** RunInTerminal request; value of command field is 'runInTerminal'.
 		This optional request is sent from the debug adapter to the client to run a command in a terminal.
 		This is typically used to launch the debuggee in a terminal provided by the client.
@@ -439,7 +456,7 @@ export module DebugProtocol {
 		/** Determines in what format paths are specified. The default is 'path', which is the native format.
 			Values: 'path', 'uri', etc.
 		*/
-		pathFormat?: string;
+		pathFormat?: 'path' | 'uri' | string;
 		/** Client supports the optional type attribute for variables. */
 		supportsVariableType?: boolean;
 		/** Client supports the paging of variables. */
@@ -450,6 +467,8 @@ export module DebugProtocol {
 		supportsMemoryReferences?: boolean;
 		/** Client supports progress reporting. */
 		supportsProgressReporting?: boolean;
+		/** Client supports the invalidated event. */
+		supportsInvalidatedEvent?: boolean;
 	}
 
 	/** Response to 'initialize' request. */
@@ -1257,7 +1276,7 @@ export module DebugProtocol {
 			The attribute is only honored by a debug adapter if the capability 'supportsClipboardContext' is true.
 			etc.
 		*/
-		context?: string;
+		context?: 'watch' | 'repl' | 'hover' | 'clipboard' | string;
 		/** Specifies details on how to format the Evaluate result.
 			The attribute is only honored by a debug adapter if the capability 'supportsValueFormattingOptions' is true.
 		*/
@@ -1770,7 +1789,7 @@ export module DebugProtocol {
 			'registers': Scope contains registers. Only a single 'registers' scope should be returned from a 'scopes' request.
 			etc.
 		*/
-		presentationHint?: string;
+		presentationHint?: 'arguments' | 'locals' | 'registers' | string;
 		/** The variables of this scope can be retrieved by passing the value of variablesReference to the VariablesRequest. */
 		variablesReference: number;
 		/** The number of named variables in this scope.
@@ -1849,7 +1868,7 @@ export module DebugProtocol {
 			'dataBreakpoint': Indicates that a data breakpoint is registered for the object.
 			etc.
 		*/
-		kind?: string;
+		kind?: 'property' | 'method' | 'class' | 'data' | 'event' | 'baseClass' | 'innerClass' | 'interface' | 'mostDerivedClass' | 'virtual' | 'dataBreakpoint' | string;
 		/** Set of attributes represented as an array of strings. Before introducing additional values, try to use the listed values.
 			Values: 
 			'static': Indicates that the object is static.
@@ -1861,11 +1880,11 @@ export module DebugProtocol {
 			'hasSideEffects': Indicates that the evaluation had side effects.
 			etc.
 		*/
-		attributes?: string[];
+		attributes?: ('static' | 'constant' | 'readOnly' | 'rawString' | 'hasObjectId' | 'canHaveObjectId' | 'hasSideEffects' | string)[];
 		/** Visibility of variable. Before introducing additional values, try to use the listed values.
 			Values: 'public', 'private', 'protected', 'internal', 'final', etc.
 		*/
-		visibility?: string;
+		visibility?: 'public' | 'private' | 'protected' | 'internal' | 'final' | string;
 	}
 
 	/** Properties of a breakpoint location returned from the 'breakpointLocations' request. */
@@ -2159,5 +2178,15 @@ export module DebugProtocol {
 		/** The end column of the range that corresponds to this instruction, if any. */
 		endColumn?: number;
 	}
+
+	/** Logical areas that can be invalidated by the 'invalidated' event.
+		Values: 
+		'all': All previously fetched data has become invalid and needs to be refetched.
+		'stacks': Previously fetched stack related data has become invalid and needs to be refetched.
+		'threads': Previously fetched thread related data has become invalid and needs to be refetched.
+		'variables': Previously fetched variable data has become invalid and needs to be refetched.
+		etc.
+	*/
+	export type InvalidatedAreas = 'all' | 'stacks' | 'threads' | 'variables' | string;
 }
 
