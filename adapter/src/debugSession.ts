@@ -324,6 +324,29 @@ export class ProgressEndEvent extends Event implements DebugProtocol.ProgressEnd
 	}
 }
 
+export class InvalidatedEvent extends Event implements DebugProtocol.InvalidatedEvent {
+	body: {
+		areas?: DebugProtocol.InvalidatedAreas[];
+		threadId?: number;
+		stackFrameId?: number;
+	};
+
+	public constructor(areas?: DebugProtocol.InvalidatedAreas[], threadId?: number, stackFrameId?: number) {
+		super('invalidated');
+		this.body = {
+		};
+		if (areas) {
+			this.body.areas = areas;
+		}
+		if (threadId) {
+			this.body.threadId = threadId;
+		}
+		if (stackFrameId) {
+			this.body.stackFrameId = stackFrameId;
+		}
+	}
+}
+
 export enum ErrorDestination {
 	User = 1,
 	Telemetry = 2
