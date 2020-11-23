@@ -695,6 +695,9 @@ export class DebugSession extends ProtocolServer {
 		/** The debug adapter does not support the 'setInstructionBreakpoints' request. */
 		response.body.supportsInstructionBreakpoints = false;
 
+		/** The debug adapter does not support 'filterOptions' on the 'setExceptionBreakpoints' request. */
+		response.body.supportsExceptionFilterOptions = false;
+
 		this.sendResponse(response);
 	}
 

@@ -222,7 +222,7 @@ export module DebugProtocol {
 				A non empty 'output' attribute is shown as the unindented end of the group.
 			*/
 			group?: 'start' | 'startCollapsed' | 'end';
-			/** If an attribute 'variablesReference' exists and its value is > 0, the output contains objects which can be retrieved by passing 'variablesReference' to the 'variables' request. The value should be less than or equal to 2147483647 (2^31 - 1). */
+			/** If an attribute 'variablesReference' exists and its value is > 0, the output contains objects which can be retrieved by passing 'variablesReference' to the 'variables' request. The value should be less than or equal to 2147483647 (2^31-1). */
 			variablesReference?: number;
 			/** An optional source location where the output was produced. */
 			source?: Source;
@@ -409,7 +409,7 @@ export module DebugProtocol {
 		kind?: 'integrated' | 'external';
 		/** Optional title of the terminal. */
 		title?: string;
-		/** Working directory of the command. */
+		/** Working directory for the command. For non-empty, valid paths this typically results in execution of a change directory command. */
 		cwd: string;
 		/** List of arguments. The first argument is the command to run. */
 		args: string[];
@@ -420,9 +420,9 @@ export module DebugProtocol {
 	/** Response to 'runInTerminal' request. */
 	export interface RunInTerminalResponse extends Response {
 		body: {
-			/** The process ID. The value should be less than or equal to 2147483647 (2^31 - 1). */
+			/** The process ID. The value should be less than or equal to 2147483647 (2^31-1). */
 			processId?: number;
-			/** The process ID of the terminal shell. The value should be less than or equal to 2147483647 (2^31 - 1). */
+			/** The process ID of the terminal shell. The value should be less than or equal to 2147483647 (2^31-1). */
 			shellProcessId?: number;
 		};
 	}
@@ -713,8 +713,10 @@ export module DebugProtocol {
 
 	/** Arguments for 'setExceptionBreakpoints' request. */
 	export interface SetExceptionBreakpointsArguments {
-		/** IDs of checked exception options. The set of IDs is returned via the 'exceptionBreakpointFilters' capability. */
+		/** Set of exception filters specified by their ID. The set of all possible exception filters is defined by the 'exceptionBreakpointFilters' capability. */
 		filters: string[];
+		/** Set of exception filters and their options. The set of all possible exception filters is defined by the 'exceptionBreakpointFilters' capability. This attribute is only honored by a debug adapter if the capability 'supportsExceptionFilterOptions' is true. */
+		filterOptions?: ExceptionFilterOptions[];
 		/** Configuration options for selected exceptions.
 			The attribute is only honored by a debug adapter if the capability 'supportsExceptionOptions' is true.
 		*/
@@ -1126,17 +1128,17 @@ export module DebugProtocol {
 			/** The type of the new value. Typically shown in the UI when hovering over the value. */
 			type?: string;
 			/** If variablesReference is > 0, the new value is structured and its children can be retrieved by passing variablesReference to the VariablesRequest.
-				The value should be less than or equal to 2147483647 (2^31 - 1).
+				The value should be less than or equal to 2147483647 (2^31-1).
 			*/
 			variablesReference?: number;
 			/** The number of named child variables.
 				The client can use this optional information to present the variables in a paged UI and fetch them in chunks.
-				The value should be less than or equal to 2147483647 (2^31 - 1).
+				The value should be less than or equal to 2147483647 (2^31-1).
 			*/
 			namedVariables?: number;
 			/** The number of indexed child variables.
 				The client can use this optional information to present the variables in a paged UI and fetch them in chunks.
-				The value should be less than or equal to 2147483647 (2^31 - 1).
+				The value should be less than or equal to 2147483647 (2^31-1).
 			*/
 			indexedVariables?: number;
 		};
@@ -1295,17 +1297,17 @@ export module DebugProtocol {
 			/** Properties of a evaluate result that can be used to determine how to render the result in the UI. */
 			presentationHint?: VariablePresentationHint;
 			/** If variablesReference is > 0, the evaluate result is structured and its children can be retrieved by passing variablesReference to the VariablesRequest.
-				The value should be less than or equal to 2147483647 (2^31 - 1).
+				The value should be less than or equal to 2147483647 (2^31-1).
 			*/
 			variablesReference: number;
 			/** The number of named child variables.
 				The client can use this optional information to present the variables in a paged UI and fetch them in chunks.
-				The value should be less than or equal to 2147483647 (2^31 - 1).
+				The value should be less than or equal to 2147483647 (2^31-1).
 			*/
 			namedVariables?: number;
 			/** The number of indexed child variables.
 				The client can use this optional information to present the variables in a paged UI and fetch them in chunks.
-				The value should be less than or equal to 2147483647 (2^31 - 1).
+				The value should be less than or equal to 2147483647 (2^31-1).
 			*/
 			indexedVariables?: number;
 			/** Optional memory reference to a location appropriate for this result.
@@ -1350,17 +1352,17 @@ export module DebugProtocol {
 			/** Properties of a value that can be used to determine how to render the result in the UI. */
 			presentationHint?: VariablePresentationHint;
 			/** If variablesReference is > 0, the value is structured and its children can be retrieved by passing variablesReference to the VariablesRequest.
-				The value should be less than or equal to 2147483647 (2^31 - 1).
+				The value should be less than or equal to 2147483647 (2^31-1).
 			*/
 			variablesReference?: number;
 			/** The number of named child variables.
 				The client can use this optional information to present the variables in a paged UI and fetch them in chunks.
-				The value should be less than or equal to 2147483647 (2^31 - 1).
+				The value should be less than or equal to 2147483647 (2^31-1).
 			*/
 			namedVariables?: number;
 			/** The number of indexed child variables.
 				The client can use this optional information to present the variables in a paged UI and fetch them in chunks.
-				The value should be less than or equal to 2147483647 (2^31 - 1).
+				The value should be less than or equal to 2147483647 (2^31-1).
 			*/
 			indexedVariables?: number;
 		};
@@ -1557,7 +1559,7 @@ export module DebugProtocol {
 		supportsHitConditionalBreakpoints?: boolean;
 		/** The debug adapter supports a (side effect free) evaluate request for data hovers. */
 		supportsEvaluateForHovers?: boolean;
-		/** Available filters or options for the setExceptionBreakpoints request. */
+		/** Available exception filter options for the 'setExceptionBreakpoints' request. */
 		exceptionBreakpointFilters?: ExceptionBreakpointsFilter[];
 		/** The debug adapter supports stepping back via the 'stepBack' and 'reverseContinue' requests. */
 		supportsStepBack?: boolean;
@@ -1617,16 +1619,20 @@ export module DebugProtocol {
 		supportsSteppingGranularity?: boolean;
 		/** The debug adapter supports adding breakpoints based on instruction references. */
 		supportsInstructionBreakpoints?: boolean;
+		/** The debug adapter supports 'filterOptions' as an argument on the 'setExceptionBreakpoints' request. */
+		supportsExceptionFilterOptions?: boolean;
 	}
 
-	/** An ExceptionBreakpointsFilter is shown in the UI as an option for configuring how exceptions are dealt with. */
+	/** An ExceptionBreakpointsFilter is shown in the UI as an filter option for configuring how exceptions are dealt with. */
 	export interface ExceptionBreakpointsFilter {
-		/** The internal ID of the filter. This value is passed to the setExceptionBreakpoints request. */
+		/** The internal ID of the filter option. This value is passed to the 'setExceptionBreakpoints' request. */
 		filter: string;
-		/** The name of the filter. This will be shown in the UI. */
+		/** The name of the filter option. This will be shown in the UI. */
 		label: string;
-		/** Initial value of the filter. If not specified a value 'false' is assumed. */
+		/** Initial value of the filter option. If not specified a value 'false' is assumed. */
 		default?: boolean;
+		/** Controls whether a condition can be specified for this filter option. If false or missing, a condition can not be set. */
+		supportsCondition?: boolean;
 	}
 
 	/** A structured message object. Used to return errors from requests. */
@@ -1731,7 +1737,7 @@ export module DebugProtocol {
 		path?: string;
 		/** If sourceReference > 0 the contents of the source must be retrieved through the SourceRequest (even if a path is specified).
 			A sourceReference is only valid for a session, so it must not be used to persist a source.
-			The value should be less than or equal to 2147483647 (2^31 - 1).
+			The value should be less than or equal to 2147483647 (2^31-1).
 		*/
 		sourceReference?: number;
 		/** An optional hint for how to present the source in the UI.
@@ -2107,6 +2113,16 @@ export module DebugProtocol {
 		module?: boolean;
 		/** Includes all stack frames, including those the debug adapter might otherwise hide. */
 		includeAll?: boolean;
+	}
+
+	/** An ExceptionFilterOptions is used to specify an exception filter together with a condition for the setExceptionsFilter request. */
+	export interface ExceptionFilterOptions {
+		/** ID of an exception filter returned by the 'exceptionBreakpointFilters' capability. */
+		filterId: string;
+		/** An optional expression for conditional exceptions.
+			The exception will break into the debugger if the result of the condition is true.
+		*/
+		condition?: string;
 	}
 
 	/** An ExceptionOptions assigns configuration options to a set of exceptions. */
