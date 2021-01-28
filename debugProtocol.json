@@ -1308,7 +1308,7 @@
 				},
 				"name": {
 					"type": "string",
-					"description": "The name of the Variable's child to obtain data breakpoint information for.\nIf variableReference isn’t provided, this can be an expression."
+					"description": "The name of the Variable's child to obtain data breakpoint information for.\nIf variablesReference isn’t provided, this can be an expression."
 				}
 			},
 			"required": [ "name" ]
@@ -1803,7 +1803,7 @@
 		"StackTraceRequest": {
 			"allOf": [ { "$ref": "#/definitions/Request" }, {
 				"type": "object",
-				"description": "The request returns a stacktrace from the current execution state of a given thread.\nA client can request all stack frames by omitting the startFrame and levels arguments. For performance conscious clients stack frames can be retrieved in a piecemeal way with the startFrame and levels arguments. The response of the stackTrace request may contain a totalFrames property that hints at the total number of frames in the stack. If a client needs this total number upfront, it can issue a request for a single (first) frame and depending on the value of totalFrames decide how to proceed. In any case a client should be prepared to receive less frames than requested, which is an indication that the end of the stack has been reached.",
+				"description": "The request returns a stacktrace from the current execution state of a given thread.\nA client can request all stack frames by omitting the startFrame and levels arguments. For performance conscious clients and if the debug adapter's 'supportsDelayedStackTraceLoading' capability is true, stack frames can be retrieved in a piecemeal way with the startFrame and levels arguments. The response of the stackTrace request may contain a totalFrames property that hints at the total number of frames in the stack. If a client needs this total number upfront, it can issue a request for a single (first) frame and depending on the value of totalFrames decide how to proceed. In any case a client should be prepared to receive less frames than requested, which is an indication that the end of the stack has been reached.",
 				"properties": {
 					"command": {
 						"type": "string",
@@ -2913,7 +2913,7 @@
 				},
 				"supportsDelayedStackTraceLoading": {
 					"type": "boolean",
-					"description": "The debug adapter supports the delayed loading of parts of the stack, which requires that both the 'startFrame' and 'levels' arguments and the 'totalFrames' result of the 'StackTrace' request are supported."
+					"description": "The debug adapter supports the delayed loading of parts of the stack, which requires that both the 'startFrame' and 'levels' arguments and an optional 'totalFrames' result of the 'StackTrace' request are supported."
 				},
 				"supportsLoadedSourcesRequest": {
 					"type": "boolean",
@@ -3361,7 +3361,7 @@
 						"Indicates that the object is an interface.",
 						"Indicates that the object is the most derived class.",
 						"Indicates that the object is virtual, that means it is a synthetic object introducedby the\nadapter for rendering purposes, e.g. an index range for large arrays.",
-						"Indicates that a data breakpoint is registered for the object."
+						"Deprecated: Indicates that a data breakpoint is registered for the object. The 'hasDataBreakpoint' attribute should generally be used instead."
 					]
 				},
 				"attributes": {
@@ -3369,7 +3369,7 @@
 					"type": "array",
 					"items": {
 						"type": "string",
-						"_enum": [ "static", "constant", "readOnly", "rawString", "hasObjectId", "canHaveObjectId", "hasSideEffects" ],
+						"_enum": [ "static", "constant", "readOnly", "rawString", "hasObjectId", "canHaveObjectId", "hasSideEffects", "hasDataBreakpoint" ],
 						"enumDescriptions": [
 							"Indicates that the object is static.",
 							"Indicates that the object is a constant.",
@@ -3377,7 +3377,8 @@
 							"Indicates that the object is a raw string.",
 							"Indicates that the object can have an Object ID created for it.",
 							"Indicates that the object has an Object ID associated with it.",
-							"Indicates that the evaluation had side effects."
+							"Indicates that the evaluation had side effects.",
+							"Indicates that the object has its value tracked by a data breakpoint."
 						]
 					}
 				},
