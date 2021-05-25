@@ -14,7 +14,7 @@ export class ProtocolClient extends ee.EventEmitter {
 	private outputStream: stream.Writable;
 	private sequence: number;
 	private pendingRequests = new Map<number, (e: DebugProtocol.Response) => void>();
-	private rawData = new Buffer(0);
+	private rawData = Buffer.alloc(0);
 	private contentLength: number;
 
 	constructor() {

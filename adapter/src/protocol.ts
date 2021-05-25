@@ -123,7 +123,7 @@ export class ProtocolServer extends ee.EventEmitter implements VSCodeDebugAdapte
 	public start(inStream: NodeJS.ReadableStream, outStream: NodeJS.WritableStream): void {
 		this._sequence = 1;
 		this._writableStream = outStream;
-		this._rawData = new Buffer(0);
+		this._rawData = Buffer.alloc(0);
 
 		inStream.on('data', (data: Buffer) => this._handleData(data));
 
