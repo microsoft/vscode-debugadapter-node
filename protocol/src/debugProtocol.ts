@@ -1126,6 +1126,7 @@ export module DebugProtocol {
 
 	/** SetVariable request; value of command field is 'setVariable'.
 		Set the variable with the given name in the variable container to a new value. Clients should only call this request if the capability 'supportsSetVariable' is true.
+		If a debug adapter implements both setVariable and setExpression, a client will only use setExpression if the variable has an evaluateName property.
 	*/
 	export interface SetVariableRequest extends Request {
 		// command: 'setVariable';
@@ -1346,6 +1347,7 @@ export module DebugProtocol {
 		Evaluates the given 'value' expression and assigns it to the 'expression' which must be a modifiable l-value.
 		The expressions have access to any variables and arguments that are in scope of the specified frame.
 		Clients should only call this request if the capability 'supportsSetExpression' is true.
+		If a debug adapter implements both setExpression and setVariable, a client will only use setExpression if the variable has an evaluateName property.
 	*/
 	export interface SetExpressionRequest extends Request {
 		// command: 'setExpression';
@@ -1538,6 +1540,39 @@ export module DebugProtocol {
 		};
 	}
 
+	/** WriteMemory request; value of command field is 'writeMemory'.
+		Writes bytes to memory at the provided location.
+		Clients should only call this request if the capability 'supportsWriteMemoryRequest' is true.
+	*/
+	export interface WriteMemoryRequest extends Request {
+		// command: 'writeMemory';
+		arguments: WriteMemoryArguments;
+	}
+
+	/** Arguments for 'writeMemory' request. */
+	export interface WriteMemoryArguments {
+		/** Memory reference to the base location to which data should be written. */
+		memoryReference: string;
+		/** Optional offset (in bytes) to be applied to the reference location before writing data. Can be negative. */
+		offset?: number;
+		/** Optional property to control partial writes. If true, the debug adapter should attempt to write memory even if the entire memory region is not writable. In such a case the debug adapter should stop after hitting the first byte of memory that cannot be written and return the number of bytes written in the response via the 'offset' and 'bytesWritten' properties.
+			If false or missing, a debug adapter should attempt to verify the region is writable before writing, and fail the response if it is not.
+		*/
+		allowPartial?: boolean;
+		/** Bytes to write, encoded using base64. */
+		data: string;
+	}
+
+	/** Response to 'writeMemory' request. */
+	export interface WriteMemoryResponse extends Response {
+		body?: {
+			/** Optional property that should be returned when 'allowPartial' is true to indicate the offset of the first byte of data successfully written. Can be negative. */
+			offset?: number;
+			/** Optional property that should be returned when 'allowPartial' is true to indicate the number of bytes starting from address that were successfully written. */
+			bytesWritten?: number;
+		};
+	}
+
 	/** Disassemble request; value of command field is 'disassemble'.
 		Disassembles code stored at the provided location.
 		Clients should only call this request if the capability 'supportsDisassembleRequest' is true.
@@ -1633,6 +1668,8 @@ export module DebugProtocol {
 		supportsDataBreakpoints?: boolean;
 		/** The debug adapter supports the 'readMemory' request. */
 		supportsReadMemoryRequest?: boolean;
+		/** The debug adapter supports the 'writeMemory' request. */
+		supportsWriteMemoryRequest?: boolean;
 		/** The debug adapter supports the 'disassemble' request. */
 		supportsDisassembleRequest?: boolean;
 		/** The debug adapter supports the 'cancel' request. */

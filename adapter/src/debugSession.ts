@@ -583,6 +583,9 @@ export class DebugSession extends ProtocolServer {
 			} else if (request.command === 'readMemory') {
 				this.readMemoryRequest(<DebugProtocol.ReadMemoryResponse> response, request.arguments, request);
 
+			} else if (request.command === 'writeMemory') {
+				this.writeMemoryRequest(<DebugProtocol.WriteMemoryResponse> response, request.arguments, request);
+
 			} else if (request.command === 'disassemble') {
 				this.disassembleRequest(<DebugProtocol.DisassembleResponse> response, request.arguments, request);
 
@@ -839,6 +842,10 @@ export class DebugSession extends ProtocolServer {
 	}
 
 	protected readMemoryRequest(response: DebugProtocol.ReadMemoryResponse, args: DebugProtocol.ReadMemoryArguments, request?: DebugProtocol.Request): void {
+		this.sendResponse(response);
+	}
+
+	protected writeMemoryRequest(response: DebugProtocol.WriteMemoryResponse, args: DebugProtocol.WriteMemoryArguments, request?: DebugProtocol.Request): void {
 		this.sendResponse(response);
 	}
 
