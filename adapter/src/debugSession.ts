@@ -104,6 +104,10 @@ export class Breakpoint implements DebugProtocol.Breakpoint {
 			e.source = source;
 		}
 	}
+
+	public setId(id: number) {
+		(this as DebugProtocol.Breakpoint).id = id;
+ 	}
 }
 
 export class Module implements DebugProtocol.Module {
