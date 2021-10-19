@@ -42,10 +42,16 @@ export class Scope implements DebugProtocol.Scope {
 
 export class StackFrame implements DebugProtocol.StackFrame {
 	id: number;
-	source: Source;
+	name: string;
+	source?: Source;
 	line: number;
 	column: number;
-	name: string;
+	endLine?: number;
+	endColumn?: number;
+	canRestart?: boolean;
+	instructionPointerReference?: string;
+	moduleId?: number | string;
+	presentationHint?: 'normal' | 'label' | 'subtle';
 
 	public constructor(i: number, nm: string, src?: Source, ln: number = 0, col: number = 0) {
 		this.id = i;
