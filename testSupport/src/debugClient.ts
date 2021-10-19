@@ -57,10 +57,10 @@ export class DebugClient extends ProtocolClient {
 	 *     return dc.hitBreakpoint({ program: 'test.js' }, 'test.js', 15);
 	 * });
 	 */
-	constructor(runtime: string, executable: string, debugType: string, spawnOptions?: cp.SpawnOptions, enableStderr?: boolean) {
+	constructor(debugAdapterRuntime: string, debugAdapterExecutable: string, debugType: string, spawnOptions?: cp.SpawnOptions, enableStderr?: boolean) {
 		super();
-		this._runtime = runtime;
-		this._executable = executable;
+		this._runtime = debugAdapterRuntime;
+		this._executable = debugAdapterExecutable;
 		this._spawnOptions = spawnOptions;
 		this._enableStderr = enableStderr;
 		this._debugType = debugType;
