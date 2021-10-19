@@ -182,6 +182,19 @@ export class TerminatedEvent extends Event implements DebugProtocol.TerminatedEv
 	}
 }
 
+export class ExitedEvent extends Event implements DebugProtocol.ExitedEvent {
+	body: {
+		exitCode: number
+	};
+
+	public constructor(exitCode: number) {
+		super('exited');
+		this.body = {
+			exitCode: exitCode
+		};
+	}
+}
+
 export class OutputEvent extends Event implements DebugProtocol.OutputEvent {
 	body: {
 		category: string,
