@@ -43,7 +43,7 @@ export class Scope implements DebugProtocol.Scope {
 export class StackFrame implements DebugProtocol.StackFrame {
 	id: number;
 	name: string;
-	source?: Source;
+	source?: DebugProtocol.Source;
 	line: number;
 	column: number;
 	endLine?: number;
@@ -242,10 +242,10 @@ export class ThreadEvent extends Event implements DebugProtocol.ThreadEvent {
 export class BreakpointEvent extends Event implements DebugProtocol.BreakpointEvent {
 	body: {
 		reason: string,
-		breakpoint: Breakpoint
+		breakpoint: DebugProtocol.Breakpoint
 	};
 
-	public constructor(reason: string, breakpoint: Breakpoint) {
+	public constructor(reason: string, breakpoint: DebugProtocol.Breakpoint) {
 		super('breakpoint');
 		this.body = {
 			reason: reason,
@@ -257,10 +257,10 @@ export class BreakpointEvent extends Event implements DebugProtocol.BreakpointEv
 export class ModuleEvent extends Event implements DebugProtocol.ModuleEvent {
 	body: {
 		reason: 'new' | 'changed' | 'removed',
-		module: Module
+		module: DebugProtocol.Module
 	};
 
-	public constructor(reason: 'new' | 'changed' | 'removed', module: Module) {
+	public constructor(reason: 'new' | 'changed' | 'removed', module: DebugProtocol.Module) {
 		super('module');
 		this.body = {
 			reason: reason,
@@ -272,10 +272,10 @@ export class ModuleEvent extends Event implements DebugProtocol.ModuleEvent {
 export class LoadedSourceEvent extends Event implements DebugProtocol.LoadedSourceEvent {
 	body: {
 		reason: 'new' | 'changed' | 'removed',
-		source: Source
+		source: DebugProtocol.Source
 	};
 
-	public constructor(reason: 'new' | 'changed' | 'removed', source: Source) {
+	public constructor(reason: 'new' | 'changed' | 'removed', source: DebugProtocol.Source) {
 		super('loadedSource');
 		this.body = {
 			reason: reason,
