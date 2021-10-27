@@ -12,4 +12,4 @@ As of August 2018 the change history of the Debug Adapter Protocol lives on the 
 
 ## License
 
-[MIT](https://github.com/microsoft/vscode-languageserver-node/blob/master/License.txt)
+[MIT](https://github.com/microsoft/vscode-debugadapter-node/blob/main/License.txt)

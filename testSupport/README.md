@@ -44,4 +44,4 @@ test('should stop on a breakpoint', () => {
 
 ## License
 
-[MIT](https://github.com/microsoft/vscode-languageserver-node/blob/master/License.txt)
+[MIT](https://github.com/microsoft/vscode-debugadapter-node/blob/main/License.txt)
