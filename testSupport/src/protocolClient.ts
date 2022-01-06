@@ -5,7 +5,7 @@
 
 import stream = require('stream');
 import * as ee from 'events';
-import {DebugProtocol} from 'vscode-debugprotocol';
+import {DebugProtocol} from '@vscode/debugprotocol';
 
 export class ProtocolClient extends ee.EventEmitter {
 

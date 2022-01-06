@@ -1,5 +1,5 @@
 {
-	"name": "vscode-debugprotocol",
+	"name": "@vscode/debugprotocol",
 	"description": "Npm module with declarations for the Visual Studio Code debug protocol",
 	"version": "1.51.0",
 	"author": "Microsoft Corporation",

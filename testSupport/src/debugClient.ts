@@ -8,7 +8,7 @@ import constants = require('constants');
 import cp = require('child_process');
 import assert = require('assert');
 import net = require('net');
-import {DebugProtocol} from 'vscode-debugprotocol';
+import {DebugProtocol} from '@vscode/debugprotocol';
 import {ProtocolClient} from './protocolClient';
 
 export interface ILocation {

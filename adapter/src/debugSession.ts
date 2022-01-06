@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { DebugProtocol } from 'vscode-debugprotocol';
+import { DebugProtocol } from '@vscode/debugprotocol';
 import { ProtocolServer } from './protocol';
 import { Response, Event } from './messages';
 import { runDebugAdapter } from './runDebugAdapter';
