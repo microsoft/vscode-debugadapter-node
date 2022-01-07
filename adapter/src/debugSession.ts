@@ -370,6 +370,19 @@ export class InvalidatedEvent extends Event implements DebugProtocol.Invalidated
 	}
 }
 
+export class MemoryEvent extends Event implements DebugProtocol.MemoryEvent {
+	body: {
+		memoryReference: string;
+		offset: number;
+		count: number;
+	};
+
+	public constructor(memoryReference: string, offset: number, count: number) {
+		super('memory');
+		this.body = { memoryReference, offset, count };
+	}
+}
+
 export enum ErrorDestination {
 	User = 1,
 	Telemetry = 2

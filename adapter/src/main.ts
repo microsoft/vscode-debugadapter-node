@@ -7,7 +7,7 @@
 import {
 	DebugSession,
 	InitializedEvent, TerminatedEvent, ExitedEvent, StoppedEvent, ContinuedEvent, OutputEvent, ThreadEvent, BreakpointEvent, ModuleEvent,
-		LoadedSourceEvent, CapabilitiesEvent, ProgressStartEvent, ProgressUpdateEvent, ProgressEndEvent, InvalidatedEvent,
+		LoadedSourceEvent, CapabilitiesEvent, ProgressStartEvent, ProgressUpdateEvent, ProgressEndEvent, InvalidatedEvent, MemoryEvent,
 	Thread, StackFrame, Scope, Variable,
 	Breakpoint, Source, Module, CompletionItem,
 	ErrorDestination
@@ -25,7 +25,7 @@ export {
 	Logger,
 	logger,
 	InitializedEvent, TerminatedEvent, ExitedEvent, StoppedEvent, ContinuedEvent, OutputEvent, ThreadEvent, BreakpointEvent, ModuleEvent,
-		LoadedSourceEvent, CapabilitiesEvent, ProgressStartEvent, ProgressUpdateEvent, ProgressEndEvent, InvalidatedEvent,
+		LoadedSourceEvent, CapabilitiesEvent, ProgressStartEvent, ProgressUpdateEvent, ProgressEndEvent, InvalidatedEvent, MemoryEvent,
 	Thread, StackFrame, Scope, Variable,
 	Breakpoint, Source, Module, CompletionItem,
 	ErrorDestination,
