@@ -20,7 +20,8 @@
 	},
 	"scripts": {
 		"compile": "tsc -p ./src",
-		"watch": "tsc -w -p ./src"
+		"watch": "tsc -w -p ./src",
+		"postinstall": "cd protocol && npm i && cd ../adapter && npm i"
 	},
 	"main": "./out/generator"
 }

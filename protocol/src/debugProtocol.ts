@@ -1938,7 +1938,11 @@ export module DebugProtocol {
 	export interface Variable {
 		/** The variable's name. */
 		name: string;
-		/** The variable's value. This can be a multi-line text, e.g. for a function the body of a function. */
+		/** The variable's value.
+			This can be a multi-line text, e.g. for a function the body of a function.
+			For structured variables (which do not have a simple value), it is recommended to provide a one line representation of the structured object. This helps to identify the structured object in the collapsed state when its children are not yet visible.
+			An empty string can be used if no value should be shown in the UI.
+		*/
 		value: string;
 		/** The type of the variable's value. Typically shown in the UI when hovering over the value.
 			This attribute should only be returned by a debug adapter if the client has passed the value true for the 'supportsVariableType' capability of the 'initialize' request.
@@ -2164,6 +2168,8 @@ export module DebugProtocol {
 		text?: string;
 		/** A string that should be used when comparing this item with other items. When `falsy` the label is used. */
 		sortText?: string;
+		/** A human-readable string with additional information about this item, like type or symbol information. */
+		detail?: string;
 		/** The item's type. Typically the client uses this information to render the item in the UI with an icon. */
 		type?: CompletionItemType;
 		/** This value determines the location (in the CompletionsRequest's 'text' attribute) where the completion text is added.
