@@ -2004,6 +2004,8 @@ export module DebugProtocol {
 			Values: 'public', 'private', 'protected', 'internal', 'final', etc.
 		*/
 		visibility?: 'public' | 'private' | 'protected' | 'internal' | 'final' | string;
+		/** If true clients can present the variable with a UI that supports a specific gesture to trigger its evaluation. */
+		lazy?: boolean;
 	}
 
 	/** Properties of a breakpoint location returned from the 'breakpointLocations' request. */
