@@ -17,26 +17,24 @@ function Module(moduleName: string, schema: IProtocol): string {
 	s += line(" *  Licensed under the MIT License. See License.txt in the project root for license information.");
 	s += line(" *--------------------------------------------------------------------------------------------*/");
 	s += line();
-	s += line("'use strict';");
-	s += line();
 
 	//s += comment(schema.description);
 	s += comment({ description : 'Declaration module describing the VS Code debug protocol.\nAuto-generated from json schema. Do not edit manually.'});
 
-	s += openBlock(`export module ${moduleName}`);
+	s += openBlock(`export declare module ${moduleName}`);
 
 	for (let typeName in schema.definitions) {
 
 		const d2 = schema.definitions[typeName];
 
-		let supertype: string = null;
+		let supertype: string | null = null;
 		if ((<P.AllOf>d2).allOf) {
 			const array = (<P.AllOf>d2).allOf;
 			for (let d of array) {
 				if ((<P.RefType>d).$ref) {
 					supertype = getRef((<P.RefType>d).$ref);
 				} else {
-					s += Interface(typeName, <P.Definition> d, supertype);
+					s += Interface(typeName, <P.Definition> d, supertype!);
 				}
 			}
 		} else {
@@ -56,17 +54,21 @@ function Module(moduleName: string, schema: IProtocol): string {
 	return s;
 }
 
+function isEnumType(someType: unknown): someType is P.StringType & { enum: string[] } {
+	return !!someType && typeof someType === 'object' && (someType as P.StringType).type === 'string' && !!(someType as P.StringType).enum;
+}
+
 function Interface(interfaceName: string, definition: P.Definition, superType?: string): string {
 
 	let desc = definition.description;
 
-	if (definition.properties && definition.properties.event && definition.properties.event['enum']) {
-		const eventName = `${definition.properties.event['enum'][0]}`;
+	if (definition.properties && isEnumType(definition.properties.event)) {
+		const eventName = `${definition.properties.event.enum[0]}`;
 		if (eventName) {
 			desc = `Event message for '${eventName}' event type.\n${desc}`;
 		}
-	} else if (definition.properties && definition.properties.command && definition.properties.command['enum']) {
-		const requestName = `${definition.properties.command['enum'][0]}`;
+	} else if (definition.properties && isEnumType(definition.properties.command)) {
+		const requestName = `${definition.properties.command.enum[0]}`;
 		if (requestName) {
 			const RequestName = requestName[0].toUpperCase() + requestName.substr(1);
 			desc = `${RequestName} request; value of command field is '${requestName}'.\n${desc}`;
@@ -77,7 +79,7 @@ function Interface(interfaceName: string, definition: P.Definition, superType?: 
 
 	s += comment({ description : desc });
 
-	let x = `export interface ${interfaceName}`;
+	let x = `interface ${interfaceName}`;
 	if (superType) {
 		x += ` extends ${superType}`;
 	}
@@ -96,16 +98,16 @@ function Interface(interfaceName: string, definition: P.Definition, superType?: 
 function Enum(typeName: string, definition: P.StringType): string {
 	let s = line();
 	s += comment(definition);
-	const x = enumAsOrType(definition.enum, false);
-	s += line(`export type ${typeName} = ${x};`);
+	const x = enumAsOrType(definition.enum!, false);
+	s += line(`type ${typeName} = ${x};`);
 	return s;
 }
 
 function _Enum(typeName: string, definition: P.StringType): string {
 	let s = line();
 	s += comment(definition);
-	const x = enumAsOrType(definition._enum, true);
-	s += line(`export type ${typeName} = ${x};`);
+	const x = enumAsOrType(definition._enum!, true);
+	s += line(`type ${typeName} = ${x};`);
 	return s;
 }
 
@@ -204,7 +206,7 @@ function propertyType(prop: any): string {
 		if (prop.type.length === 7 && prop.type.sort().join() === 'array,boolean,integer,null,number,object,string') {	// silly way to detect all possible json schema types
 			return 'any';
 		} else {
-			return prop.type.map(v => v === 'integer' ? 'number' : v).join(' | ');
+			return prop.type.map((v: string) => v === 'integer' ? 'number' : v).join(' | ');
 		}
 	}
 	return prop.type;
@@ -281,8 +283,8 @@ function line(str?: string, newline?: boolean, indnt?: boolean): string {
 
 /// Main
 
-const debugProtocolSchema = JSON.parse(fs.readFileSync('./debugProtocol.json').toString());
+const debugProtocolSchema = JSON.parse(fs.readFileSync(`${__dirname}/../../debugProtocol.json`).toString());
 
 const emitStr = Module('DebugProtocol', debugProtocolSchema);
 
-fs.writeFileSync(`./protocol/src/debugProtocol.ts`, emitStr, { encoding: 'utf-8'});
+fs.writeFileSync(`${__dirname}/debugProtocol.d.ts`, emitStr, { encoding: 'utf-8'});
