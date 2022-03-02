@@ -19,7 +19,7 @@ function Module(moduleName: string, schema: IProtocol): string {
 	s += line();
 
 	//s += comment(schema.description);
-	s += comment({ description : 'Declaration module describing the VS Code debug protocol.\nAuto-generated from json schema. Do not edit manually.'});
+	s += comment({ description: 'Declaration module describing the VS Code debug protocol.\nAuto-generated from json schema. Do not edit manually.'});
 
 	s += openBlock(`export declare module ${moduleName}`);
 
