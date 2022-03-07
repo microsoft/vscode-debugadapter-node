@@ -5,8 +5,7 @@
 			"type": "node",
 			"request": "launch",
 			"name": "Generate debugProtocol.ts",
-			"program": "${workspaceRoot}/src/generator.ts",
-			"outFiles": [ "${workspaceRoot}/out/**/*.js" ]
+			"program": "${workspaceRoot}/protocol/lib/generator.js",
 		}
 	]
 }

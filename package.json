@@ -1,27 +1,17 @@
 {
-	"name": "generator",
-	"version": "0.0.1",
-	"description": "Generator",
-	"author": {
-		"name": "Microsoft Corporation",
-		"email": "aweinand@microsoft.com"
-	},
+	"name": "root",
 	"private": true,
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/microsoft/vscode-debugadapter-node.git"
-	},
-	"bugs": {
-		"url": "https://github.com/microsoft/vscode-debugadapter-node/issues"
+	"license": "MIT",
+	"scripts": {
+		"sync-dap": "curl https://microsoft.github.io/debug-adapter-protocol/debugAdapterProtocol.json > debugProtocol.json && npm run compile",
+		"test": "lerna run test --stream",
+		"compile": "lerna run compile --stream",
+		"version": "lerna version --exact",
+		"postinstall": "lerna bootstrap"
 	},
 	"devDependencies": {
 		"@types/node": "14.x",
-		"typescript": "4.3.5"
-	},
-	"scripts": {
-		"compile": "tsc -p ./src",
-		"watch": "tsc -w -p ./src",
-		"postinstall": "cd protocol && npm i && cd ../adapter && npm i"
-	},
-	"main": "./out/generator"
+		"lerna": "^4.0.0",
+		"typescript": "^4.6.2"
+	}
 }

@@ -13,12 +13,9 @@
 	},
 	"main": "./lib/debugProtocol.js",
 	"typings": "./lib/debugProtocol",
-	"devDependencies": {
-		"typescript": "4.4.4"
-	},
 	"scripts": {
-		"prepare": "tsc -p ./src",
-		"compile": "tsc -p ./src",
-		"watch": "tsc -w -p ./src"
+		"prepack": "npm run compile",
+		"compile": "tsc && node lib/generator",
+		"watch": "tsc -w"
 	}
 }

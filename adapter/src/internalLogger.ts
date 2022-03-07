@@ -5,7 +5,6 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import * as mkdirp from 'mkdirp';
 
 import { LogLevel, ILogCallback, trimLastNewline, LogOutputEvent, IInternalLoggerOptions, IInternalLogger } from './logger';
 
@@ -59,10 +58,10 @@ export class InternalLogger implements IInternalLogger {
 			if (!path.isAbsolute(options.logFilePath)) {
 				this.log(`logFilePath must be an absolute path: ${options.logFilePath}`, LogLevel.Error);
 			} else {
-				const handleError = err => this.sendLog(`Error creating log file at path: ${options.logFilePath}. Error: ${err.toString()}\n`, LogLevel.Error);
+				const handleError = (err: Error) => this.sendLog(`Error creating log file at path: ${options.logFilePath}. Error: ${err.toString()}\n`, LogLevel.Error);
 
 				try {
-					await mkdirp(path.dirname(options.logFilePath));
+					await fs.promises.mkdir(path.dirname(options.logFilePath), { recursive: true });
 					this.log(`Verbose logs are written to:\n`, LogLevel.Warn);
 					this.log(options.logFilePath + '\n', LogLevel.Warn);
 
@@ -87,9 +86,9 @@ export class InternalLogger implements IInternalLogger {
 	}
 
 	private setupShutdownListeners(): void {
-		process.addListener('beforeExit', this.beforeExitCallback);
-		process.addListener('SIGTERM', this.disposeCallback);
-		process.addListener('SIGINT', this.disposeCallback);
+		process.on('beforeExit', this.beforeExitCallback);
+		process.on('SIGTERM', this.disposeCallback);
+		process.on('SIGINT', this.disposeCallback);
 	}
 
 	private removeShutdownListeners(): void {

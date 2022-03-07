@@ -1,0 +1,8 @@
+{
+  "packages": [
+    "adapter",
+    "protocol",
+    "testSupport"
+  ],
+  "version": "1.54.0"
+}
