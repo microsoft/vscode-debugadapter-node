@@ -26,6 +26,11 @@ jobs:
       - run: npm ci
       - run: npm run compile
       - run: npm test
+      - run: npx lerna@4.0.0 publish from-git -y --no-verify-access --dist-tag=next
+        if: "contains(github.ref, '-pre.')"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - run: npx lerna@4.0.0 publish from-git -y --no-verify-access
+        if: "!contains(github.ref, '-pre.')"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
