@@ -22,9 +22,10 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: ^16
+          registry-url: "https://registry.npmjs.org"
       - run: npm ci
       - run: npm run compile
       - run: npm test
-      - run: npx lerna@4.0.0 publish from-git
+      - run: npx lerna@4.0.0 publish from-git -y
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
