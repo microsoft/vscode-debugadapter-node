@@ -7,7 +7,7 @@
 		"sync-next-dap": "curl https://raw.githubusercontent.com/microsoft/debug-adapter-protocol/next/debugAdapterProtocol.json > debugProtocol.json && npm run compile",
 		"test": "lerna run test --stream",
 		"compile": "lerna run compile --stream",
-		"version": "lerna version --exact",
+		"version": "lerna version --exact --force-publish",
 		"postinstall": "lerna bootstrap"
 	},
 	"devDependencies": {
