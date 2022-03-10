@@ -1,3 +1,4 @@
 .vscode/
 src/
 .npmignore
+tsconfig.json

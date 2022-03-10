@@ -2,3 +2,4 @@
 src/
 lib/tests/
 .npmignore
+tsconfig.json
