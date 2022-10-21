@@ -266,6 +266,10 @@ export class DebugClient extends ProtocolClient {
 	public evaluateRequest(args: DebugProtocol.EvaluateArguments): Promise<DebugProtocol.EvaluateResponse> {
 		return this.send('evaluate', args);
 	}
+	
+	public disassembleRequest(args: DebugProtocol.DisassembleArguments): Promise<DebugProtocol.DisassembleResponse> {
+    		return this.send('disassemble', args);
+	}
 
 	public stepInTargetsRequest(args: DebugProtocol.StepInTargetsArguments): Promise<DebugProtocol.StepInTargetsResponse> {
 		return this.send('stepInTargets', args);
