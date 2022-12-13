@@ -2,18 +2,17 @@
 	"name": "root",
 	"private": true,
 	"license": "MIT",
+	"workspaces": [
+		"protocol",
+		"testSupport",
+		"adapter"
+	],
 	"scripts": {
 		"sync-dap": "curl https://microsoft.github.io/debug-adapter-protocol/debugAdapterProtocol.json > debugProtocol.json && npm run compile",
 		"sync-next-dap": "curl https://raw.githubusercontent.com/microsoft/debug-adapter-protocol/main/debugAdapterProtocol.json > debugProtocol.json && npm run compile",
-		"test": "lerna run test --stream",
-		"compile": "lerna run compile --stream",
-		"version": "lerna version --exact --force-publish=\"*\"",
-		"postinstall": "lerna bootstrap"
-	},
-	"devDependencies": {
-		"@types/node": "14.x",
-		"lerna": "^6.1.0",
-		"typescript": "^4.6.2"
+		"test": "npm run test --workspaces --if-present",
+		"compile": "npm run compile --workspaces",
+		"version": "npm version --workspaces"
 	},
 	"publishConfig": {
 		"access": "public"
