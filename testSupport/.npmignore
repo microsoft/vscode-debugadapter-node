@@ -1,4 +1,6 @@
-.vscode/
-src/
-.npmignore
-tsconfig.json
+/*
+!lib
+!thirdpartynotices.txt
+lib/test/
+lib/generator*
+lib/*.map
