@@ -1,0 +1,55 @@
+name: $(Date:yyyyMMdd)$(Rev:.r)
+
+trigger:
+  branches:
+    include:
+      - main
+
+pr: none
+
+resources:
+  repositories:
+    - repository: templates
+      type: github
+      name: microsoft/vscode-engineering
+      ref: main
+      endpoint: Monaco
+
+parameters:
+  - name: publishPackage
+    displayName: 🚀 Publish packages
+    type: boolean
+    default: false
+
+  - name: runOnPackages
+    displayName: 🚀 Run on packages
+    type: object
+    default: [protocol, testSupport, adapter]
+
+extends:
+  template: azure-pipelines/npm-package/pipeline.yml@templates
+  parameters:
+    npmPackages:
+      - ${{ each package in parameters.runOnPackages }}:
+        - name: ${{ package }}
+          buildSteps:
+            - script: npm ci
+              displayName: ☁️ Install
+            - script: npm run compile
+              displayName: 📦 Compile
+          testSteps:
+            - script: npm ci
+              displayName: ☁️ Install
+            - script: npm run compile
+              displayName: 📦 Compile
+            - script: npm test
+              displayName: 👨‍🔬 Test
+
+          testPlatforms:
+            - name: Linux
+              nodeVersions:
+                - 16.x
+
+          publishPackage: ${{ parameters.publishPackage }}
+          workingDirectory: $(Build.SourcesDirectory)/${{ package }}
+          publishRequiresApproval: false
