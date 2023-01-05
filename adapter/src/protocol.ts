@@ -111,6 +111,8 @@ export class ProtocolServer extends ee.EventEmitter implements VSCodeDebugAdapte
 				this._pendingRequests.delete(response.request_seq);
 				clb(response);
 			}
+		} else if (msg.type === 'event') {
+			this._emitEvent(<DebugProtocol.Event>msg)
 		}
 	}
 

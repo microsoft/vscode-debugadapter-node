@@ -139,6 +139,8 @@ export class CompletionItem implements DebugProtocol.CompletionItem {
 }
 
 export class StoppedEvent extends Event implements DebugProtocol.StoppedEvent {
+	event: 'stopped';
+
 	body: {
 		reason: string;
 	};
@@ -158,6 +160,8 @@ export class StoppedEvent extends Event implements DebugProtocol.StoppedEvent {
 }
 
 export class ContinuedEvent extends Event implements DebugProtocol.ContinuedEvent {
+	event: 'continued';
+
 	body: {
 		threadId: number;
 	};
@@ -175,12 +179,16 @@ export class ContinuedEvent extends Event implements DebugProtocol.ContinuedEven
 }
 
 export class InitializedEvent extends Event implements DebugProtocol.InitializedEvent {
+	event: 'initialized';
+
 	public constructor() {
 		super('initialized');
 	}
 }
 
 export class TerminatedEvent extends Event implements DebugProtocol.TerminatedEvent {
+	event: 'terminated';
+
 	public constructor(restart?: any) {
 		super('terminated');
 		if (typeof restart === 'boolean' || restart) {
@@ -193,6 +201,8 @@ export class TerminatedEvent extends Event implements DebugProtocol.TerminatedEv
 }
 
 export class ExitedEvent extends Event implements DebugProtocol.ExitedEvent {
+	event: 'exited';
+
 	body: {
 		exitCode: number
 	};
@@ -206,6 +216,8 @@ export class ExitedEvent extends Event implements DebugProtocol.ExitedEvent {
 }
 
 export class OutputEvent extends Event implements DebugProtocol.OutputEvent {
+	event: 'output';
+
 	body: {
 		category: string,
 		output: string,
@@ -225,6 +237,8 @@ export class OutputEvent extends Event implements DebugProtocol.OutputEvent {
 }
 
 export class ThreadEvent extends Event implements DebugProtocol.ThreadEvent {
+	event: 'thread';
+
 	body: {
 		reason: string,
 		threadId: number
@@ -240,6 +254,8 @@ export class ThreadEvent extends Event implements DebugProtocol.ThreadEvent {
 }
 
 export class BreakpointEvent extends Event implements DebugProtocol.BreakpointEvent {
+	event: 'breakpoint';
+
 	body: {
 		reason: string,
 		breakpoint: DebugProtocol.Breakpoint
@@ -255,6 +271,8 @@ export class BreakpointEvent extends Event implements DebugProtocol.BreakpointEv
 }
 
 export class ModuleEvent extends Event implements DebugProtocol.ModuleEvent {
+	event: 'module';
+
 	body: {
 		reason: 'new' | 'changed' | 'removed',
 		module: DebugProtocol.Module
@@ -270,6 +288,8 @@ export class ModuleEvent extends Event implements DebugProtocol.ModuleEvent {
 }
 
 export class LoadedSourceEvent extends Event implements DebugProtocol.LoadedSourceEvent {
+	event: 'loadedSource';
+
 	body: {
 		reason: 'new' | 'changed' | 'removed',
 		source: DebugProtocol.Source
@@ -285,6 +305,8 @@ export class LoadedSourceEvent extends Event implements DebugProtocol.LoadedSour
 }
 
 export class CapabilitiesEvent extends Event implements DebugProtocol.CapabilitiesEvent {
+	event: 'capabilities';
+
 	body: {
 		capabilities: DebugProtocol.Capabilities
 	};
@@ -298,6 +320,8 @@ export class CapabilitiesEvent extends Event implements DebugProtocol.Capabiliti
 }
 
 export class ProgressStartEvent extends Event implements DebugProtocol.ProgressStartEvent {
+	event: 'progressStart';
+
 	body: {
 		progressId: string,
 		title: string
@@ -316,6 +340,8 @@ export class ProgressStartEvent extends Event implements DebugProtocol.ProgressS
 }
 
 export class ProgressUpdateEvent extends Event implements DebugProtocol.ProgressUpdateEvent {
+	event: 'progressUpdate';
+
 	body: {
 		progressId: string
 	};
@@ -332,6 +358,8 @@ export class ProgressUpdateEvent extends Event implements DebugProtocol.Progress
 }
 
 export class ProgressEndEvent extends Event implements DebugProtocol.ProgressEndEvent {
+	event: 'progressEnd';
+
 	body: {
 		progressId: string
 	};
@@ -348,6 +376,8 @@ export class ProgressEndEvent extends Event implements DebugProtocol.ProgressEnd
 }
 
 export class InvalidatedEvent extends Event implements DebugProtocol.InvalidatedEvent {
+	event: 'invalidated';
+
 	body: {
 		areas?: DebugProtocol.InvalidatedAreas[];
 		threadId?: number;
@@ -371,6 +401,8 @@ export class InvalidatedEvent extends Event implements DebugProtocol.Invalidated
 }
 
 export class MemoryEvent extends Event implements DebugProtocol.MemoryEvent {
+	event: 'memory';
+
 	body: {
 		memoryReference: string;
 		offset: number;
