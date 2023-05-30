@@ -86,7 +86,7 @@ export class ProtocolServer extends ee.EventEmitter implements VSCodeDebugAdapte
 
 	private _rawData: Buffer;
 	private _contentLength: number;
-	private _sequence: number;
+	private _sequence: number = 1;
 	private _writableStream: NodeJS.WritableStream;
 	private _pendingRequests = new Map<number, (response: DebugProtocol.Response) => void>();
 
@@ -121,7 +121,6 @@ export class ProtocolServer extends ee.EventEmitter implements VSCodeDebugAdapte
 	//--------------------------------------------------------------------------
 
 	public start(inStream: NodeJS.ReadableStream, outStream: NodeJS.WritableStream): void {
-		this._sequence = 1;
 		this._writableStream = outStream;
 		this._rawData = Buffer.alloc(0);
 
