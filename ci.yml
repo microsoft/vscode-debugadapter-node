@@ -5,7 +5,8 @@ trigger:
     include:
       - main
 
-pr: none
+pr:
+  - main
 
 resources:
   repositories:
@@ -31,7 +32,7 @@ extends:
   parameters:
     npmPackages:
       - ${{ each package in parameters.runOnPackages }}:
-        - name: ${{ package }}        
+        - name: ${{ package }}
           ghCreateTag: false
           buildSteps:
             - script: npm ci
