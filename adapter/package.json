@@ -21,7 +21,7 @@
 	},
 	"typings": "./lib/main",
 	"dependencies": {
-		"@vscode/debugprotocol": "1.59.0"
+		"@vscode/debugprotocol": "1.60.0"
 	},
 	"devDependencies": {
 		"@types/mocha": "^9.1.0",
