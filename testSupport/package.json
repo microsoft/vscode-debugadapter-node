@@ -17,7 +17,7 @@
 	"main": "./lib/main.js",
 	"typings": "./lib/main",
 	"dependencies": {
-		"@vscode/debugprotocol": "1.60.0"
+		"@vscode/debugprotocol": "1.61.0"
 	},
 	"devDependencies": {
 		"@types/node": "14.x",
