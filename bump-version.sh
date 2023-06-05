@@ -3,6 +3,10 @@
 npm version --workspaces "$@" --workspaces-update
 
 VERSION=v$(cat adapter/package.json | jq -r .version)
+npm --workspace adapter pkg set "dependencies.@vscode/debugprotocol=$VERSION"
+npm --workspace testSupport pkg set "dependencies.@vscode/debugprotocol=$VERSION"
+npm i
+
 git checkout -b release/$VERSION
 
 git add .
