@@ -5,7 +5,7 @@ npm version --workspaces "$@" --workspaces-update
 VERSION=$(cat adapter/package.json | jq -r .version)
 npm --workspace adapter pkg set "dependencies.@vscode/debugprotocol=$VERSION"
 npm --workspace testSupport pkg set "dependencies.@vscode/debugprotocol=$VERSION"
-sleep 1 # npm may have some disk cache that keeps it from seeing the new version?
+sleep 5 # npm may have some disk cache that keeps it from seeing the new version?
 npm i
 
 git checkout -b bump-v$VERSION
