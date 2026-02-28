@@ -18,9 +18,10 @@ function Module(moduleName: string, schema: IProtocol): string {
 	s += line(" *--------------------------------------------------------------------------------------------*/");
 	s += line();
 
-	//s += comment(schema.description);
 	s += comment({ description: 'Declaration module describing the VS Code debug protocol.\nAuto-generated from json schema. Do not edit manually.'});
-
+	s += line();
+	
+	s += comment({ description: schema.description });
 	s += openBlock(`export declare module ${moduleName}`);
 
 	for (let typeName in schema.definitions) {
@@ -77,7 +78,7 @@ function Interface(interfaceName: string, definition: P.Definition, superType?: 
 
 	let s = line();
 
-	s += comment({ description : desc });
+	s += comment({ description: desc });
 
 	let x = `interface ${interfaceName}`;
 	if (superType) {
@@ -247,11 +248,7 @@ function property(name: string, optional: boolean, prop: P.PropertyType): string
 	s += comment(prop);
 	const type = propertyType(prop);
 	const propertyDef = `${name}${optional ? '?' : ''}: ${type}`;
-	if (type[0] === '\'' && type[type.length-1] === '\'' && type.indexOf('|') < 0) {
-		s += line(`// ${propertyDef};`);
-	} else {
-		s += line(`${propertyDef};`);
-	}
+	s += line(`${propertyDef};`);
 	return s;
 }
 

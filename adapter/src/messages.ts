@@ -17,6 +17,7 @@ export class Message implements DebugProtocol.ProtocolMessage {
 }
 
 export class Response extends Message implements DebugProtocol.Response {
+	type: 'response';
 	request_seq: number;
 	success: boolean;
 	command: string;
@@ -35,6 +36,7 @@ export class Response extends Message implements DebugProtocol.Response {
 }
 
 export class Event extends Message implements DebugProtocol.Event {
+	type: 'event';
 	event: string;
 
 	public constructor(event: string, body?: any) {
