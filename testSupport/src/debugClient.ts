@@ -191,6 +191,10 @@ export class DebugClient extends ProtocolClient {
 		return this.send('setExceptionBreakpoints', args);
 	}
 
+	public setInstructionBreakpointsRequest(args: DebugProtocol.SetInstructionBreakpointsArguments): Promise<DebugProtocol.SetInstructionBreakpointsResponse> {
+		return this.send('setInstructionBreakpoints', args);
+	}
+
 	public dataBreakpointInfoRequest(args: DebugProtocol.DataBreakpointInfoArguments): Promise<DebugProtocol.DataBreakpointInfoResponse> {
 		return this.send('dataBreakpointInfo', args);
 	}
@@ -285,6 +289,14 @@ export class DebugClient extends ProtocolClient {
 
 	public exceptionInfoRequest(args: DebugProtocol.ExceptionInfoArguments): Promise<DebugProtocol.ExceptionInfoResponse> {
 		return this.send('exceptionInfo', args);
+	}
+
+	public readMemoryRequest(args: DebugProtocol.ReadMemoryArguments): Promise<DebugProtocol.ReadMemoryResponse> {
+		return this.send('readMemory', args);
+	}
+
+	public writeMemoryRequest(args: DebugProtocol.WriteMemoryArguments): Promise<DebugProtocol.WriteMemoryResponse> {
+		return this.send('writeMemory', args);
 	}
 
 	public customRequest(command: string, args?: any): Promise<DebugProtocol.Response> {
