@@ -24,7 +24,7 @@
 		"@vscode/debugprotocol": "1.68.0"
 	},
 	"devDependencies": {
-		"@types/mocha": "^9.1.0",
+		"@types/mocha": "^10.0.0",
 		"mocha": "^11.7.6",
 		"typescript": "^4.9.4"
 	},
