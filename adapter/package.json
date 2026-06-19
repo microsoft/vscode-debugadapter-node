@@ -9,7 +9,7 @@
 		"url": "https://github.com/microsoft/vscode-debugadapter-node.git"
 	},
 	"engines": {
-		"node": ">=14"
+		"node": ">=22"
 	},
 	"bugs": {
 		"url": "https://github.com/microsoft/vscode-debugadapter-node/issues"
@@ -25,8 +25,9 @@
 	},
 	"devDependencies": {
 		"@types/mocha": "^10.0.0",
+		"@types/node": "22.x",
 		"mocha": "^11.7.6",
-		"typescript": "^4.9.4"
+		"typescript": "^5.9.0"
 	},
 	"scripts": {
 		"prepack": "npm run compile",
