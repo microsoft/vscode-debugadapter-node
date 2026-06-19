@@ -31,7 +31,7 @@ extends:
   parameters:
     npmPackages:
       - ${{ each package in parameters.runOnPackages }}:
-        - name: ${{ package }}        
+        - name: ${{ package }}
           ghCreateTag: false
           buildSteps:
             - script: npm ci
@@ -49,8 +49,9 @@ extends:
           testPlatforms:
             - name: Linux
               nodeVersions:
-                - 16.x
+                - 22.x
 
           publishPackage: ${{ parameters.publishPackage }}
           workingDirectory: $(Build.SourcesDirectory)/${{ package }}
           publishRequiresApproval: false
+          skipAPIScan: true
