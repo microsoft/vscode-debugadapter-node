@@ -41,6 +41,7 @@ export class ProtocolClient extends ee.EventEmitter {
 	public send(command: 'setBreakpoints', args: DebugProtocol.SetBreakpointsArguments) : Promise<DebugProtocol.SetBreakpointsResponse>;
 	public send(command: 'setFunctionBreakpoints', args: DebugProtocol.SetFunctionBreakpointsArguments) : Promise<DebugProtocol.SetFunctionBreakpointsResponse>;
 	public send(command: 'setExceptionBreakpoints', args: DebugProtocol.SetExceptionBreakpointsArguments) : Promise<DebugProtocol.SetExceptionBreakpointsResponse>;
+	public send(command: 'setInstructionBreakpoints', args: DebugProtocol.SetInstructionBreakpointsArguments) : Promise<DebugProtocol.SetInstructionBreakpointsResponse>;
 	public send(command: 'dataBreakpointInfo', args: DebugProtocol.DataBreakpointInfoArguments) : Promise<DebugProtocol.DataBreakpointInfoResponse>;
 	public send(command: 'setDataBreakpoints', args: DebugProtocol.SetDataBreakpointsArguments) : Promise<DebugProtocol.SetDataBreakpointsResponse>;
 	public send(command: 'continue', args: DebugProtocol.ContinueArguments) : Promise<DebugProtocol.ContinueResponse>;
@@ -64,6 +65,8 @@ export class ProtocolClient extends ee.EventEmitter {
 	public send(command: 'gotoTargets', args: DebugProtocol.GotoTargetsArguments) : Promise<DebugProtocol.GotoTargetsResponse>;
 	public send(command: 'completions', args: DebugProtocol.CompletionsArguments) : Promise<DebugProtocol.CompletionsResponse>;
 	public send(command: 'exceptionInfo', args: DebugProtocol.ExceptionInfoArguments) : Promise<DebugProtocol.ExceptionInfoResponse>;
+	public send(command: 'readMemoryRequest', args: DebugProtocol.ReadMemoryArguments) : Promise<DebugProtocol.ReadMemoryResponse>;
+	public send(command: 'writeMemoryRequest', args: DebugProtocol.WriteMemoryArguments) : Promise<DebugProtocol.WriteMemoryResponse>;
 	public send(command: string, args?: any) : Promise<DebugProtocol.Response>;
 
 	public send(command: string, args?: any): Promise<DebugProtocol.Response> {

@@ -21,7 +21,7 @@ function Module(moduleName: string, schema: IProtocol): string {
 	//s += comment(schema.description);
 	s += comment({ description: 'Declaration module describing the VS Code debug protocol.\nAuto-generated from json schema. Do not edit manually.'});
 
-	s += openBlock(`export declare module ${moduleName}`);
+	s += openBlock(`export declare namespace ${moduleName}`);
 
 	for (let typeName in schema.definitions) {
 

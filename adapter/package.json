@@ -1,7 +1,7 @@
 {
 	"name": "@vscode/debugadapter",
 	"description": "Debug adapter implementation for node",
-	"version": "1.60.0",
+	"version": "1.68.0",
 	"author": "Microsoft Corporation",
 	"license": "MIT",
 	"repository": {
@@ -9,7 +9,7 @@
 		"url": "https://github.com/microsoft/vscode-debugadapter-node.git"
 	},
 	"engines": {
-		"node": ">=14"
+		"node": ">=22"
 	},
 	"bugs": {
 		"url": "https://github.com/microsoft/vscode-debugadapter-node/issues"
@@ -21,12 +21,13 @@
 	},
 	"typings": "./lib/main",
 	"dependencies": {
-		"@vscode/debugprotocol": "1.59.0"
+		"@vscode/debugprotocol": "1.68.0"
 	},
 	"devDependencies": {
-		"@types/mocha": "^9.1.0",
-		"mocha": "^9.2.1",
-		"typescript": "^4.9.4"
+		"@types/mocha": "^10.0.0",
+		"@types/node": "22.x",
+		"mocha": "^11.7.6",
+		"typescript": "^5.9.0"
 	},
 	"scripts": {
 		"prepack": "npm run compile",

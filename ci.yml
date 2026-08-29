@@ -50,8 +50,9 @@ extends:
           testPlatforms:
             - name: Linux
               nodeVersions:
-                - 16.x
+                - 22.x
 
           publishPackage: ${{ parameters.publishPackage }}
           workingDirectory: $(Build.SourcesDirectory)/${{ package }}
           publishRequiresApproval: false
+          skipAPIScan: true
