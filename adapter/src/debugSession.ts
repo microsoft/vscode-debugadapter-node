@@ -491,6 +491,10 @@ export class DebugSession extends ProtocolServer {
 		this.sendRequest('runInTerminal', args, timeout, cb as (r: DebugProtocol.Response) => void);
 	}
 
+	public startDebuggingRequest(args: DebugProtocol.StartDebuggingRequestArguments, timeout: number, cb: (response: DebugProtocol.StartDebuggingResponse) => void) {
+		this.sendRequest('startDebugging', args, timeout, cb as (r: DebugProtocol.Response) => void);
+	}
+
 	protected dispatchRequest(request: DebugProtocol.Request): void {
 
 		const response = new Response(request);
