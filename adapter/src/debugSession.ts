@@ -462,7 +462,7 @@ export class DebugSession extends ProtocolServer {
 		if (typeof codeOrMessage === 'number') {
 			msg = <DebugProtocol.Message> {
 				id: <number> codeOrMessage,
-				format: format
+				format: format ? format : ''
 			};
 			if (variables) {
 				msg.variables = variables;
